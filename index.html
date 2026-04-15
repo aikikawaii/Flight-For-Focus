@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFlight - Premium Focus Timer</title>
+    <style>
+        /* Apple-style Typography */
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            /* iOS Dark Mode Palette */
+            --bg-base: #000000;
+            --bg-flight: #000000;
+            --glass-bg: rgba(28, 28, 30, 0.6); /* iOS System Gray 6 */
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-highlight: rgba(255, 255, 255, 0.2);
+            
+            --text-main: #FFFFFF;
+            --text-muted: rgba(235, 235, 245, 0.6); /* iOS Secondary Label */
+            
+            --accent-cyan: #5E5CE6; /* iOS Purple */
+            --accent-blue: #0A84FF; /* iOS Blue */
+            --accent-purple: #BF5AF2;
+            --danger: #FF453A; /* iOS Red */
+            --success: #32D74B; /* iOS Green */
+            --warning: #FF9F0A; /* iOS Orange */
+            
+            --font-main: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 1s ease;
+        }
+
+        /* In-Flight State */
+        body.in-flight { background-color: var(--bg-flight); }
+        body.in-flight header { opacity: 0.2; pointer-events: none; filter: blur(4px); }
+
+        .container {
+            max-width: 1000px; margin: 0 auto; padding: 2rem;
+            position: relative; z-index: 1;
+        }
+
+        /* Apple-style Glassmorphism Card (Widget-like) */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 0.5px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: var(--transition);
+            position: relative; overflow: hidden;
+        }
+
+        /* Header */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; transition: var(--transition); }
+        .logo {
+            display: flex; align-items: center;
+        }
+        .logo img { height: 40px; mix-blend-mode: screen; object-fit: contain; }
+
+        /* Setup Interactive Map Area */
+        .interactive-setup { display: flex; flex-direction: column; gap: 2rem; }
+        
+        .map-interactive-container {
+            position: relative; width: 100%; height: 350px; background: rgba(0,0,0,0.5);
+            border-radius: 16px; overflow: hidden; border: 0.5px solid var(--glass-border);
+        }
+        
+        #main-svg-map { width: 100%; height: 100%; display: block; }
+        
+        .map-grid { stroke: rgba(255,255,255,0.03); stroke-width: 1; }
+        .world-map-bg { opacity: 0.2; filter: invert(1) hue-rotate(180deg) brightness(1.2); pointer-events: none; }
+        .airport-node { fill: var(--text-muted); transition: var(--transition); cursor: pointer; }
+        .airport-node text { fill: var(--text-muted); font-size: 9px; font-weight: 500; text-anchor: middle; transform: translateY(14px); opacity: 0; transition: var(--transition); }
+        .airport-node:hover text { opacity: 0.8; }
+        
+        .airport-node.start circle { fill: var(--accent-blue); r: 5; }
+        .airport-node.start text { fill: var(--accent-blue); opacity: 1; font-weight: 600; font-size: 11px; }
+        .airport-node.dest circle { fill: var(--accent-cyan); r: 7; filter: drop-shadow(0 0 10px var(--accent-cyan)); }
+        .airport-node.dest text { fill: var(--accent-cyan); opacity: 1; font-weight: 700; font-size: 13px; transform: translateY(18px); }
+        
+        .radius-circle { fill: rgba(94, 92, 230, 0.1); stroke: var(--accent-cyan); stroke-width: 1; stroke-dasharray: 4 4; transition: r 0.4s cubic-bezier(0.25, 0.1, 0.25, 1); }
+        .flight-path { fill: none; stroke: var(--accent-cyan); stroke-width: 2.5; stroke-dasharray: 6 6; opacity: 0.7; filter: drop-shadow(0 0 5px var(--accent-cyan)); }
+
+        /* Apple-style Slider */
+        .slider-container { padding: 0.5rem 0; }
+        .duration-label { display: flex; justify-content: space-between; margin-bottom: 1.2rem; font-weight: 500; font-size: 1.1rem; letter-spacing: -0.3px; }
+        
+        input[type="range"] {
+            -webkit-appearance: none; width: 100%; height: 6px; background: rgba(255,255,255,0.15);
+            border-radius: 10px; outline: none; margin: 10px 0;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 28px; height: 28px; border-radius: 50%;
+            background: #FFFFFF; cursor: pointer; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s; border: 0.5px solid rgba(0,0,0,0.1);
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+
+        /* Buttons (iOS Style) */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 1rem 1.5rem; border: none; border-radius: 14px; font-weight: 600; font-size: 1.1rem;
+            cursor: pointer; transition: var(--transition); width: 100%; color: white;
+            letter-spacing: -0.3px;
+        }
+        .btn-primary { background: var(--accent-blue); box-shadow: 0 4px 14px rgba(10, 132, 255, 0.3); }
+        .btn-primary:active { transform: scale(0.97); filter: brightness(0.9); }
+        .btn-danger { background: rgba(255, 69, 58, 0.15); color: var(--danger); }
+        .btn-danger:active { background: rgba(255, 69, 58, 0.25); transform: scale(0.97); }
+
+        /* Apple Wallet Boarding Pass Modal */
+        .boarding-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; align-items: center; justify-content: center; z-index: 100;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s;
+        }
+        .boarding-modal.show { opacity: 1; pointer-events: auto; }
+        
+        .ticket-wrapper { display: flex; filter: drop-shadow(0 25px 40px rgba(0,0,0,0.6)); transform: translateY(50px) scale(0.9); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); perspective: 1000px; }
+        .boarding-modal.show .ticket-wrapper { transform: translateY(0) scale(1); }
+        
+        .ticket-main, .ticket-stub { background: #1C1C1E; color: #FFFFFF; padding: 2.5rem; position: relative; transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s; border: 0.5px solid rgba(255,255,255,0.2); }
+        .ticket-main { width: 420px; border-radius: 20px 0 0 20px; border-right: 2px dashed rgba(255,255,255,0.2); background: linear-gradient(145deg, #2C2C2E, #1C1C1E); }
+        .ticket-stub { width: 160px; border-radius: 0 20px 20px 0; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-left: 2px dashed #000; left: -2px; background: #2C2C2E; }
+        
+        /* Tear Animation */
+        .ticket-wrapper.tearing .ticket-main { transform: translateX(-60px) rotateY(-15deg); opacity: 0; }
+        .ticket-wrapper.tearing .ticket-stub { transform: translateX(60px) rotateY(15deg) translateY(30px); opacity: 0; }
+
+        .ticket-header { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; font-weight: 500; }
+        .ticket-route { display: flex; justify-content: space-between; align-items: center; font-size: 3rem; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: -1px; }
+        .ticket-plane-icon { color: var(--accent-blue); }
+        .ticket-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+        .ticket-info-item label { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+        .ticket-info-item span { font-weight: 600; font-size: 1.2rem; }
+        .barcode { width: 100%; height: 70px; background: repeating-linear-gradient(90deg, #FFFFFF, #FFFFFF 3px, transparent 3px, transparent 6px, #FFFFFF 6px, #FFFFFF 8px, transparent 8px, transparent 12px); margin-top: auto; opacity: 0.8; }
+
+        /* Active Flight View */
+        .flight-hud { display: flex; flex-direction: column; align-items: center; width: 100%; animation: fadeIn 0.8s ease; }
+        
+        /* iOS Segmented Control */
+        .view-toggle { display: flex; background: rgba(118, 118, 128, 0.24); padding: 4px; border-radius: 9px; margin-bottom: 2.5rem; }
+        .view-btn { padding: 6px 20px; border-radius: 7px; cursor: pointer; border: 0.5px solid transparent; transition: var(--transition); color: var(--text-main); font-size: 0.9rem; font-weight: 500; }
+        .view-btn.active { background: #636366; box-shadow: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.04); }
+
+        .visual-container { width: 100%; height: 400px; border-radius: 24px; overflow: hidden; position: relative; border: 0.5px solid var(--glass-border); margin-bottom: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        /* Window View (Images) */
+        .window-view { 
+            position: absolute; 
+            inset: 0; 
+            background-size: cover; 
+            background-position: center; 
+            transition: background-image 1.5s ease-in-out; 
+            display: none; 
+        }
+
+        /* Live Map View */
+        .live-map-view { position: absolute; inset: 0; background: #000000; display: none; }
+        .live-map-view.active { display: block; }
+        .window-view.active { display: block; }
+
+        .time-display { font-size: 5.5rem; font-weight: 200; font-variant-numeric: tabular-nums; text-align: center; margin-bottom: 1.5rem; letter-spacing: -2px; }
+        .status-text { color: var(--accent-cyan); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; font-size: 0.9rem; text-align: center; margin-bottom: 2rem; animation: pulseText 2.5s infinite; }
+
+        .hidden { display: none !important; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    </style>
+</head>
+<body>
+
+<!-- Boarding Pass Modal -->
+<div class="boarding-modal" id="boarding-modal">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 2.5rem;">
+        <div class="ticket-wrapper" id="ticket-wrapper">
+            <div class="ticket-main">
+                <div class="ticket-header">FocusFlight • First Class</div>
+                <div class="ticket-route">
+                    <span id="ticket-start">ICN</span>
+                    <svg class="ticket-plane-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21.5 4c0 0-2 .5-3.5 2L14.5 9.5 6.3 7.7 4 9l6 4-3 3-3.2-.8L2 16.5l4.5 1 1 4.5 1.3-1.8-.8-3.2 3-3 4 6 1.3-2.3z"/></svg>
+                    <span id="ticket-dest">JFK</span>
+                </div>
+                <div class="ticket-info-grid">
+                    <div class="ticket-info-item"><label>Passenger</label><span>Guest</span></div>
+                    <div class="ticket-info-item"><label>Flight Time</label><span id="ticket-time">120 MIN</span></div>
+                    <div class="ticket-info-item"><label>Gate</label><span>G-07</span></div>
+                    <div class="ticket-info-item"><label>Seat</label><span>1A</span></div>
+                </div>
+            </div>
+            <div class="ticket-stub">
+                <div>
+                    <div style="font-weight: 700; font-size: 1.8rem; text-align: center; letter-spacing: -1px;" id="ticket-stub-dest">JFK</div>
+                    <div style="font-size: 0.75rem; text-align: center; color: var(--text-muted); margin-top: 0.5rem; font-weight: 500;">FIRST CLASS</div>
+                </div>
+                <div class="barcode"></div>
+            </div>
+        </div>
+        <button class="btn btn-primary" id="btn-tear-ticket" style="width: 240px;">탑승 및 이륙 (Board)</button>
+    </div>
+</div>
+
+<div class="container">
+    <header>
+        <div class="logo">
+            <img src="FFF로고 검은배경.jpg" alt="FFF FLIGHT FOR FOCUS">
+        </div>
+    </header>
+
+    <!-- Main Setup View -->
+    <div class="glass-card" id="setup-view" style="max-width: 700px; margin: 0 auto;">
+        <div class="interactive-setup">
+            <div style="text-align: center;">
+                <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: 600; letter-spacing: -0.5px;">목적지 설정</h2>
+                <p style="color: var(--text-muted); font-size: 1rem;">집중할 시간을 선택하면 도달 가능한 목적지가 배정됩니다.</p>
+            </div>
+
+            <!-- SVG Map for Setup -->
+            <div class="map-interactive-container">
+                <svg id="main-svg-map" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice">
+                    <!-- Grid background -->
+                    <defs>
+                        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                            <path d="M 40 0 L 0 0 0 40" fill="none" class="map-grid"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#grid)" />
+                    
+                    <!-- World Map Image -->
+                    <image href="https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg" width="800" height="400" class="world-map-bg" />
+
+                    <!-- Dynamic Elements -->
+                    <circle id="map-radius" class="radius-circle" cx="0" cy="0" r="0" />
+                    <path id="map-flight-path" class="flight-path" d="" />
+                    <g id="map-airports"></g>
+                </svg>
+            </div>
+
+            <!-- Time Slider -->
+            <div class="slider-container">
+                <div class="duration-label">
+                    <span id="display-duration" style="color: var(--text-main);">25분 (단거리 비행)</span>
+                    <span id="display-dest-name" style="color: var(--accent-blue);">탐색 중...</span>
+                </div>
+                <!-- Changed max from 180 to 360 -->
+                <input type="range" id="flight-duration" min="10" max="360" value="25" step="5">
+            </div>
+
+            <button class="btn btn-primary" id="btn-issue-ticket">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                탑승 수속
+            </button>
+        </div>
+    </div>
+
+    <!-- Active Flight View -->
+    <div class="glass-card hidden" id="active-view" style="max-width: 700px; margin: 0 auto;">
+        <div class="flight-hud">
+            <div class="status-text" id="flight-status-text">CRUISING ALTITUDE</div>
+            
+            <div class="view-toggle">
+                <div class="view-btn active" data-target="window">창문 뷰</div>
+                <div class="view-btn" data-target="map">라이브 항로</div>
+                <div class="view-btn" id="btn-fullscreen">전체화면</div>
+            </div>
+
+            <div class="visual-container">
+                <!-- Window View -->
+                <div class="window-view active" id="view-window">
+                    <!-- Image background applied via JS -->
+                </div>
+
+                <!-- Live Map View -->
+                <div class="live-map-view" id="view-map">
+                    <svg viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" style="width: 100%; height: 100%;">
+                        <rect width="100%" height="100%" fill="url(#grid)" />
+                        <!-- World Map Image -->
+                        <image href="https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg" width="800" height="400" class="world-map-bg" />
+                        
+                        <path id="live-path" class="flight-path" d="" style="opacity: 0.3;" />
+                        <path id="live-progress-path" class="flight-path" d="" style="stroke: var(--accent-blue); opacity: 1; stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset 1s linear;" />
+                        <circle id="live-start-node" cx="0" cy="0" r="4" fill="var(--text-muted)" />
+                        <circle id="live-dest-node" cx="0" cy="0" r="7" fill="var(--accent-blue)" style="filter: drop-shadow(0 0 8px var(--accent-blue));" />
+                        <!-- Airplane Icon moving -->
+                        <g id="live-plane" style="transition: transform 1s linear;">
+                            <svg x="-12" y="-12" width="24" height="24" viewBox="0 0 24 24" fill="var(--text-main)" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21.5 4c0 0-2 .5-3.5 2L14.5 9.5 6.3 7.7 4 9l6 4-3 3-3.2-.8L2 16.5l4.5 1 1 4.5 1.3-1.8-.8-3.2 3-3 4 6 1.3-2.3z"/></svg>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="time-display" id="time-display">25:00</div>
+            
+            <div style="display: flex; gap: 1rem; width: 100%; max-width: 300px;">
+                <button class="btn btn-danger" id="btn-stop">비상 착륙 (중단)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Data & Airports (Expanded for global coverage) ---
+    const AIRPORTS = [
+        // Asia
+        { id: "ICN", name: "서울", lat: 37.46, lon: 126.44 },
+        { id: "HND", name: "도쿄", lat: 35.54, lon: 139.77 },
+        { id: "PEK", name: "베이징", lat: 40.07, lon: 116.59 },
+        { id: "TPE", name: "타이베이", lat: 25.07, lon: 121.23 },
+        { id: "BKK", name: "방콕", lat: 13.68, lon: 100.75 },
+        { id: "SIN", name: "싱가포르", lat: 1.36, lon: 103.99 },
+        { id: "DEL", name: "뉴델리", lat: 28.55, lon: 77.10 },
+        { id: "HKG", name: "홍콩", lat: 22.30, lon: 113.91 },
+        { id: "KUL", name: "쿠알라룸푸르", lat: 2.74, lon: 101.68 },
+        { id: "CGK", name: "자카르타", lat: -6.12, lon: 106.65 },
+        { id: "BOM", name: "뭄바이", lat: 19.08, lon: 72.86 },
+        // Middle East
+        { id: "DXB", name: "두바이", lat: 25.25, lon: 55.36 },
+        { id: "IST", name: "이스탄불", lat: 41.27, lon: 28.72 },
+        // Europe
+        { id: "LHR", name: "런던", lat: 51.47, lon: -0.45 },
+        { id: "CDG", name: "파리", lat: 49.00, lon: 2.55 },
+        { id: "FRA", name: "프랑크푸르트", lat: 50.03, lon: 8.57 },
+        { id: "AMS", name: "암스테르담", lat: 52.30, lon: 4.76 },
+        { id: "MAD", name: "마드리드", lat: 40.49, lon: -3.56 },
+        { id: "FCO", name: "로마", lat: 41.80, lon: 12.24 },
+        // North America
+        { id: "JFK", name: "뉴욕", lat: 40.64, lon: -73.77 },
+        { id: "LAX", name: "로스앤젤레스", lat: 33.94, lon: -118.40 },
+        { id: "SFO", name: "샌프란시스코", lat: 37.61, lon: -122.37 },
+        { id: "ORD", name: "시카고", lat: 41.97, lon: -87.90 },
+        { id: "ATL", name: "애틀랜타", lat: 33.64, lon: -84.42 },
+        { id: "DFW", name: "댈러스", lat: 32.89, lon: -97.04 },
+        { id: "YYZ", name: "토론토", lat: 43.67, lon: -79.62 },
+        { id: "YVR", name: "밴쿠버", lat: 49.19, lon: -123.18 },
+        { id: "SEA", name: "시애틀", lat: 47.45, lon: -122.30 },
+        { id: "MEX", name: "멕시코시티", lat: 19.43, lon: -99.07 },
+        { id: "HNL", name: "호놀룰루", lat: 21.31, lon: -157.92 },
+        // South America
+        { id: "GRU", name: "상파울루", lat: -23.43, lon: -46.47 },
+        { id: "SCL", name: "산티아고", lat: -33.39, lon: -70.79 },
+        { id: "BOG", name: "보고타", lat: 4.70, lon: -74.14 },
+        { id: "EZE", name: "부에노스아이레스", lat: -34.81, lon: -58.53 },
+        // Africa
+        { id: "CPT", name: "케이프타운", lat: -33.97, lon: 18.60 },
+        { id: "JNB", name: "요하네스버그", lat: -26.13, lon: 28.24 },
+        { id: "CAI", name: "카이로", lat: 30.12, lon: 31.40 },
+        { id: "LOS", name: "라고스", lat: 6.57, lon: 3.32 },
+        { id: "ADD", name: "아디스아바바", lat: 8.97, lon: 38.79 },
+        // Oceania
+        { id: "SYD", name: "시드니", lat: -33.93, lon: 151.17 },
+        { id: "MEL", name: "멜버른", lat: -37.66, lon: 144.84 },
+        { id: "AKL", name: "오클랜드", lat: -37.00, lon: 174.79 }
+    ];
+
+    let startAirport = AIRPORTS[0]; 
+    let destAirport = AIRPORTS[1];
+    let selectedDuration = 25;
+    let timerInterval = null;
+    let remainingSeconds = 0;
+    let totalSeconds = 0;
+
+    // --- Fullscreen Logic ---
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+    btnFullscreen.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable fullscreen: ${err.message}`);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+            btnFullscreen.textContent = '전체화면 종료';
+            btnFullscreen.classList.add('active');
+        } else {
+            btnFullscreen.textContent = '전체화면';
+            btnFullscreen.classList.remove('active');
+        }
+    });
+
+    // --- Audio Context for White Noise / Cabin Rumble ---
+    let audioCtx, noiseNode, filterNode, gainNode;
+    
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+
+    function startCabinNoise() {
+        initAudio();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        
+        const bufferSize = audioCtx.sampleRate * 2;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1; 
+        }
+        
+        noiseNode = audioCtx.createBufferSource();
+        noiseNode.buffer = buffer;
+        noiseNode.loop = true;
+
+        filterNode = audioCtx.createBiquadFilter();
+        filterNode.type = 'lowpass';
+        filterNode.frequency.value = 300; 
+
+        gainNode = audioCtx.createGain();
+        gainNode.gain.value = 0.2; 
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 2); 
+
+        noiseNode.connect(filterNode);
+        filterNode.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        noiseNode.start();
+    }
+
+    function stopCabinNoise() {
+        if (gainNode) {
+            gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1); 
+            setTimeout(() => { if(noiseNode) noiseNode.stop(); }, 1000);
+        }
+    }
+
+    // --- Geolocation & Map Logic ---
+    function getDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371; 
+        const dLat = (lat2-lat1)*Math.PI/180;
+        const dLon = (lon2-lon1)*Math.PI/180;
+        const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function geoToSvg(lat, lon) {
+        const x = (lon + 180) * (800 / 360);
+        const y = (90 - lat) * (400 / 180);
+        return { x, y };
+    }
+
+    function findNearestAirport(lat, lon) {
+        let nearest = AIRPORTS[0];
+        let minDist = Infinity;
+        AIRPORTS.forEach(ap => {
+            const d = getDistance(lat, lon, ap.lat, ap.lon);
+            if(d < minDist) { minDist = d; nearest = ap; }
+        });
+        return nearest;
+    }
+
+    function initMap() {
+        const svgAirports = document.getElementById('map-airports');
+        svgAirports.innerHTML = '';
+        
+        AIRPORTS.forEach(ap => {
+            const pos = geoToSvg(ap.lat, ap.lon);
+            ap.svgX = pos.x; ap.svgY = pos.y;
+            
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            g.setAttribute('class', 'airport-node');
+            g.setAttribute('id', `node-${ap.id}`);
+            g.innerHTML = `<circle cx="${pos.x}" cy="${pos.y}" r="3" /><text x="${pos.x}" y="${pos.y}">${ap.id}</text>`;
+            svgAirports.appendChild(g);
+        });
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                pos => {
+                    startAirport = findNearestAirport(pos.coords.latitude, pos.coords.longitude);
+                    updateMapBasedOnSlider();
+                },
+                err => {
+                    console.log("Geolocation denied, defaulting to ICN");
+                    updateMapBasedOnSlider();
+                }
+            );
+        } else {
+            updateMapBasedOnSlider();
+        }
+    }
+
+    function updateMapBasedOnSlider() {
+        selectedDuration = parseInt(document.getElementById('flight-duration').value);
+        
+        // Multiplier adjusted so 360 mins approx covers half earth (longest flight)
+        const targetDist = selectedDuration * 55; 
+        
+        let bestDest = null;
+        let bestDiff = Infinity;
+        
+        AIRPORTS.forEach(ap => {
+            if (ap.id === startAirport.id) return;
+            const dist = getDistance(startAirport.lat, startAirport.lon, ap.lat, ap.lon);
+            const diff = Math.abs(dist - targetDist);
+            if (diff < bestDiff) { bestDiff = diff; bestDest = ap; }
+        });
+        
+        destAirport = bestDest || AIRPORTS[1];
+
+        // Adjusted Scale Text for 6-hour range
+        let scaleText = selectedDuration <= 60 ? "단거리" : (selectedDuration <= 180 ? "중거리" : "장거리");
+        document.getElementById('display-duration').textContent = `${selectedDuration}분 (${scaleText})`;
+        document.getElementById('display-dest-name').textContent = `도달지: ${destAirport.name} (${destAirport.id})`;
+
+        document.querySelectorAll('.airport-node').forEach(el => {
+            el.classList.remove('start', 'dest');
+        });
+        
+        document.getElementById(`node-${startAirport.id}`).classList.add('start');
+        document.getElementById(`node-${destAirport.id}`).classList.add('dest');
+
+        const radiusElem = document.getElementById('map-radius');
+        const startPos = geoToSvg(startAirport.lat, startAirport.lon);
+        const destPos = geoToSvg(destAirport.lat, destAirport.lon);
+        
+        const dx = destPos.x - startPos.x;
+        const dy = destPos.y - startPos.y;
+        const pixelDist = Math.sqrt(dx*dx + dy*dy);
+        
+        radiusElem.setAttribute('cx', startPos.x);
+        radiusElem.setAttribute('cy', startPos.y);
+        radiusElem.setAttribute('r', pixelDist);
+
+        const pathElem = document.getElementById('map-flight-path');
+        const cx = (startPos.x + destPos.x) / 2;
+        const cy = Math.min(startPos.y, destPos.y) - 80; // slightly higher curve
+        pathElem.setAttribute('d', `M ${startPos.x} ${startPos.y} Q ${cx} ${cy} ${destPos.x} ${destPos.y}`);
+    }
+
+    // --- Interactive Setup Events ---
+    document.getElementById('flight-duration').addEventListener('input', updateMapBasedOnSlider);
+
+    document.getElementById('btn-issue-ticket').addEventListener('click', () => {
+        document.getElementById('ticket-start').textContent = startAirport.id;
+        document.getElementById('ticket-dest').textContent = destAirport.id;
+        document.getElementById('ticket-stub-dest').textContent = destAirport.id;
+        
+        // Format time display as HH:MM if over 60 mins
+        let timeStr = `${selectedDuration} MIN`;
+        if (selectedDuration >= 60) {
+            const h = Math.floor(selectedDuration / 60);
+            const m = selectedDuration % 60;
+            timeStr = m > 0 ? `${h}H ${m}M` : `${h}H`;
+        }
+        document.getElementById('ticket-time').textContent = timeStr;
+        
+        const modal = document.getElementById('boarding-modal');
+        modal.classList.add('show');
+    });
+
+    document.getElementById('btn-tear-ticket').addEventListener('click', () => {
+        const wrapper = document.getElementById('ticket-wrapper');
+        wrapper.classList.add('tearing');
+        
+        setTimeout(() => {
+            document.getElementById('boarding-modal').classList.remove('show');
+            wrapper.classList.remove('tearing');
+            startFlight();
+        }, 1200);
+    });
+
+    // --- Flight Logic ---
+    function startFlight() {
+        document.getElementById('setup-view').classList.add('hidden');
+        document.getElementById('active-view').classList.remove('hidden');
+        document.body.classList.add('in-flight');
+        
+        totalSeconds = selectedDuration * 60;
+        remainingSeconds = totalSeconds;
+        
+        updateTimeDisplay();
+        setupEnvironment();
+        startCabinNoise();
+        
+        timerInterval = setInterval(tick, 1000);
+    }
+
+    function tick() {
+        remainingSeconds--;
+        updateTimeDisplay();
+        updateLiveMap();
+        
+        if (remainingSeconds <= 0) {
+            clearInterval(timerInterval);
+            finishFlight();
+        }
+    }
+
+    function updateTimeDisplay() {
+        const h = Math.floor(remainingSeconds / 3600);
+        const m = Math.floor((remainingSeconds % 3600) / 60);
+        const s = remainingSeconds % 60;
+        
+        let displayStr = "";
+        if (h > 0) {
+            displayStr = `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        } else {
+            displayStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+        document.getElementById('time-display').textContent = displayStr;
+    }
+
+    document.getElementById('btn-stop').addEventListener('click', () => {
+        if(confirm('비상 착륙 하시겠습니까? 진행 사항이 저장되지 않습니다.')) {
+            clearInterval(timerInterval);
+            stopCabinNoise();
+            resetToSetup();
+        }
+    });
+
+    function finishFlight() {
+        stopCabinNoise();
+        alert(`목적지 ${destAirport.name}(${destAirport.id})에 도착했습니다! 집중 성공.`);
+        resetToSetup();
+    }
+
+    function resetToSetup() {
+        document.getElementById('setup-view').classList.remove('hidden');
+        document.getElementById('active-view').classList.add('hidden');
+        document.body.classList.remove('in-flight');
+        
+        // Exit fullscreen if active
+        if (document.fullscreenElement && document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+
+    // --- Views (Window & Live Map) ---
+    function setupEnvironment() {
+        const hour = new Date().getHours();
+        const windowView = document.getElementById('view-window');
+        windowView.className = 'window-view active'; 
+        
+        // 18:00 (6 PM) to 05:59 (5 AM) is night. Otherwise, day.
+        if (hour >= 18 || hour < 6) {
+            windowView.style.backgroundImage = "url('밤하늘.jpg')";
+        } else {
+            windowView.style.backgroundImage = "url('낮하늘.jpg')";
+        }
+
+        // Setup Live Map
+        const startPos = geoToSvg(startAirport.lat, startAirport.lon);
+        const destPos = geoToSvg(destAirport.lat, destAirport.lon);
+        const cx = (startPos.x + destPos.x) / 2;
+        const cy = Math.min(startPos.y, destPos.y) - 80;
+        const pathData = `M ${startPos.x} ${startPos.y} Q ${cx} ${cy} ${destPos.x} ${destPos.y}`;
+        
+        document.getElementById('live-start-node').setAttribute('cx', startPos.x);
+        document.getElementById('live-start-node').setAttribute('cy', startPos.y);
+        document.getElementById('live-dest-node').setAttribute('cx', destPos.x);
+        document.getElementById('live-dest-node').setAttribute('cy', destPos.y);
+        
+        document.getElementById('live-path').setAttribute('d', pathData);
+        
+        const progPath = document.getElementById('live-progress-path');
+        progPath.setAttribute('d', pathData);
+        const pathLen = progPath.getTotalLength() || 1000;
+        progPath.style.strokeDasharray = pathLen;
+        progPath.style.strokeDashoffset = pathLen;
+        progPath.dataset.len = pathLen;
+    }
+
+    function updateLiveMap() {
+        const progPath = document.getElementById('live-progress-path');
+        const plane = document.getElementById('live-plane');
+        const len = parseFloat(progPath.dataset.len || 1000);
+        
+        const progress = 1 - (remainingSeconds / totalSeconds);
+        progPath.style.strokeDashoffset = len - (len * progress);
+        
+        if (progPath.getPointAtLength) {
+            const pt = progPath.getPointAtLength(len * progress);
+            plane.style.transform = `translate(${pt.x}px, ${pt.y}px)`;
+        }
+    }
+
+    // Toggle Views
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        if(btn.id === 'btn-fullscreen') return; // Skip fullscreen button for tab toggling
+        
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.view-btn:not(#btn-fullscreen)').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            const target = e.target.dataset.target;
+            document.getElementById('view-window').classList.remove('active');
+            document.getElementById('view-map').classList.remove('active');
+            document.getElementById(`view-${target}`).classList.add('active');
+        });
+    });
+
+    // Run Init
+    window.onload = () => {
+        initMap();
+    };
+
+</script>
+</body>
+</html>
