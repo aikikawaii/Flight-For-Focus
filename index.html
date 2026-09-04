@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="light">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +11,12 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Typography: Archivo Black (영문 볼드) + Black Han Sans (한글 볼드) [완벽한 사각 스템 조화] + Plus Jakarta Sans & Pretendard [본문 UI] + JetBrains Mono -->
+    <!-- Typography: Archivo Black (Neo-Brutalist Headlines) + Plus Jakarta Sans (Interface) + JetBrains Mono (Numbers/Metrics) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Black+Han+Sans&family=JetBrains+Mono:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Premium Korean Typography: Pretendard (본문 디테일용) -->
+    <!-- Korean Fallback Typography for User Inputs -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 
     <style>
@@ -92,10 +92,10 @@
             transition: background-color 0.15s ease, color 0.15s ease;
         }
 
-        /* 네오-브루탈리즘 헤드라인: Archivo Black과 Black Han Sans의 단단한 사각 스템 일체화 */
+        /* Neo-Brutalist Headlines: Pure Archivo Black & Geometric Cuts */
         h1, h2, h3, .tab-btn, .nb-btn, .nb-btn-solid {
-            font-family: "Archivo Black", "Black Han Sans", "Plus Jakarta Sans", "Pretendard", sans-serif;
-            letter-spacing: 0.015em;
+            font-family: "Archivo Black", "Plus Jakarta Sans", "Pretendard", sans-serif;
+            letter-spacing: 0.01em;
             word-break: keep-all;
         }
 
@@ -103,7 +103,6 @@
             font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         }
 
-        /* Neo-Brutalist Frame & Components */
         .nb-card {
             background-color: var(--card-bg);
             border: 2.5px solid var(--card-border);
@@ -161,14 +160,13 @@
             box-shadow: 0px 0px 0px var(--card-border);
         }
 
-        /* Scrollbar */
+        /* Scrollbars */
         ::-webkit-scrollbar { width: 7px; height: 7px; }
         ::-webkit-scrollbar-track { background: var(--bg-main); }
         ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 0; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Legacy mapping preserving ID styles */
         .card-squircle {
             border-radius: 18px;
             background-color: var(--card-bg);
@@ -233,7 +231,6 @@
             transform: rotate(45deg) translateY(-1px);
         }
 
-        /* Accordion & Toasts */
         .truncate-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .toast-enter-active { transform: translateY(0); opacity: 1; transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1); }
         .toast-exit-active { transform: translateY(12px); opacity: 0; transition: all 150ms ease-in; }
@@ -242,7 +239,6 @@
         .accordion-grid.open { grid-template-rows: 1fr; opacity: 1; pointer-events: auto; }
         .accordion-inner { overflow: hidden; }
 
-        /* Neo-Brutalist Calendar Grid */
         .calendar-wrapper {
             background-color: var(--card-border);
             border: 2.5px solid var(--card-border);
@@ -276,7 +272,6 @@
         .draggable-item { cursor: grab; touch-action: pan-y; }
         .draggable-item:active { cursor: grabbing; transform: scale(0.98); }
 
-        /* Master DB Table */
         .db-table { border-collapse: separate; border-spacing: 0; width: 100%; }
         .db-table th, .db-table td {
             padding: 0.85rem 1.1rem;
@@ -293,9 +288,6 @@
             letter-spacing: 0.05em;
         }
         .db-table tr:hover td { background-color: var(--hover-bg); }
-        
-        .sync-spinner { animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="p-3 sm:p-5 md:p-8">
@@ -307,7 +299,7 @@
             <div>
                 <div class="flex items-center gap-2 mb-1.5">
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[var(--text-main)] text-[var(--bg-main)]">
-                        BRUTALISM // ACTIVE
+                        MOVEMENT // BRUTALISM
                     </span>
                     <span id="sync-status-indicator" class="text-[11px] font-bold font-mono-num inline-flex items-center hidden border-2 border-[var(--card-border)] rounded-full px-2 py-0.5 bg-[var(--card-bg)] shadow-[1px_1px_0px_var(--card-border)]">
                         <span id="cloud-icon" class="mr-1">●</span>
@@ -321,16 +313,16 @@
             
             <div class="flex flex-wrap items-center gap-2.5 text-xs font-bold font-mono-num">
                 <a href="https://cafe.naver.com/kcidorcen" target="_blank" rel="noopener noreferrer" class="nb-btn px-3.5 py-2 flex items-center gap-1.5">
-                    <span class="text-[#03c75a] font-extrabold text-sm leading-none">↗</span> 독편사
+                    <span class="text-[#03c75a] font-extrabold text-sm leading-none">↗</span> DOKPYEONSA
                 </a>
                 <a href="https://www.kimyoung.co.kr/offmegaky.asp" target="_blank" rel="noopener noreferrer" class="nb-btn px-3.5 py-2 flex items-center gap-1.5">
-                    <span class="text-[#e11d48] font-extrabold text-sm leading-none">↗</span> 김영편입
+                    <span class="text-[#e11d48] font-extrabold text-sm leading-none">↗</span> KIMYOUNG
                 </a>
                 
-                <button data-action="toggleTheme" class="nb-btn px-3.5 py-2" title="테마 변경">
+                <button data-action="toggleTheme" class="nb-btn px-3.5 py-2" title="Toggle Theme">
                     <span id="theme-icon">☀️ LIGHT</span>
                 </button>
-                <button data-action="refreshPage" class="nb-btn px-3.5 py-2" title="새로고침">
+                <button data-action="refreshPage" class="nb-btn px-3.5 py-2" title="Refresh Page">
                     REFRESH
                 </button>
 
@@ -369,12 +361,12 @@
 
             <!-- Central Worktable: Left Syllabus / Right Brutalist Calendar -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Todo Lectures (남은 강의) -->
+                <!-- Todo Lectures (Remaining) -->
                 <div class="lg:col-span-4 nb-card flex flex-col h-[540px] lg:h-[700px] overflow-hidden">
                     <div class="p-4 border-b-2 border-[var(--card-border)] bg-[var(--table-header)] flex justify-between items-center">
                         <div>
                             <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">INVENTORY</span>
-                            <h2 class="text-lg font-extrabold text-[var(--text-main)] uppercase">남은 강의 목록</h2>
+                            <h2 class="text-lg font-extrabold text-[var(--text-main)] uppercase">Remaining Lectures</h2>
                         </div>
                         <span class="text-[10px] font-extrabold border-2 border-[var(--card-border)] rounded-full px-2.5 py-1 bg-[var(--card-bg)] shadow-[1.5px_1.5px_0px_var(--card-border)] uppercase">DRAG & DROP</span>
                     </div>
@@ -383,12 +375,12 @@
                     <ul id="view-todo-lectures" class="overflow-y-auto p-3 flex-1 space-y-2.5 min-h-0 hide-scrollbar bg-[var(--card-bg)]"></ul>
                 </div>
 
-                <!-- Study Calendar (학습 캘린더) -->
+                <!-- Study Calendar -->
                 <div class="lg:col-span-8 nb-card flex flex-col h-auto overflow-hidden">
                     <div class="p-4 sm:p-5 border-b-2 border-[var(--card-border)] bg-[var(--table-header)] flex flex-wrap justify-between items-center gap-3">
                         <div>
                             <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">TIMETABLE</span>
-                            <h2 class="text-lg font-extrabold text-[var(--text-main)] uppercase">학습 기록 캘린더</h2>
+                            <h2 class="text-lg font-extrabold text-[var(--text-main)] uppercase">Academic Timetable</h2>
                         </div>
                         <div class="flex items-center space-x-1.5 font-mono-num text-xs font-bold">
                             <button data-action="changeMonth" data-val="-1" class="nb-btn w-8 h-8 flex items-center justify-center">&lt;</button>
@@ -424,7 +416,7 @@
                             <div id="dailySplitText" class="flex items-center space-x-1.5 text-[10px] font-mono-num mt-1 font-bold"></div>
                         </div>
                     </div>
-                    <div class="text-[10px] font-extrabold font-mono-num text-[var(--text-muted)] text-center border-t-2 border-[var(--card-border)] pt-2 uppercase">LECTURE VS. INDEPENDENT STUDY</div>
+                    <div class="text-[10px] font-extrabold font-mono-num text-[var(--text-muted)] text-center border-t-2 border-[var(--card-border)] pt-2 uppercase">LECTURE VS. SELF-STUDY</div>
                 </div>
 
                 <!-- Weekly Study Dispersion -->
@@ -453,10 +445,10 @@
                 <div class="flex flex-wrap justify-between items-center border-b-2 border-[var(--card-border)] pb-3 mb-4 gap-2">
                     <div>
                         <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">CONTINUOUS REGISTER</span>
-                        <h2 class="text-lg font-extrabold text-[var(--text-main)] uppercase">연속 학습 일지 (Streak Log)</h2>
+                        <h2 class="text-lg font-extrabold text-[var(--text-main)] uppercase">Continuous Streak Log</h2>
                     </div>
                     <div class="border-2 border-[var(--card-border)] rounded-xl px-3.5 py-1.5 font-mono-num font-extrabold text-xs bg-[var(--table-header)] text-[var(--text-main)] shadow-[2px_2px_0px_var(--card-border)]">
-                        <span id="streak-counter">STREAK: 0 DAYS</span>
+                        <span id="streak-counter">STREAK: 0 DAYS ACTIVE</span>
                     </div>
                 </div>
                 
@@ -477,11 +469,11 @@
                 </div>
             </div>
             
-            <!-- Course Gallery (과목별 진도 현황) -->
+            <!-- Course Gallery (Syllabus Progress) -->
             <div class="nb-card p-5 sm:p-6">
                 <div class="border-b-2 border-[var(--card-border)] pb-3 mb-5">
                     <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">SYLLABUS PROGRESS</span>
-                    <h2 class="text-xl font-extrabold text-[var(--text-main)] uppercase">과목별 진도 및 이수율</h2>
+                    <h2 class="text-xl font-extrabold text-[var(--text-main)] uppercase">Subject Progress & Completion</h2>
                 </div>
                 <div id="view-course-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
             </div>
@@ -493,9 +485,9 @@
                 <div class="flex flex-wrap justify-between items-end gap-2 border-b-2 border-[var(--card-border)] pb-4">
                     <div>
                         <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">CURRICULUM REGISTER</span>
-                        <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--text-main)] uppercase">강좌 및 강의 커리큘럼 관리</h2>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--text-main)] uppercase">Curriculum & Lecture Ledger</h2>
                     </div>
-                    <p class="text-xs font-mono-num font-bold text-[var(--text-muted)]">과목별 강좌 구성 및 개별 강의 일람</p>
+                    <p class="text-xs font-mono-num font-bold text-[var(--text-muted)]">Course breakdown and itemized lecture inventory</p>
                 </div>
                 
                 <div id="curriculum-manager" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
@@ -503,7 +495,7 @@
                 <div class="pt-4 flex justify-center">
                     <button data-action="openCourseModal" class="nb-btn-solid px-6 py-3.5 text-sm uppercase flex items-center space-x-2">
                         <span class="text-lg leading-none">+</span>
-                        <span>새로운 강좌 등록 (ADD COURSE)</span>
+                        <span>Register New Course (Add Course)</span>
                     </button>
                 </div>
             </section>
@@ -637,7 +629,7 @@
         };
         const generateId = (prefix) => prefix + '_' + (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID().split('-')[0] : Math.random().toString(36).substring(2, 10));
 
-        // 로컬 타임존 기반 안전 날짜 파서
+        // Local timezone-safe date parser
         const parseLocalDate = (dateStr) => {
             if (!dateStr) return new Date();
             const parts = dateStr.split('-').map(Number);
@@ -651,15 +643,21 @@
         const TODAY = getTodayStr();
         let currentCalendarDate = new Date(); 
 
-        // Brutalist High Contrast Subject Theme Palette
+        // Brutalist High Contrast Subject Theme Palette (supports both English and legacy tags)
         const SUBJECT_THEMES = {
+            'Mathematics': { bg: 'transparent', text: 'var(--sub-math)', border: 'var(--card-border)', dot: '#2563eb' },
+            'Physics': { bg: 'transparent', text: 'var(--sub-phys)', border: 'var(--card-border)', dot: '#0d9488' },
+            'English': { bg: 'transparent', text: 'var(--sub-eng)', border: 'var(--card-border)', dot: '#d97706' },
+            'Chemistry': { bg: 'transparent', text: 'var(--sub-chem)', border: 'var(--card-border)', dot: '#dc2626' },
+            'General': { bg: 'transparent', text: 'var(--sub-etc)', border: 'var(--card-border)', dot: '#4b5563' },
+            // Backward compatibility aliases
             '수학': { bg: 'transparent', text: 'var(--sub-math)', border: 'var(--card-border)', dot: '#2563eb' },
             '물리': { bg: 'transparent', text: 'var(--sub-phys)', border: 'var(--card-border)', dot: '#0d9488' },
             '영어': { bg: 'transparent', text: 'var(--sub-eng)', border: 'var(--card-border)', dot: '#d97706' },
             '화학': { bg: 'transparent', text: 'var(--sub-chem)', border: 'var(--card-border)', dot: '#dc2626' },
             '기타': { bg: 'transparent', text: 'var(--sub-etc)', border: 'var(--card-border)', dot: '#4b5563' }
         };
-        const subjects = Object.keys(SUBJECT_THEMES);
+        const subjects = ['Mathematics', 'Physics', 'English', 'Chemistry', 'General'];
 
         const COURSE_COLORS = [
             '#000000', '#2563eb', '#0d9488', '#d97706', '#dc2626', '#7c3aed', '#059669', '#475569', '#c026d3', '#ea580c'
@@ -757,14 +755,16 @@
             for (let i = 0; i < records.length; i++) map[records[i].date] = records[i];
             return map;
         };
-        const getTheme = (subj) => SUBJECT_THEMES[subj] || SUBJECT_THEMES['기타'];
+        const getTheme = (subj) => SUBJECT_THEMES[subj] || SUBJECT_THEMES['General'];
         const getCourseName = id => getCourses().find(c => c.id === id)?.title || '-';
         
         function getCourseProgress(lecsMap, courseId) {
             const courseLecs = lecsMap[courseId] || [];
             if (courseLecs.length === 0) return 0;
             let completed = 0;
-            for (let i = 0; i < courseLecs.length; i++) if (courseLecs[i].status === '완료') completed++;
+            for (let i = 0; i < courseLecs.length; i++) {
+                if (courseLecs[i].status === '완료' || courseLecs[i].status === 'Completed') completed++;
+            }
             return Math.round((completed / courseLecs.length) * 100);
         }
 
@@ -944,7 +944,7 @@
                 ? dataCourses.map(c => {
                     const theme = getTheme(c.subject);
                     let completed = 0, total = (lecsMap[c.id] || []).length;
-                    if(total > 0) completed = lecsMap[c.id].filter(l => l.status === '완료').length;
+                    if(total > 0) completed = lecsMap[c.id].filter(l => l.status === '완료' || l.status === 'Completed').length;
                     const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
 
                     return `
@@ -965,7 +965,7 @@
         function renderTodoLectures() {
             const dataCourses = getCourses();
             const dataLectures = getLectures();
-            const todoLectures = dataLectures.filter(l => l.status === '미시작');
+            const todoLectures = dataLectures.filter(l => l.status !== '완료' && l.status !== 'Completed');
             let activeSubjects = [...new Set(dataCourses.map(c => c.subject))];
             
             if (activeSubjects.length > 0 && (!currentSubjectTab || !activeSubjects.includes(currentSubjectTab))) {
@@ -991,7 +991,7 @@
             const filteredCourses = dataCourses.filter(c => c.subject === currentSubjectTab);
             
             if(filteredCourses.length === 0) {
-                if(DOM.viewTodoLectures) DOM.viewTodoLectures.innerHTML = `<div class="py-12 text-center text-xs font-mono-num font-bold text-[var(--text-muted)]">선택된 과목의 강좌가 없습니다.</div>`;
+                if(DOM.viewTodoLectures) DOM.viewTodoLectures.innerHTML = `<div class="py-12 text-center text-xs font-mono-num font-bold text-[var(--text-muted)]">No courses found for this subject.</div>`;
                 return;
             }
 
@@ -1165,8 +1165,8 @@
             if (splitTextContainer) {
                 if (totalToday > 0) {
                     splitTextContainer.innerHTML = `
-                        ${todayStats.lecture > 0 ? `<span class="border border-[var(--card-border)] rounded-md px-1 bg-[var(--table-header)]">인강 ${formatTime(todayStats.lecture)}</span>` : ''}
-                        ${todayStats.study > 0 ? `<span class="border border-[var(--card-border)] rounded-md px-1 bg-[var(--table-header)]">자습 ${formatTime(todayStats.study)}</span>` : ''}
+                        ${todayStats.lecture > 0 ? `<span class="border border-[var(--card-border)] rounded-md px-1 bg-[var(--table-header)]">LEC ${formatTime(todayStats.lecture)}</span>` : ''}
+                        ${todayStats.study > 0 ? `<span class="border border-[var(--card-border)] rounded-md px-1 bg-[var(--table-header)]">STUDY ${formatTime(todayStats.study)}</span>` : ''}
                     `;
                 } else { splitTextContainer.innerHTML = ''; }
             }
@@ -1183,7 +1183,7 @@
             } else {
                 chartInstances.daily = new Chart(ctxDaily, {
                     type: 'doughnut',
-                    data: { labels: ['인강 시청', '개인 공부', '미학습'], datasets: [{ data: dailyData, backgroundColor: dailyBg, borderWidth: 2, borderColor: 'var(--card-border)', hoverOffset: 2 }] },
+                    data: { labels: ['Lecture', 'Self-Study', 'Remaining'], datasets: [{ data: dailyData, backgroundColor: dailyBg, borderWidth: 2, borderColor: 'var(--card-border)', hoverOffset: 2 }] },
                     options: { responsive: true, maintainAspectRatio: false, cutout: '78%', plugins: { legend: { display: false } } }
                 });
             }
@@ -1222,8 +1222,8 @@
                 chartInstances.weekly = new Chart(ctxWeekly, {
                     type: 'bar',
                     data: { labels: weeklyLabels, datasets: [
-                        { label: '인강 시청', data: dataLecHours, backgroundColor: '#0d9488', borderWidth: 2, borderColor: 'var(--card-border)', borderRadius: 4, barPercentage: 0.6 }, 
-                        { label: '개인 공부', data: dataStudyHours, backgroundColor: '#2563eb', borderWidth: 2, borderColor: 'var(--card-border)', borderRadius: 4, barPercentage: 0.6 }
+                        { label: 'Lecture', data: dataLecHours, backgroundColor: '#0d9488', borderWidth: 2, borderColor: 'var(--card-border)', borderRadius: 4, barPercentage: 0.6 }, 
+                        { label: 'Self-Study', data: dataStudyHours, backgroundColor: '#2563eb', borderWidth: 2, borderColor: 'var(--card-border)', borderRadius: 4, barPercentage: 0.6 }
                     ]},
                     options: wOpts
                 });
@@ -1249,7 +1249,7 @@
                 else cumulativeDataHours.push(monthTotals[m] / 60); 
             }
 
-            const monthlyTooltip = getChartTooltip(c => ` 월간 총계: ${formatTime(Math.round(c.raw * 60))}`);
+            const monthlyTooltip = getChartTooltip(c => ` Monthly Total: ${formatTime(Math.round(c.raw * 60))}`);
 
             if(chartInstances.monthly) {
                 chartInstances.monthly.data.datasets[0].data = cumulativeDataHours;
@@ -1259,7 +1259,7 @@
                 mOpts.plugins.tooltip = monthlyTooltip;
                 chartInstances.monthly = new Chart(ctxMonthly, {
                     type: 'bar',
-                    data: { labels: monthlyLabels, datasets: [{ label: '월간 학습량', data: cumulativeDataHours, backgroundColor: 'var(--text-main)', borderWidth: 2, borderColor: 'var(--card-border)', borderRadius: 4, barPercentage: 0.6 }] },
+                    data: { labels: monthlyLabels, datasets: [{ label: 'Monthly Volume', data: cumulativeDataHours, backgroundColor: 'var(--text-main)', borderWidth: 2, borderColor: 'var(--card-border)', borderRadius: 4, barPercentage: 0.6 }] },
                     options: mOpts
                 });
             }
@@ -1327,7 +1327,9 @@
             }
 
             let html = '';
-            subjects.forEach(subject => {
+            // Display unique subjects based on registered courses or standard disciplines
+            const activeSubjs = [...new Set(dataCourses.map(c => c.subject))];
+            activeSubjs.forEach(subject => {
                 const subjCourses = dataCourses.filter(c => c.subject === subject);
                 if(subjCourses.length === 0) return; 
 
@@ -1368,11 +1370,13 @@
                                     <div>
                                         ${displayLecs.length > 0 ? `
                                         <ul class="border-l-2 border-[var(--card-border)] ml-1 pl-3 space-y-1.5 font-mono-num text-xs">
-                                            ${displayLecs.map(lec => `
+                                            ${displayLecs.map(lec => {
+                                                const isCompleted = lec.status === '완료' || lec.status === 'Completed';
+                                                return `
                                                 <li class="flex justify-between items-center py-1.5 px-2 rounded-lg hover:bg-[var(--hover-bg)] transition group border border-transparent hover:border-[var(--card-border)]">
                                                     <div class="flex items-center space-x-2.5 overflow-hidden flex-1">
-                                                        <input type="checkbox" class="custom-checkbox" ${lec.status === '완료' ? 'checked' : ''} data-action="toggleLecture" data-id="${lec.id}">
-                                                        <span class="truncate font-bold ${lec.status === '완료' ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text-main)]'}" title="${esc(lec.title)}">${esc(lec.title)}</span>
+                                                        <input type="checkbox" class="custom-checkbox" ${isCompleted ? 'checked' : ''} data-action="toggleLecture" data-id="${lec.id}">
+                                                        <span class="truncate font-bold ${isCompleted ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text-main)]'}" title="${esc(lec.title)}">${esc(lec.title)}</span>
                                                         <span class="text-[10px] text-[var(--text-muted)] font-extrabold">[${lec.duration || 0}m]</span>
                                                     </div>
                                                     <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-2">
@@ -1380,9 +1384,9 @@
                                                         <button data-action="deleteLecture" data-id="${lec.id}" class="nb-btn text-[10px] px-2 py-0.5 text-red-500">DEL</button>
                                                     </div>
                                                 </li>
-                                            `).join('')}
+                                            `}).join('')}
                                         </ul>
-                                        ` : (totalLecs === 0 ? '<p class="text-xs font-mono-num font-bold text-[var(--text-muted)] py-1">등록된 강의가 없습니다.</p>' : '')}
+                                        ` : (totalLecs === 0 ? '<p class="text-xs font-mono-num font-bold text-[var(--text-muted)] py-1">No lectures registered.</p>' : '')}
                                     </div>
                                     ${totalLecs > 0 ? `
                                         <div class="pt-3 flex justify-between items-center border-t-2 border-[var(--card-border)] mt-3 text-[11px] font-mono-num font-bold">
@@ -1423,7 +1427,8 @@
             `}).join('') : `<tr><td colspan="3" class="text-center font-mono-num text-[var(--text-muted)] py-6 text-xs font-bold">NO RECORD DATA.</td></tr>`;
 
             let lecturesHtml = '';
-            subjects.forEach(subj => {
+            const activeSubjs = [...new Set(dataCourses.map(c => c.subject))];
+            activeSubjs.forEach(subj => {
                 const subjCourses = dataCourses.filter(c => c.subject === subj);
                 if(subjCourses.length === 0) return;
                 
@@ -1444,16 +1449,18 @@
                             <div class="accordion-inner border-t-2 border-[var(--card-border)]">
                                 <table class="w-full text-xs font-mono-num font-bold">
                                     <thead class="text-[var(--text-muted)] text-[10px] uppercase tracking-wider bg-[var(--table-header)] border-b-2 border-[var(--card-border)]">
-                                        <tr><th class="p-2.5 pl-4 text-left">Lecture Title</th><th class="p-2.5 w-24 text-center">Status</th><th class="p-2.5 w-20 text-center">Duration</th></tr>
+                                        <tr><th class="p-2.5 pl-4 text-left">Lecture Title</th><th class="p-2.5 w-28 text-center">Status</th><th class="p-2.5 w-20 text-center">Duration</th></tr>
                                     </thead>
                                     <tbody class="bg-[var(--card-bg)]">
-                                        ${courseLecs.length > 0 ? courseLecs.map(l => `
-                                        <tr class="border-b border-[var(--card-border)] hover:bg-[var(--hover-bg)] last:border-b-0">
-                                            <td class="p-2.5 pl-4 ${l.status === '완료' ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text-main)]'}">${esc(l.title)}</td>
-                                            <td class="p-2.5 text-center"><span class="text-[10px] px-2 py-0.5 border-2 border-[var(--card-border)] rounded-md ${l.status === '완료' ? 'bg-[var(--table-header)] text-[var(--text-muted)]' : 'bg-[var(--text-main)] text-[var(--bg-main)] font-extrabold'}">${l.status}</span></td>
-                                            <td class="p-2.5 text-center text-[10px] text-[var(--text-muted)]">${l.duration||0}m</td>
-                                        </tr>
-                                        `).join('') : `<tr><td colspan="3" class="p-4 text-center text-[var(--text-muted)] text-xs font-bold">NO LECTURES REGISTERED.</td></tr>`}
+                                        ${courseLecs.length > 0 ? courseLecs.map(l => {
+                                            const isCompleted = l.status === '완료' || l.status === 'Completed';
+                                            return `
+                                            <tr class="border-b border-[var(--card-border)] hover:bg-[var(--hover-bg)] last:border-b-0">
+                                                <td class="p-2.5 pl-4 ${isCompleted ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text-main)]'}">${esc(l.title)}</td>
+                                                <td class="p-2.5 text-center"><span class="text-[10px] px-2 py-0.5 border-2 border-[var(--card-border)] rounded-md ${isCompleted ? 'bg-[var(--table-header)] text-[var(--text-muted)]' : 'bg-[var(--text-main)] text-[var(--bg-main)] font-extrabold'}">${isCompleted ? 'COMPLETED' : 'TODO'}</span></td>
+                                                <td class="p-2.5 text-center text-[10px] text-[var(--text-muted)]">${l.duration||0}m</td>
+                                            </tr>
+                                        `}).join('') : `<tr><td colspan="3" class="p-4 text-center text-[var(--text-muted)] text-xs font-bold">NO LECTURES REGISTERED.</td></tr>`}
                                     </tbody>
                                 </table>
                             </div>
@@ -1471,7 +1478,7 @@
                 return `
                 <tr class="cursor-pointer hover:bg-[var(--hover-bg)] transition-colors" data-action="openDailyModal" data-date="${d.date}">
                     <td class="text-[var(--text-muted)] font-extrabold text-center text-xs tracking-wider">${d.date.substring(5)}</td>
-                    <td class="text-[var(--text-main)] font-bold truncate max-w-[150px] sm:max-w-[250px]" title="${esc(stats.goals)}">${esc(stats.goals) || '<span class="text-[var(--text-faint)] italic">목표 없음</span>'}</td>
+                    <td class="text-[var(--text-main)] font-bold truncate max-w-[150px] sm:max-w-[250px]" title="${esc(stats.goals)}">${esc(stats.goals) || '<span class="text-[var(--text-faint)] italic">No goals logged</span>'}</td>
                     <td class="text-right text-[var(--text-muted)] text-xs">${stats.lecture > 0 ? stats.lecture + 'm' : '—'}</td>
                     <td class="text-right text-[var(--text-muted)] text-xs">${stats.study > 0 ? formatTime(stats.study) : '—'}</td>
                     <td class="text-right text-[var(--text-main)] font-extrabold text-xs">${formatTime(stats.total)}</td>
@@ -1596,7 +1603,7 @@
                         <div class="space-y-4 font-mono-num text-xs font-bold">
                             <div>
                                 <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">EVENT / EXAM TITLE</label>
-                                <input type="text" id="input-dday-title" class="input-dark font-sans" placeholder="예: 편입시험, TOEIC 등">
+                                <input type="text" id="input-dday-title" class="input-dark font-sans" placeholder="e.g. Transfer Exam, Finals, TOEIC">
                             </div>
                             <div>
                                 <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">TARGET DATE</label>
@@ -1604,8 +1611,8 @@
                             </div>
                         </div>
                     `;
-                    openModal('디데이 일정 추가 (ADD D-DAY)', html, () => {
-                        const title = document.getElementById('input-dday-title').value.trim() || '목표일';
+                    openModal('ADD D-DAY DEADLINE', html, () => {
+                        const title = document.getElementById('input-dday-title').value.trim() || 'Target Deadline';
                         const dateVal = document.getElementById('input-dday-date').value;
                         if(dateVal) {
                             ddays.push({ id: generateId('DD'), title, targetDate: dateVal });
@@ -1627,7 +1634,7 @@
                 }
                 case 'openCourseModal': {
                     const cId = target.dataset.courseId;
-                    const course = cId ? getCourses().find(c => c.id === cId) : { subject: '수학', title: '', color: '' };
+                    const course = cId ? getCourses().find(c => c.id === cId) : { subject: 'Mathematics', title: '', color: '' };
                     const options = subjects.map(s => `<option value="${s}" ${course.subject === s ? 'selected' : ''}>${s}</option>`).join('');
                     const colorOptionsHtml = COURSE_COLORS.map(c => `
                         <div data-color="${c}" class="color-option w-6 h-6 rounded-full cursor-pointer border-2 border-[var(--card-border)] ${(course.color || getStringColor(course.title)) === c ? 'ring-4 ring-[var(--card-border)] scale-110' : ''}" style="background-color: ${c}"></div>
@@ -1641,7 +1648,7 @@
                             </div>
                             <div>
                                 <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">COURSE TITLE</label>
-                                <input type="text" id="input-ctitle" class="input-dark font-sans" value="${esc(course.title)}" placeholder="강좌 제목 입력">
+                                <input type="text" id="input-ctitle" class="input-dark font-sans" value="${esc(course.title)}" placeholder="Enter course title">
                             </div>
                             <div>
                                 <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">LEDGER COLOR IDENTIFIER</label>
@@ -1652,9 +1659,9 @@
                             </div>
                         </div>
                     `;
-                    openModal(cId ? '강좌 정보 수정 (EDIT COURSE)' : '새로운 강좌 등록 (ADD COURSE)', html, () => {
+                    openModal(cId ? 'EDIT COURSE' : 'REGISTER NEW COURSE', html, () => {
                         const subj = document.getElementById('input-subject').value;
-                        const tit = document.getElementById('input-ctitle').value || '제목 없음';
+                        const tit = document.getElementById('input-ctitle').value || 'Untitled Course';
                         const col = document.getElementById('input-ccolor').value || getStringColor(tit);
                         if (cId) { 
                             const idx = courses.findIndex(c => c.id === cId); 
@@ -1668,7 +1675,11 @@
                     const cId = target.dataset.courseId;
                     const lId = target.dataset.lecId;
                     const lecture = lId ? getLectures().find(l => l.id === lId) : { title: '', status: '미시작', duration: '' };
-                    const statusOptions = ['미시작', '완료'].map(s => `<option value="${s}" ${lecture.status === s ? 'selected' : ''}>${s}</option>`).join('');
+                    const isCompleted = lecture.status === '완료' || lecture.status === 'Completed';
+                    const statusOptions = `
+                        <option value="미시작" ${!isCompleted ? 'selected' : ''}>TODO / UNWATCHED</option>
+                        <option value="완료" ${isCompleted ? 'selected' : ''}>COMPLETED</option>
+                    `;
                     const cName = getCourseName(cId);
                     const html = `
                         <div class="space-y-4 font-mono-num text-xs font-bold">
@@ -1677,7 +1688,7 @@
                             </div>
                             <div>
                                 <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">LECTURE TITLE</label>
-                                <input type="text" id="input-ltitle" class="input-dark font-sans" value="${esc(lecture.title)}" placeholder="강의 제목 입력">
+                                <input type="text" id="input-ltitle" class="input-dark font-sans" value="${esc(lecture.title)}" placeholder="Enter lecture title">
                             </div>
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
@@ -1691,8 +1702,8 @@
                             </div>
                         </div>
                     `;
-                    openModal(lId ? '강의 정보 수정 (EDIT LECTURE)' : '새 강의 추가 (ADD LECTURE)', html, () => {
-                        const tit = document.getElementById('input-ltitle').value || '제목 없음';
+                    openModal(lId ? 'EDIT LECTURE' : 'ADD NEW LECTURE', html, () => {
+                        const tit = document.getElementById('input-ltitle').value || 'Untitled Lecture';
                         const dur = parseInt(document.getElementById('input-lduration').value) || 0;
                         const stat = document.getElementById('input-lstatus').value;
                         if (lId) { 
@@ -1713,7 +1724,7 @@
                     lectures = lectures.filter(l => l.courseId !== cId);
                     saveData(); renderAll();
 
-                    showUndoToast('강좌가 삭제되었습니다.', () => {
+                    showUndoToast('Course deleted.', () => {
                         courses.push(courseToDelete);
                         lectures.push(...lecsToDelete);
                         saveData(); renderAll();
@@ -1728,7 +1739,7 @@
                     lectures = lectures.filter(l => l.id !== lId);
                     saveData(); renderAll();
 
-                    showUndoToast('강의가 삭제되었습니다.', () => {
+                    showUndoToast('Lecture deleted.', () => {
                         lectures.push(lecToDelete);
                         saveData(); renderAll();
                     });
@@ -1806,14 +1817,14 @@
                                 <div>
                                     <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">1. INSERT FROM CURRICULUM</label>
                                     <div class="flex space-x-2">
-                                        <select id="modal-lecture-select" class="input-dark flex-1 py-1.5 text-xs bg-[var(--card-bg)]"><option value="">강의 선택...</option>${lecOptions}</select>
+                                        <select id="modal-lecture-select" class="input-dark flex-1 py-1.5 text-xs bg-[var(--card-bg)]"><option value="">Select lecture...</option>${lecOptions}</select>
                                         <button data-action="addModalLecTask" class="nb-btn-solid px-3.5 py-1.5 text-xs">ADD</button>
                                     </div>
                                 </div>
                                 <div class="pt-2 border-t-2 border-[var(--card-border)]">
                                     <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">2. DIRECT STUDY LOG</label>
                                     <div class="flex flex-col space-y-2">
-                                        <input type="text" id="modal-study-title" class="input-dark py-1.5 text-xs bg-[var(--card-bg)] font-sans" placeholder="과업 항목 입력 (예: 오답 노트 복습)">
+                                        <input type="text" id="modal-study-title" class="input-dark py-1.5 text-xs bg-[var(--card-bg)] font-sans" placeholder="Task name (e.g. Mock test review)">
                                         <div class="flex space-x-2">
                                             <div class="flex-1 flex items-center bg-[var(--card-bg)] border-2 border-[var(--card-border)] rounded-xl px-2.5 py-1 shadow-[1.5px_1.5px_0px_var(--card-border)]">
                                                 <input type="number" id="modal-study-h" class="bg-transparent w-full outline-none text-right font-mono-num text-xs font-extrabold text-[var(--text-main)]" min="0" placeholder="0">
@@ -1838,7 +1849,7 @@
                             </div>
                         </div>
                     `;
-                    openModal(`일일 학습 기록 (DAILY LOG)`, html, () => {
+                    openModal(`DAILY STUDY LOG`, html, () => {
                         const idx = dailyRecords.findIndex(d => d.date === currentModalDate);
                         if(idx > -1) dailyRecords[idx].tasks = currentModalTasks;
                         else dailyRecords.push({ id: generateId('D'), date: currentModalDate, tasks: currentModalTasks }); 
@@ -1868,7 +1879,7 @@
                     const titleEl = document.getElementById('modal-study-title');
                     const hEl = document.getElementById('modal-study-h');
                     const mEl = document.getElementById('modal-study-m');
-                    const title = titleEl.value.trim() || '개인 공부';
+                    const title = titleEl.value.trim() || 'Self-Study';
                     const h = parseInt(hEl.value) || 0;
                     const m = parseInt(mEl.value) || 0;
                     currentModalTasks.push({ id: generateId('T'), type: 'study', title: title, time: (h*60)+m, completed: false });
@@ -1920,14 +1931,14 @@
                     const a = document.createElement('a');
                     a.href = url; a.download = `daon_academic_register.json`; a.click();
                     URL.revokeObjectURL(url);
-                    showUndoToast('백업 파일 다운로드가 완료되었습니다.', null);
+                    showUndoToast('Backup JSON exported successfully.', null);
                     break;
                 }
                 case 'closeModal': closeModal(); break;
             }
         });
 
-        // 자습 시간 변경 시 포커스 유지
+        // Retain focus while dynamically updating task durations
         document.addEventListener('input', (e) => {
             const target = e.target;
             if (target.dataset.action === 'updateTaskTime') {
@@ -1952,7 +1963,8 @@
                 case 'toggleLecture': {
                     const idx = lectures.findIndex(l => l.id === target.dataset.id);
                     if(idx > -1) { 
-                        lectures[idx].status = lectures[idx].status === '완료' ? '미시작' : '완료'; 
+                        const isDone = lectures[idx].status === '완료' || lectures[idx].status === 'Completed';
+                        lectures[idx].status = isDone ? '미시작' : '완료'; 
                         saveData(); renderAll();
                     }
                     break;
@@ -1983,9 +1995,9 @@
                                 courses = data.courses; lectures = data.lectures; dailyRecords = data.dailyRecords;
                                 if(data.ddays) ddays = data.ddays;
                                 saveData(); renderAll();
-                                showUndoToast('데이터가 성공적으로 복원되었습니다.', null);
-                            } else { showUndoToast('올바른 백업 파일 형식이 아닙니다.', null); }
-                        } catch(err) { showUndoToast('파일을 읽는 중 오류가 발생했습니다.', null); }
+                                showUndoToast('Data restored successfully.', null);
+                            } else { showUndoToast('Invalid backup file format.', null); }
+                        } catch(err) { showUndoToast('Error reading backup file.', null); }
                     };
                     reader.readAsText(file);
                     target.value = ''; 
@@ -2050,7 +2062,6 @@
         }
     </script>
     
-    <!-- Firebase 실시간 클라우드 동기화 모듈 (다온 님의 모든 기기 연동을 위한 단일 룸 지정) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
