@@ -11,16 +11,16 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Typography: Archivo Black (Neo-Brutalist Headlines) + Plus Jakarta Sans (Interface) + JetBrains Mono (Numbers/Metrics) -->
+    <!-- Typography: Anti-AI Curated Stack (Unbounded + Spline Sans + Azeret Mono) + IBM Plex Sans KR -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@600;700;800&family=IBM+Plex+Sans+KR:wght@500;600;700;800&family=Spline+Sans:wght@500;600;700;800&family=Unbounded:wght@700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Korean Fallback Typography for User Inputs -->
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+    <!-- Bespoke Korean Typography: SUIT Variable (Cross-device high-definition geometric Korean UI typeface) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css">
 
     <style>
-        /* Neo-Brutalism Design System Tokens */
+        /* Neo-Brutalism Design System Tokens (Streamlined Light Canvas) */
         :root {
             --bg-main: #f5f5f2;
             --bg-canvas: #ffffff;
@@ -51,56 +51,26 @@
             --sub-etc: #4b5563;
         }
 
-        [data-theme="dark"] {
-            --bg-main: #101012;
-            --bg-canvas: #18181c;
-            --text-main: #ffffff;
-            --text-muted: #a1a1aa;
-            --text-faint: #71717a;
-            --card-bg: #1c1c21;
-            --card-border: #ffffff;
-            --card-shadow: 4px 4px 0px #ffffff;
-            --card-shadow-lg: 6px 6px 0px #ffffff;
-            --card-shadow-sm: 2px 2px 0px #ffffff;
-            --card-shadow-hover: 1px 1px 0px #ffffff;
-            --hover-bg: #272730;
-            --input-bg: #18181c;
-            --input-border: #ffffff;
-            --table-header: #24242a;
-            --calendar-cell: #1c1c21;
-            --calendar-hover: #26262d;
-            --calendar-border: #ffffff;
-            --scrollbar-thumb: #ffffff;
-            --btn-glass: #24242a;
-            --rule-color: #ffffff;
-
-            --sub-math: #60a5fa;
-            --sub-phys: #2dd4bf;
-            --sub-eng: #fbbf24;
-            --sub-chem: #f87171;
-            --sub-etc: #9ca3af;
-        }
-
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            font-family: "Plus Jakarta Sans", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            font-family: "Spline Sans", "SUIT Variable", "SUIT", "IBM Plex Sans KR", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
             -webkit-font-smoothing: antialiased;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.015em;
             position: relative;
             overflow-x: hidden;
-            transition: background-color 0.15s ease, color 0.15s ease;
         }
 
-        /* Neo-Brutalist Headlines: Pure Archivo Black & Geometric Cuts */
+        /* Anti-AI Neo-Brutalist Headlines: Studio NaN's Unbounded Display */
         h1, h2, h3, .tab-btn, .nb-btn, .nb-btn-solid {
-            font-family: "Archivo Black", "Plus Jakarta Sans", "Pretendard", sans-serif;
-            letter-spacing: 0.01em;
+            font-family: "Unbounded", "SUIT Variable", "SUIT", "IBM Plex Sans KR", "Spline Sans", sans-serif;
+            letter-spacing: -0.02em;
             word-break: keep-all;
         }
 
         .font-mono-num {
-            font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: "Azeret Mono", "SUIT Variable", "SUIT", "IBM Plex Sans KR", ui-monospace, monospace;
+            font-feature-settings: "tnum" 1;
         }
 
         .nb-card {
@@ -189,7 +159,7 @@
             outline: none;
             font-size: 0.875rem;
             font-weight: 700;
-            font-family: "Plus Jakarta Sans", "Pretendard", sans-serif;
+            font-family: "Spline Sans", "SUIT Variable", "SUIT", "IBM Plex Sans KR", sans-serif;
             box-shadow: var(--card-shadow-sm);
             transition: box-shadow 0.1s ease, transform 0.1s ease;
         }
@@ -319,9 +289,6 @@
                     <span class="text-[#e11d48] font-extrabold text-sm leading-none">↗</span> KIMYOUNG
                 </a>
                 
-                <button data-action="toggleTheme" class="nb-btn px-3.5 py-2" title="Toggle Theme">
-                    <span id="theme-icon">☀️ LIGHT</span>
-                </button>
                 <button data-action="refreshPage" class="nb-btn px-3.5 py-2" title="Refresh Page">
                     REFRESH
                 </button>
@@ -679,9 +646,9 @@
         let currentSubjectTab = null; 
         let openTodoCourses = new Set(); 
         let courseViewCounts = {};
-        let currentTheme = localStorage.getItem('theme') || 'light';
 
-        document.documentElement.setAttribute('data-theme', currentTheme);
+        // Streamlined permanent light canvas
+        document.documentElement.setAttribute('data-theme', 'light');
 
         window.showSyncIndicator = function(isLoading, isError = false) {
             if(!DOM.syncIndicator) return;
@@ -706,7 +673,6 @@
             const activeSubjects = [...new Set(courses.map(c => c.subject))];
             if (activeSubjects.length > 0 && !currentSubjectTab) currentSubjectTab = activeSubjects[0];
             
-            updateThemeIcon();
             renderAll();
         }
 
@@ -951,7 +917,7 @@
                     <div class="nb-card p-4 flex flex-col justify-between min-h-[120px] hover:translate-x-[-1px] hover:translate-y-[-1px] transition">
                         <div>
                             <div class="flex justify-between items-center mb-1.5">
-                                <span class="text-[10px] font-mono-num uppercase tracking-wider font-extrabold px-2 py-0.5 border border-[var(--card-border)] rounded-md bg-[var(--table-header)]" style="color: ${theme.dot};">${esc(c.subject)}</span>
+                                <span class="text-[11px] font-extrabold px-2 py-0.5 border border-[var(--card-border)] rounded-md bg-[var(--table-header)] tracking-tight" style="color: ${theme.dot};">${esc(c.subject)}</span>
                                 <span class="text-[10px] font-mono-num font-bold text-[var(--text-muted)]">${completed}/${total} LECTURES</span>
                             </div>
                             <div class="font-extrabold text-sm text-[var(--text-main)] truncate w-full" title="${esc(c.title)}">${esc(c.title)}</div>
@@ -974,12 +940,12 @@
 
             let tabsHtml = '';
             if (activeSubjects.length > 0) {
-                tabsHtml = `<div class="flex border-b-2 border-[var(--card-border)] w-full overflow-x-auto hide-scrollbar font-mono-num text-xs">`;
+                tabsHtml = `<div class="flex border-b-2 border-[var(--card-border)] w-full overflow-x-auto hide-scrollbar text-xs">`;
                 tabsHtml += activeSubjects.map(subj => {
                     const isActive = currentSubjectTab === subj;
                     return `
                         <button data-action="setLectureTab" data-subj="${esc(subj)}"
-                                class="px-4 py-2.5 transition-all font-extrabold flex-shrink-0 uppercase border-r-2 border-[var(--card-border)] ${isActive ? 'bg-[var(--text-main)] text-[var(--bg-main)]' : 'bg-[var(--card-bg)] text-[var(--text-main)] hover:bg-[var(--hover-bg)]'}">
+                                class="px-4 py-2.5 transition-all font-extrabold flex-shrink-0 border-r-2 border-[var(--card-border)] tracking-tight ${isActive ? 'bg-[var(--text-main)] text-[var(--bg-main)]' : 'bg-[var(--card-bg)] text-[var(--text-main)] hover:bg-[var(--hover-bg)]'}">
                             ${esc(subj)}
                         </button>
                     `;
@@ -1124,7 +1090,7 @@
             const styles = getComputedStyle(document.documentElement);
             Chart.defaults.color = styles.getPropertyValue('--text-main').trim() || '#000000';
             Chart.defaults.borderColor = styles.getPropertyValue('--card-border').trim() || '#000000';
-            Chart.defaults.font.family = '"Plus Jakarta Sans", "Pretendard", sans-serif';
+            Chart.defaults.font.family = '"Spline Sans", "Pretendard", sans-serif';
             Chart.defaults.font.size = 11;
             Chart.defaults.font.weight = 'bold';
         }
@@ -1500,23 +1466,6 @@
             renderMasterDB();
         }
 
-        function updateThemeIcon() {
-            const icon = document.getElementById('theme-icon');
-            if(icon) icon.innerText = currentTheme === 'dark' ? '☀️ LIGHT' : '🌙 DARK';
-        }
-
-        function toggleTheme() {
-            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            localStorage.setItem('theme', currentTheme);
-            updateThemeIcon();
-            
-            if (chartInstances.daily) { chartInstances.daily.destroy(); chartInstances.daily = null; }
-            if (chartInstances.weekly) { chartInstances.weekly.destroy(); chartInstances.weekly = null; }
-            if (chartInstances.monthly) { chartInstances.monthly.destroy(); chartInstances.monthly = null; }
-            renderCharts(); 
-        }
-
         function showUndoToast(message, onUndo = null) {
             const toastId = 'toast-' + Date.now();
             const toast = document.createElement('div');
@@ -1578,7 +1527,6 @@
             const action = target.dataset.action;
 
             switch(action) {
-                case 'toggleTheme': toggleTheme(); break;
                 case 'refreshPage': window.location.reload(); break;
                 case 'switchTab': {
                     const tabName = target.dataset.tab;
