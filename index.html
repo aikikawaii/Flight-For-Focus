@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@600;700;800&family=IBM+Plex+Sans+KR:wght@500;600;700;800&family=Spline+Sans:wght@500;600;700;800&family=Unbounded:wght@700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Bespoke Korean Typography: SUIT Variable (Cross-device high-definition geometric Korean UI typeface) -->
+    <!-- Bespoke Korean Typography: SUIT Variable -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css">
 
     <style>
@@ -61,7 +61,6 @@
             overflow-x: hidden;
         }
 
-        /* Anti-AI Neo-Brutalist Headlines: Studio NaN's Unbounded Display */
         h1, h2, h3, .tab-btn, .nb-btn, .nb-btn-solid {
             font-family: "Unbounded", "SUIT Variable", "SUIT", "IBM Plex Sans KR", "Spline Sans", sans-serif;
             letter-spacing: -0.02em;
@@ -130,25 +129,12 @@
             box-shadow: 0px 0px 0px var(--card-border);
         }
 
-        /* Scrollbars */
         ::-webkit-scrollbar { width: 7px; height: 7px; }
         ::-webkit-scrollbar-track { background: var(--bg-main); }
         ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 0; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .card-squircle {
-            border-radius: 18px;
-            background-color: var(--card-bg);
-            border: 2.5px solid var(--card-border);
-            box-shadow: var(--card-shadow);
-        }
-        .inner-squircle {
-            border-radius: 14px;
-            background-color: var(--card-bg);
-            border: 2px solid var(--card-border);
-            box-shadow: var(--card-shadow-sm);
-        }
         .input-dark {
             background-color: var(--input-bg);
             border: 2px solid var(--input-border);
@@ -168,7 +154,6 @@
             transform: translate(-1px, -1px);
         }
 
-        /* Neo-Brutalist Stamped Checkbox */
         .custom-checkbox {
             appearance: none;
             width: 1.3rem;
@@ -221,18 +206,26 @@
         }
         .calendar-cell {
             background-color: var(--calendar-cell);
-            min-height: 114px;
-            padding: 0.4rem;
+            min-height: 118px;
+            padding: 0.45rem;
             display: flex;
             flex-direction: column;
             transition: background-color 0.15s ease;
             min-width: 0;
+            position: relative;
         }
         .calendar-cell:hover { background-color: var(--calendar-hover); }
         .calendar-cell.today-cell {
             background-color: var(--hover-bg);
             outline: 2.5px solid var(--text-main);
             outline-offset: -2.5px;
+        }
+        .calendar-cell.empty-cell {
+            background-color: var(--calendar-cell);
+            cursor: default;
+        }
+        .calendar-cell.empty-cell:hover {
+            background-color: var(--calendar-cell);
         }
         .drag-over {
             background-color: var(--hover-bg) !important;
@@ -241,6 +234,34 @@
         }
         .draggable-item { cursor: grab; touch-action: pan-y; }
         .draggable-item:active { cursor: grabbing; transform: scale(0.98); }
+
+        /* Multi-Task Lasso Selection Styles */
+        .calendar-task-item {
+            transition: all 0.1s ease;
+        }
+        .calendar-task-item.task-selected {
+            background-color: #fef08a !important; /* Neo-Brutalist Vivid Yellow Highlight */
+            color: #000000 !important;
+            border-color: #000000 !important;
+            outline: 2px solid #000000 !important;
+            outline-offset: 1px !important;
+            transform: translate(-1px, -1px);
+            box-shadow: 2.5px 2.5px 0px #000000 !important;
+        }
+        .calendar-task-item.task-selected * {
+            color: #000000 !important;
+        }
+
+        #lasso-selection-box {
+            position: absolute;
+            pointer-events: none;
+            border: 2px solid var(--text-main);
+            background-color: rgba(37, 99, 235, 0.18);
+            box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.4);
+            border-radius: 6px;
+            z-index: 40;
+            display: none;
+        }
 
         .db-table { border-collapse: separate; border-spacing: 0; width: 100%; }
         .db-table th, .db-table td {
@@ -264,7 +285,6 @@
 
     <div id="app-container" class="max-w-[1440px] mx-auto space-y-6">
         
-        <!-- Neo-Brutalist Top Masthead Showcase Bar -->
         <header class="nb-card p-5 sm:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <div class="flex items-center gap-2 mb-1.5">
@@ -302,7 +322,6 @@
             </div>
         </header>
 
-        <!-- Brutalist Movement Tabs -->
         <div class="flex space-x-2 pb-1 overflow-x-auto hide-scrollbar text-xs font-extrabold tracking-wider uppercase">
             <button data-action="switchTab" data-tab="dashboard" class="tab-btn active px-6 py-3 border-2 border-[var(--card-border)] bg-[var(--text-main)] text-[var(--bg-main)] rounded-xl shadow-[3px_3px_0px_var(--card-border)] flex-shrink-0 transition-transform active:translate-x-[2px] active:translate-y-[2px]">
                 [01] Dashboard
@@ -318,7 +337,7 @@
         <!-- Tab 1: Dashboard -->
         <div id="tab-dashboard" class="tab-content space-y-6 block pb-12">
             
-            <!-- Brutalist Deadlines Ticker (D-Days) -->
+            <!-- D-Days Ticker -->
             <div class="nb-card p-4">
                 <div class="text-[11px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] mb-2 flex justify-between items-center">
                     <span>EXAMINATION & APPLICATION DEADLINES</span>
@@ -326,10 +345,9 @@
                 <div class="flex items-center gap-2.5 overflow-x-auto hide-scrollbar py-1" id="view-ddays"></div>
             </div>
 
-            <!-- Central Worktable: Left Syllabus / Right Brutalist Calendar -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <!-- Todo Lectures (Remaining) -->
-                <div class="lg:col-span-4 nb-card flex flex-col h-[540px] lg:h-[700px] overflow-hidden">
+                <div class="lg:col-span-4 nb-card flex flex-col h-[540px] lg:h-[720px] overflow-hidden">
                     <div class="p-4 border-b-2 border-[var(--card-border)] bg-[var(--table-header)] flex justify-between items-center">
                         <div>
                             <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">INVENTORY</span>
@@ -342,13 +360,22 @@
                     <ul id="view-todo-lectures" class="overflow-y-auto p-3 flex-1 space-y-2.5 min-h-0 hide-scrollbar bg-[var(--card-bg)]"></ul>
                 </div>
 
-                <!-- Study Calendar -->
+                <!-- Academic Timetable with Lasso Box and Multi-select toolbar -->
                 <div class="lg:col-span-8 nb-card flex flex-col h-auto overflow-hidden">
                     <div class="p-4 sm:p-5 border-b-2 border-[var(--card-border)] bg-[var(--table-header)] flex flex-wrap justify-between items-center gap-3">
-                        <div>
-                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">TIMETABLE</span>
-                            <h2 class="text-lg font-extrabold text-[var(--text-main)] uppercase">Academic Timetable</h2>
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <div>
+                                <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">TIMETABLE</span>
+                                <h2 class="text-lg font-extrabold text-[var(--text-main)] uppercase">Academic Timetable</h2>
+                            </div>
+                            
+                            <!-- Dynamic Multi-Select Toolbar Badge -->
+                            <div id="calendar-select-toolbar" class="hidden items-center gap-2">
+                                <span id="calendar-select-count" class="px-2.5 py-1 text-[11px] font-extrabold font-mono-num bg-[var(--text-main)] text-[var(--bg-main)] rounded-lg border-2 border-[var(--card-border)] shadow-[1.5px_1.5px_0px_var(--card-border)]">0 SELECTED</span>
+                                <button type="button" data-action="clearTaskSelection" class="nb-btn px-2.5 py-1 text-[10px] font-extrabold font-mono-num">CLEAR [ESC]</button>
+                            </div>
                         </div>
+
                         <div class="flex items-center space-x-1.5 font-mono-num text-xs font-bold">
                             <button data-action="changeMonth" data-val="-1" class="nb-btn w-8 h-8 flex items-center justify-center">&lt;</button>
                             <span class="px-3 py-1 font-extrabold text-[var(--text-main)] tracking-wider min-w-[130px] text-center pointer-events-none" id="calendar-month-label"></span>
@@ -357,18 +384,27 @@
                     </div>
                     
                     <div class="p-4 sm:p-5 flex-1 flex flex-col">
+                        <!-- Quick Guide Banner -->
+                        <div class="flex flex-wrap justify-between items-center mb-2.5 text-[10px] font-extrabold font-mono-num text-[var(--text-muted)] gap-2">
+                            <span>💡 TIP: DRAG EMPTY CELL TO BOX-SELECT // CTRL+CLICK TO PICK // DRAG ANY SELECTED TO BATCH-MOVE</span>
+                            <span class="border border-[var(--card-border)] px-2 py-0.5 rounded bg-[var(--table-header)] text-[var(--text-main)]">NOTION-STYLE BATCH READY</span>
+                        </div>
+
                         <!-- Weekday Headers -->
                         <div class="grid grid-cols-7 border-2 border-[var(--card-border)] border-b-0 rounded-t-xl bg-[var(--table-header)] text-center text-xs font-extrabold text-[var(--text-main)] uppercase tracking-wider py-2">
                             <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
                         </div>
                         
-                        <!-- Month Grid -->
-                        <div id="view-calendar" class="calendar-wrapper flex-1 rounded-t-none"></div>
+                        <!-- Month Grid wrapped in interactive container with Lasso selection element -->
+                        <div id="calendar-board-container" class="relative select-none flex-1">
+                            <div id="view-calendar" class="calendar-wrapper flex-1 rounded-t-none"></div>
+                            <!-- Interactive Selection Box -->
+                            <div id="lasso-selection-box"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Brutalist Analytics Overview & Metric Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Today's Focus Ratio -->
                 <div class="nb-card p-5 flex flex-col justify-between">
@@ -436,7 +472,7 @@
                 </div>
             </div>
             
-            <!-- Course Gallery (Syllabus Progress) -->
+            <!-- Course Gallery -->
             <div class="nb-card p-5 sm:p-6">
                 <div class="border-b-2 border-[var(--card-border)] pb-3 mb-5">
                     <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">SYLLABUS PROGRESS</span>
@@ -596,7 +632,6 @@
         };
         const generateId = (prefix) => prefix + '_' + (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID().split('-')[0] : Math.random().toString(36).substring(2, 10));
 
-        // Local timezone-safe date parser
         const parseLocalDate = (dateStr) => {
             if (!dateStr) return new Date();
             const parts = dateStr.split('-').map(Number);
@@ -610,14 +645,12 @@
         const TODAY = getTodayStr();
         let currentCalendarDate = new Date(); 
 
-        // Brutalist High Contrast Subject Theme Palette (supports both English and legacy tags)
         const SUBJECT_THEMES = {
             'Mathematics': { bg: 'transparent', text: 'var(--sub-math)', border: 'var(--card-border)', dot: '#2563eb' },
             'Physics': { bg: 'transparent', text: 'var(--sub-phys)', border: 'var(--card-border)', dot: '#0d9488' },
             'English': { bg: 'transparent', text: 'var(--sub-eng)', border: 'var(--card-border)', dot: '#d97706' },
             'Chemistry': { bg: 'transparent', text: 'var(--sub-chem)', border: 'var(--card-border)', dot: '#dc2626' },
             'General': { bg: 'transparent', text: 'var(--sub-etc)', border: 'var(--card-border)', dot: '#4b5563' },
-            // Backward compatibility aliases
             '수학': { bg: 'transparent', text: 'var(--sub-math)', border: 'var(--card-border)', dot: '#2563eb' },
             '물리': { bg: 'transparent', text: 'var(--sub-phys)', border: 'var(--card-border)', dot: '#0d9488' },
             '영어': { bg: 'transparent', text: 'var(--sub-eng)', border: 'var(--card-border)', dot: '#d97706' },
@@ -647,7 +680,12 @@
         let openTodoCourses = new Set(); 
         let courseViewCounts = {};
 
-        // Streamlined permanent light canvas
+        // Multi-Task Selection Set: stores "recordId:taskId"
+        let selectedTaskKeys = new Set();
+        let isLassoSelecting = false;
+        let startLassoX = 0, startLassoY = 0;
+        let justFinishedLasso = false;
+
         document.documentElement.setAttribute('data-theme', 'light');
 
         window.showSyncIndicator = function(isLoading, isError = false) {
@@ -760,21 +798,74 @@
                     const t = record.tasks[i];
                     goalsArr.push(t.title);
                     if (t.completed) {
-                        if (t.type === 'lecture') lec += t.time;
-                        else stu += t.time;
-                    } else { allCompleted = false; }
+                        if (t.type === 'lecture') lec += (t.time || 0);
+                        else if (t.type === 'study') stu += (t.time || 0);
+                    } else { 
+                        allCompleted = false; 
+                    }
                 }
             }
             return { lecture: lec, study: stu, total: lec + stu, allCompleted, goals: goalsArr.join(', ') };
         }
 
+        function updateSelectionUI() {
+            const countEl = document.getElementById('calendar-select-count');
+            const toolbar = document.getElementById('calendar-select-toolbar');
+            
+            if (selectedTaskKeys.size > 0) {
+                if (toolbar) {
+                    toolbar.classList.remove('hidden');
+                    toolbar.classList.add('flex');
+                }
+                if (countEl) countEl.innerText = `${selectedTaskKeys.size} SELECTED`;
+            } else {
+                if (toolbar) {
+                    toolbar.classList.add('hidden');
+                    toolbar.classList.remove('flex');
+                }
+            }
+
+            document.querySelectorAll('.calendar-task-item').forEach(el => {
+                const key = `${el.dataset.recId}:${el.dataset.taskId}`;
+                if (selectedTaskKeys.has(key)) {
+                    el.classList.add('task-selected');
+                } else {
+                    el.classList.remove('task-selected');
+                }
+            });
+        }
+
         window.handleDragStart = function(event, type, sourceId, taskId) {
-            const payload = JSON.stringify({ type, sourceId, taskId });
+            let payload;
+            const taskKey = `${sourceId}:${taskId}`;
+
+            // If dragging a selected item and there are multiple selected tasks -> Batch Drag
+            if (type === 'calendar' && selectedTaskKeys.has(taskKey) && selectedTaskKeys.size > 1) {
+                const batch = [];
+                selectedTaskKeys.forEach(k => {
+                    const [recId, tId] = k.split(':');
+                    batch.push({ recId, taskId: tId });
+                });
+                payload = JSON.stringify({ type: 'calendar-batch', items: batch });
+                
+                document.querySelectorAll('.calendar-task-item.task-selected').forEach(el => {
+                    el.style.opacity = "0.35";
+                });
+            } else {
+                payload = JSON.stringify({ type, sourceId, taskId });
+                setTimeout(() => event.target.style.opacity = "0.4", 0);
+            }
+
             event.dataTransfer.setData('text/plain', payload);
             event.dataTransfer.effectAllowed = 'copyMove';
-            setTimeout(() => event.target.style.opacity = "0.4", 0);
-        }
-        window.handleDragEnd = function(event) { event.target.style.opacity = "1"; }
+        };
+
+        window.handleDragEnd = function(event) {
+            document.querySelectorAll('.calendar-task-item').forEach(el => {
+                el.style.opacity = "1";
+            });
+        };
+
         window.handleDragOver = function(event) {
             event.preventDefault(); 
             event.dataTransfer.dropEffect = 'copy';
@@ -782,18 +873,51 @@
             if (target.classList.contains('calendar-cell')) {
                 if (!target.classList.contains('drag-over')) target.classList.add('drag-over');
             }
-        }
+        };
+
         window.handleDragLeave = function(event) { 
             const target = event.currentTarget;
             if (target.classList.contains('calendar-cell')) target.classList.remove('drag-over'); 
-        }
+        };
         
         window.processDrop = function(payloadJson, targetDateStr, targetTaskId = null) {
             try {
                 const payload = JSON.parse(payloadJson);
                 let updated = false;
 
-                if (payload.type === 'todo') {
+                // Case 1: Batch Drag of Multiple Tasks
+                if (payload.type === 'calendar-batch') {
+                    let targetRecord = dailyRecords.find(d => d.date === targetDateStr);
+                    if (!targetRecord) {
+                        targetRecord = { id: generateId('D'), date: targetDateStr, tasks: [] };
+                        dailyRecords.push(targetRecord);
+                    }
+                    const movedTasks = [];
+                    payload.items.forEach(item => {
+                        const srcRec = dailyRecords.find(d => d.id === item.recId);
+                        if (srcRec && srcRec.tasks) {
+                            const idx = srcRec.tasks.findIndex(t => t.id === item.taskId);
+                            if (idx > -1) {
+                                const [t] = srcRec.tasks.splice(idx, 1);
+                                movedTasks.push(t);
+                            }
+                        }
+                    });
+
+                    if (movedTasks.length > 0) {
+                        if (targetTaskId) {
+                            const tIdx = targetRecord.tasks.findIndex(t => t.id === targetTaskId);
+                            targetRecord.tasks.splice(tIdx !== -1 ? tIdx : targetRecord.tasks.length, 0, ...movedTasks);
+                        } else {
+                            targetRecord.tasks.push(...movedTasks);
+                        }
+                        selectedTaskKeys.clear();
+                        updated = true;
+                        showUndoToast(`Moved ${movedTasks.length} tasks to ${targetDateStr}.`);
+                    }
+                } 
+                // Case 2: Drag from Todo Syllabus Inventory
+                else if (payload.type === 'todo') {
                     const lecture = getLectures().find(l => l.id === payload.sourceId);
                     if (lecture) {
                         let record = dailyRecords.find(d => d.date === targetDateStr);
@@ -810,7 +934,9 @@
                         } else { record.tasks.push(newTask); }
                         updated = true;
                     }
-                } else if (payload.type === 'calendar') {
+                } 
+                // Case 3: Single Item Drag from Calendar
+                else if (payload.type === 'calendar') {
                     const sourceRecord = dailyRecords.find(d => d.id === payload.sourceId);
                     if (sourceRecord) {
                         const taskIdx = sourceRecord.tasks.findIndex(t => t.id === payload.taskId);
@@ -837,7 +963,15 @@
                         }
                     }
                 }
-                if (updated) { saveData(); renderCalendar(); renderCharts(); renderMasterDB(); renderHeatmap(); }
+
+                if (updated) { 
+                    saveData(); 
+                    renderCalendar(); 
+                    renderCharts(); 
+                    renderMasterDB(); 
+                    renderHeatmap(); 
+                    updateSelectionUI();
+                }
             } catch(e) { console.error("Drop process error", e); }
         };
 
@@ -847,11 +981,12 @@
             if(cell) cell.classList.remove('drag-over');
             
             const payload = event.dataTransfer.getData('text/plain');
+            if (!payload) return;
             const targetItem = event.target.closest('.draggable-item');
             const targetTaskId = targetItem ? targetItem.dataset.taskId : null;
             
             window.processDrop(payload, dateStr, targetTaskId);
-        }
+        };
 
         function calculateDday(targetDateStr) {
             const today = parseLocalDate(TODAY);
@@ -1021,7 +1156,7 @@
 
             const recordsMap = getRecordsMap();
             let calendarHTML = '';
-            for(let i=0; i<firstDay; i++) calendarHTML += `<div class="calendar-cell bg-transparent pointer-events-none border-transparent opacity-20"></div>`;
+            for(let i=0; i<firstDay; i++) calendarHTML += `<div class="calendar-cell empty-cell pointer-events-none"></div>`;
 
             for(let i=1; i<=daysInMonth; i++) {
                 const dateStr = `${year}-${String(month+1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
@@ -1042,7 +1177,11 @@
                     record.tasks.forEach(task => {
                         const isCompleted = task.completed;
                         const textStyle = isCompleted ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text-main)]';
-                        let dotColor = 'var(--text-main)';
+                        const isSelected = selectedTaskKeys.has(`${record.id}:${task.id}`);
+                        
+                        let dotColor = '#4b5563';
+                        let timeLabel = task.time > 0 ? `${task.time}m` : 'EVT';
+
                         if (task.type === 'lecture') {
                             dotColor = '#0d9488';
                             if (task.refId) {
@@ -1052,17 +1191,19 @@
                                     if (crs) dotColor = crs.color || getStringColor(crs.title);
                                 }
                             }
+                        } else if (task.type === 'study') {
+                            dotColor = '#2563eb';
                         }
                         
                         cellContent += `
-                            <div class="border-2 border-[var(--card-border)] rounded-md pl-1.5 pr-1 py-0.5 mb-1 text-[10px] font-mono-num font-bold flex justify-between items-center bg-[var(--card-bg)] shadow-[1px_1px_0px_var(--card-border)] draggable-item" 
+                            <div class="calendar-task-item border-2 border-[var(--card-border)] rounded-md pl-1.5 pr-1 py-0.5 mb-1 text-[10px] font-mono-num font-bold flex justify-between items-center bg-[var(--card-bg)] shadow-[1px_1px_0px_var(--card-border)] draggable-item ${isSelected ? 'task-selected' : ''}" 
                                  data-action="toggleTask" data-rec-id="${record.id}" data-task-id="${task.id}" title="${esc(task.title)}"
                                  draggable="true" ondragstart="handleDragStart(event, 'calendar', '${record.id}', '${task.id}')" ondragend="handleDragEnd(event)">
                                  <div class="flex items-center space-x-1 overflow-hidden min-w-0 pointer-events-none">
                                      <span class="w-1.5 h-1.5 rounded-full flex-shrink-0" style="background-color: ${dotColor};"></span>
                                      <span class="truncate flex-1 ${textStyle}">${isCompleted ? '✓ ' : ''}${esc(task.title)}</span>
                                  </div>
-                                 <span class="text-[9px] text-[var(--text-muted)] ml-1 flex-shrink-0 font-mono-num">${task.time}m</span>
+                                 <span class="text-[9px] text-[var(--text-muted)] ml-1 flex-shrink-0 font-mono-num">${timeLabel}</span>
                             </div>
                         `;
                     });
@@ -1080,9 +1221,10 @@
 
             const totalCells = firstDay + daysInMonth;
             const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-            for(let i=0; i<remainingCells; i++) calendarHTML += `<div class="calendar-cell bg-transparent pointer-events-none border-transparent opacity-20"></div>`;
+            for(let i=0; i<remainingCells; i++) calendarHTML += `<div class="calendar-cell empty-cell pointer-events-none"></div>`;
 
             DOM.viewCalendar.innerHTML = calendarHTML;
+            updateSelectionUI();
         }
 
         let chartInstances = { daily: null, weekly: null, monthly: null };
@@ -1090,7 +1232,7 @@
             const styles = getComputedStyle(document.documentElement);
             Chart.defaults.color = styles.getPropertyValue('--text-main').trim() || '#000000';
             Chart.defaults.borderColor = styles.getPropertyValue('--card-border').trim() || '#000000';
-            Chart.defaults.font.family = '"Spline Sans", "Pretendard", sans-serif';
+            Chart.defaults.font.family = '"Spline Sans", "SUIT Variable", sans-serif';
             Chart.defaults.font.size = 11;
             Chart.defaults.font.weight = 'bold';
         }
@@ -1293,7 +1435,6 @@
             }
 
             let html = '';
-            // Display unique subjects based on registered courses or standard disciplines
             const activeSubjs = [...new Set(dataCourses.map(c => c.subject))];
             activeSubjs.forEach(subject => {
                 const subjCourses = dataCourses.filter(c => c.subject === subject);
@@ -1464,6 +1605,7 @@
             renderDdays();
             renderCurriculumManager();
             renderMasterDB();
+            updateSelectionUI();
         }
 
         function showUndoToast(message, onUndo = null) {
@@ -1509,6 +1651,55 @@
         }
         function closeModal() { DOM.modalOverlay.classList.add('hidden'); }
 
+        function setupModalCurriculumCascade() {
+            const subjSel = document.getElementById('modal-subject-select');
+            const courseSel = document.getElementById('modal-course-select');
+            const lecSel = document.getElementById('modal-lecture-select');
+            if (!subjSel || !courseSel || !lecSel) return;
+
+            const dataCourses = getCourses();
+            const dataLectures = getLectures();
+            const distinctSubjs = [...new Set(dataCourses.map(c => c.subject))];
+
+            if (distinctSubjs.length === 0) {
+                subjSel.innerHTML = `<option value="">과목 없음</option>`;
+                courseSel.innerHTML = `<option value="">강좌 없음</option>`;
+                lecSel.innerHTML = `<option value="">강의 없음</option>`;
+                return;
+            }
+
+            subjSel.innerHTML = distinctSubjs.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+
+            function updateCourses() {
+                const selectedSubj = subjSel.value;
+                const filteredCourses = dataCourses.filter(c => c.subject === selectedSubj);
+                if (filteredCourses.length === 0) {
+                    courseSel.innerHTML = `<option value="">강좌 없음</option>`;
+                    lecSel.innerHTML = `<option value="">강의 없음</option>`;
+                    return;
+                }
+                courseSel.innerHTML = filteredCourses.map(c => `<option value="${c.id}">${esc(c.title)}</option>`).join('');
+                updateLectures();
+            }
+
+            function updateLectures() {
+                const selectedCourseId = courseSel.value;
+                const filteredLecs = dataLectures.filter(l => l.courseId === selectedCourseId);
+                if (filteredLecs.length === 0) {
+                    lecSel.innerHTML = `<option value="">강의 없음</option>`;
+                    return;
+                }
+                lecSel.innerHTML = filteredLecs.map(l => {
+                    const isDone = l.status === '완료' || l.status === 'Completed';
+                    return `<option value="${l.id}">${isDone ? '[✓] ' : '[ ] '}${esc(l.title)} (${l.duration || 0}m)</option>`;
+                }).join('');
+            }
+
+            subjSel.onchange = updateCourses;
+            courseSel.onchange = updateLectures;
+            updateCourses();
+        }
+
         document.addEventListener('click', (e) => {
             const target = e.target.closest('[data-action]');
             
@@ -1544,6 +1735,11 @@
                     if (tabName === 'dashboard') {
                         renderCharts(); renderHeatmap();
                     }
+                    break;
+                }
+                case 'clearTaskSelection': {
+                    selectedTaskKeys.clear();
+                    updateSelectionUI();
                     break;
                 }
                 case 'openDdayModal': {
@@ -1745,14 +1941,13 @@
                     }
                     break;
                 }
+
                 case 'openDailyModal': {
+                    if (justFinishedLasso) return;
                     const dateStr = target.dataset.date;
                     currentModalDate = dateStr;
                     const record = getDailyRecords().find(d => d.date === dateStr);
                     currentModalTasks = record ? JSON.parse(JSON.stringify(record.tasks)) : []; 
-                    
-                    const allLectures = getLectures();
-                    const lecOptions = allLectures.map(l => `<option value="${l.id}">[${esc(getCourseName(l.courseId))}] ${esc(l.title)} (${l.duration||0}m)</option>`).join('');
 
                     const html = `
                         <div class="space-y-4 font-mono-num text-xs font-bold">
@@ -1761,39 +1956,68 @@
                                 <div class="text-[var(--text-main)] font-extrabold text-sm">${dateStr}</div>
                             </div>
 
-                            <div class="border-2 border-[var(--card-border)] rounded-xl p-3.5 bg-[var(--table-header)] space-y-3">
-                                <div>
-                                    <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">1. INSERT FROM CURRICULUM</label>
-                                    <div class="flex space-x-2">
-                                        <select id="modal-lecture-select" class="input-dark flex-1 py-1.5 text-xs bg-[var(--card-bg)]"><option value="">Select lecture...</option>${lecOptions}</select>
-                                        <button data-action="addModalLecTask" class="nb-btn-solid px-3.5 py-1.5 text-xs">ADD</button>
+                            <!-- 1. Cascading Curriculum Selection -->
+                            <div class="border-2 border-[var(--card-border)] rounded-xl p-3.5 bg-[var(--table-header)] space-y-2.5">
+                                <div class="flex justify-between items-center">
+                                    <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold tracking-wider">1. INSERT FROM CURRICULUM</label>
+                                    <span class="text-[9px] text-[var(--text-muted)] font-extrabold">과목 → 강좌 → 강의</span>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[9px] uppercase text-[var(--text-muted)] mb-1 font-extrabold">과목 (SUBJECT)</label>
+                                        <select id="modal-subject-select" class="input-dark py-1.5 text-xs bg-[var(--card-bg)]"></select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[9px] uppercase text-[var(--text-muted)] mb-1 font-extrabold">강좌 (COURSE)</label>
+                                        <select id="modal-course-select" class="input-dark py-1.5 text-xs bg-[var(--card-bg)]"></select>
                                     </div>
                                 </div>
-                                <div class="pt-2 border-t-2 border-[var(--card-border)]">
-                                    <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">2. DIRECT STUDY LOG</label>
-                                    <div class="flex flex-col space-y-2">
-                                        <input type="text" id="modal-study-title" class="input-dark py-1.5 text-xs bg-[var(--card-bg)] font-sans" placeholder="Task name (e.g. Mock test review)">
-                                        <div class="flex space-x-2">
-                                            <div class="flex-1 flex items-center bg-[var(--card-bg)] border-2 border-[var(--card-border)] rounded-xl px-2.5 py-1 shadow-[1.5px_1.5px_0px_var(--card-border)]">
-                                                <input type="number" id="modal-study-h" class="bg-transparent w-full outline-none text-right font-mono-num text-xs font-extrabold text-[var(--text-main)]" min="0" placeholder="0">
-                                                <span class="text-[10px] text-[var(--text-muted)] ml-1 font-bold">h</span>
-                                            </div>
-                                            <div class="flex-1 flex items-center bg-[var(--card-bg)] border-2 border-[var(--card-border)] rounded-xl px-2.5 py-1 shadow-[1.5px_1.5px_0px_var(--card-border)]">
-                                                <input type="number" id="modal-study-m" class="bg-transparent w-full outline-none text-right font-mono-num text-xs font-extrabold text-[var(--text-main)]" min="0" max="59" placeholder="0">
-                                                <span class="text-[10px] text-[var(--text-muted)] ml-1 font-bold">m</span>
-                                            </div>
-                                            <button data-action="addModalStudyTask" class="nb-btn px-3.5 py-1.5 text-xs">ADD</button>
-                                        </div>
+
+                                <div>
+                                    <label class="block text-[9px] uppercase text-[var(--text-muted)] mb-1 font-extrabold">강의 (LECTURE)</label>
+                                    <div class="flex space-x-2">
+                                        <select id="modal-lecture-select" class="input-dark flex-1 py-1.5 text-xs bg-[var(--card-bg)]"></select>
+                                        <button data-action="addModalLecTask" class="nb-btn-solid px-3.5 py-1.5 text-xs flex-shrink-0">ADD</button>
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- 2. Direct Study Log (Self-Study) -->
+                            <div class="border-2 border-[var(--card-border)] rounded-xl p-3.5 bg-[var(--table-header)] space-y-2">
+                                <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold tracking-wider">2. DIRECT STUDY LOG (SELF-STUDY)</label>
+                                <div class="flex flex-col space-y-2">
+                                    <input type="text" id="modal-study-title" class="input-dark py-1.5 text-xs bg-[var(--card-bg)] font-sans" placeholder="Task name (e.g. Mock test review, Problem set)">
+                                    <div class="flex space-x-2">
+                                        <div class="flex-1 flex items-center bg-[var(--card-bg)] border-2 border-[var(--card-border)] rounded-xl px-2.5 py-1 shadow-[1.5px_1.5px_0px_var(--card-border)]">
+                                            <input type="number" id="modal-study-h" class="bg-transparent w-full outline-none text-right font-mono-num text-xs font-extrabold text-[var(--text-main)]" min="0" placeholder="0">
+                                            <span class="text-[10px] text-[var(--text-muted)] ml-1 font-bold">h</span>
+                                        </div>
+                                        <div class="flex-1 flex items-center bg-[var(--card-bg)] border-2 border-[var(--card-border)] rounded-xl px-2.5 py-1 shadow-[1.5px_1.5px_0px_var(--card-border)]">
+                                            <input type="number" id="modal-study-m" class="bg-transparent w-full outline-none text-right font-mono-num text-xs font-extrabold text-[var(--text-main)]" min="0" max="59" placeholder="0">
+                                            <span class="text-[10px] text-[var(--text-muted)] ml-1 font-bold">m</span>
+                                        </div>
+                                        <button data-action="addModalStudyTask" class="nb-btn px-3.5 py-1.5 text-xs flex-shrink-0">ADD</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3. General Schedule / Event -->
+                            <div class="border-2 border-[var(--card-border)] rounded-xl p-3.5 bg-[var(--table-header)] space-y-2">
+                                <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold tracking-wider">3. GENERAL SCHEDULE / EVENT (일정 추가)</label>
+                                <div class="flex space-x-2">
+                                    <input type="text" id="modal-event-title" class="input-dark flex-1 py-1.5 text-xs bg-[var(--card-bg)] font-sans" placeholder="Event / Task (e.g. 편입 모의고사, 원서접수, 학원 상담)">
+                                    <button data-action="addModalEventTask" class="nb-btn-solid px-3.5 py-1.5 text-xs flex-shrink-0">ADD EVENT</button>
+                                </div>
+                            </div>
+
+                            <!-- Task Entries List -->
                             <div>
                                 <div class="flex items-center justify-between mb-2">
                                     <span class="text-[11px] uppercase text-[var(--text-muted)] font-extrabold tracking-wider">ITEMIZED ENTRIES</span>
-                                    <span class="text-[10px] text-[var(--text-muted)] font-bold">[CHECK TO LOG TIME]</span>
+                                    <span class="text-[10px] text-[var(--text-muted)] font-bold">[CHECK TO COMPLETE]</span>
                                 </div>
-                                <div id="modal-task-list" class="space-y-1.5 max-h-[240px] overflow-y-auto pr-1"></div>
+                                <div id="modal-task-list" class="space-y-1.5 max-h-[220px] overflow-y-auto pr-1"></div>
                             </div>
                         </div>
                     `;
@@ -1810,16 +2034,17 @@
                         });
                         saveData(); renderAll();
                     });
+                    setupModalCurriculumCascade();
                     renderModalTaskList();
                     break;
                 }
                 case 'addModalLecTask': {
                     const sel = document.getElementById('modal-lecture-select');
-                    if(!sel.value) return;
+                    if(!sel || !sel.value) return;
                     const lec = getLectures().find(l => l.id === sel.value);
                     if(lec) {
                         currentModalTasks.push({ id: generateId('T'), type: 'lecture', title: getShortLectureName(lec), time: lec.duration || 0, completed: false, refId: lec.id });
-                        sel.value = ''; renderModalTaskList();
+                        renderModalTaskList();
                     }
                     break;
                 }
@@ -1834,6 +2059,16 @@
                     titleEl.value = ''; hEl.value = ''; mEl.value = ''; renderModalTaskList();
                     break;
                 }
+                case 'addModalEventTask': {
+                    const titleEl = document.getElementById('modal-event-title');
+                    if (!titleEl) return;
+                    const title = titleEl.value.trim();
+                    if (!title) return;
+                    currentModalTasks.push({ id: generateId('T'), type: 'general', title: title, time: 0, completed: false });
+                    titleEl.value = '';
+                    renderModalTaskList();
+                    break;
+                }
                 case 'removeModalTask': {
                     currentModalTasks = currentModalTasks.filter(t => t.id !== target.dataset.id);
                     renderModalTaskList(); break;
@@ -1844,6 +2079,7 @@
                     break;
                 }
                 case 'toggleTask': {
+                    // Handled inside task click check or lasso handler
                     const record = dailyRecords.find(d => d.id === target.dataset.recId);
                     if(record && record.tasks) {
                         const task = record.tasks.find(t => t.id === target.dataset.taskId);
@@ -1963,8 +2199,10 @@
             }
             container.innerHTML = currentModalTasks.map(t => {
                 let badgeColor = 'var(--text-main)';
+                let badgeText = 'EVENT';
                 if (t.type === 'lecture') {
                     badgeColor = '#0d9488';
+                    badgeText = 'LEC';
                     if (t.refId) {
                         const lec = lectures.find(l => l.id === t.refId);
                         if (lec) {
@@ -1972,6 +2210,12 @@
                             if (crs) badgeColor = crs.color || getStringColor(crs.title);
                         }
                     }
+                } else if (t.type === 'study') {
+                    badgeColor = '#2563eb';
+                    badgeText = 'STUDY';
+                } else if (t.type === 'general') {
+                    badgeColor = '#4b5563';
+                    badgeText = 'EVENT';
                 }
 
                 return `
@@ -1979,7 +2223,7 @@
                     <div class="flex items-center space-x-2.5 flex-1 min-w-0">
                         <input type="checkbox" class="custom-checkbox" ${t.completed ? 'checked' : ''} data-action="toggleModalTask" data-id="${t.id}">
                         <div class="flex-1 truncate flex items-center min-w-0">
-                            <span class="text-[9px] px-1.5 py-0.5 border-2 border-[var(--card-border)] rounded-md mr-2 flex-shrink-0 font-extrabold" style="color: ${badgeColor};">${t.type === 'lecture' ? 'LEC' : 'STUDY'}</span>
+                            <span class="text-[9px] px-1.5 py-0.5 border-2 border-[var(--card-border)] rounded-md mr-2 flex-shrink-0 font-extrabold" style="color: ${badgeColor};">${badgeText}</span>
                             <span class="text-[var(--text-main)] font-bold truncate min-w-0 ${t.completed ? 'line-through text-[var(--text-faint)]' : ''}" title="${esc(t.title)}">${esc(t.title)}</span>
                         </div>
                     </div>
@@ -1989,18 +2233,129 @@
                                 <input type="number" data-action="updateTaskTime" data-id="${t.id}" value="${t.time}" min="0" class="w-12 bg-[var(--card-bg)] border-2 border-[var(--card-border)] rounded-md px-1 py-0.5 text-xs text-[var(--text-main)] font-mono-num font-extrabold text-right outline-none">
                                 <span class="text-[10px] text-[var(--text-muted)] font-bold">m</span>
                             </div>`
+                        : (t.type === 'lecture' ?
+                            `<span class="text-[11px] text-[var(--text-muted)] font-extrabold w-8 text-right">${t.time > 0 ? t.time + 'm' : '—'}</span>`
                         :
-                            `<span class="text-[11px] text-[var(--text-muted)] font-extrabold w-8 text-right">${t.time}m</span>`
-                        }
+                            `<span class="text-[10px] text-[var(--text-muted)] font-extrabold px-1 text-right">EVENT</span>`
+                        )}
                         <button data-action="removeModalTask" data-id="${t.id}" class="nb-btn text-red-500 hover:text-red-700 px-2 py-0.5 text-[10px]">DEL</button>
                     </div>
                 </div>
             `}).join('');
         }
 
+        function initLassoSelection() {
+            const board = document.getElementById('calendar-board-container');
+            const lassoBox = document.getElementById('lasso-selection-box');
+            if (!board || !lassoBox) return;
+
+            board.addEventListener('mousedown', (e) => {
+                if (e.target.closest('button, input, select, a')) return;
+
+                // If user clicks directly on a task item
+                const taskItem = e.target.closest('.calendar-task-item');
+                if (taskItem) {
+                    const key = `${taskItem.dataset.recId}:${taskItem.dataset.taskId}`;
+                    // If holding Ctrl or Cmd or Shift: toggle multi-selection
+                    if (e.ctrlKey || e.metaKey || e.shiftKey) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (selectedTaskKeys.has(key)) {
+                            selectedTaskKeys.delete(key);
+                        } else {
+                            selectedTaskKeys.add(key);
+                        }
+                        updateSelectionUI();
+                        return;
+                    }
+                    // If task is already selected, let dragstart happen with batch!
+                    if (selectedTaskKeys.has(key)) {
+                        return;
+                    }
+                    return;
+                }
+
+                // If clicked on empty space of cell or calendar background -> start lasso
+                isLassoSelecting = true;
+                startLassoX = e.clientX;
+                startLassoY = e.clientY;
+                justFinishedLasso = false;
+
+                const boardRect = board.getBoundingClientRect();
+                lassoBox.style.left = `${startLassoX - boardRect.left + board.scrollLeft}px`;
+                lassoBox.style.top = `${startLassoY - boardRect.top + board.scrollTop}px`;
+                lassoBox.style.width = '0px';
+                lassoBox.style.height = '0px';
+
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                    selectedTaskKeys.clear();
+                    updateSelectionUI();
+                }
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isLassoSelecting) return;
+                const currentX = e.clientX;
+                const currentY = e.clientY;
+                const diffX = currentX - startLassoX;
+                const diffY = currentY - startLassoY;
+
+                // Threshold to differentiate drag from simple click
+                if (Math.hypot(diffX, diffY) > 5) {
+                    justFinishedLasso = true;
+                    const boardRect = board.getBoundingClientRect();
+                    const minX = Math.min(startLassoX, currentX) - boardRect.left + board.scrollLeft;
+                    const minY = Math.min(startLassoY, currentY) - boardRect.top + board.scrollTop;
+                    const width = Math.abs(diffX);
+                    const height = Math.abs(diffY);
+
+                    lassoBox.style.left = `${minX}px`;
+                    lassoBox.style.top = `${minY}px`;
+                    lassoBox.style.width = `${width}px`;
+                    lassoBox.style.height = `${height}px`;
+                    lassoBox.style.display = 'block';
+
+                    const boxRect = {
+                        left: Math.min(startLassoX, currentX),
+                        top: Math.min(startLassoY, currentY),
+                        right: Math.max(startLassoX, currentX),
+                        bottom: Math.max(startLassoY, currentY)
+                    };
+
+                    document.querySelectorAll('.calendar-task-item').forEach(item => {
+                        const r = item.getBoundingClientRect();
+                        const overlaps = !(boxRect.right < r.left || boxRect.left > r.right || boxRect.bottom < r.top || boxRect.top > r.bottom);
+                        const key = `${item.dataset.recId}:${item.dataset.taskId}`;
+                        if (overlaps) {
+                            selectedTaskKeys.add(key);
+                        }
+                    });
+                    updateSelectionUI();
+                }
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (!isLassoSelecting) return;
+                isLassoSelecting = false;
+                lassoBox.style.display = 'none';
+
+                if (justFinishedLasso) {
+                    setTimeout(() => { justFinishedLasso = false; }, 120);
+                }
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && selectedTaskKeys.size > 0) {
+                    selectedTaskKeys.clear();
+                    updateSelectionUI();
+                }
+            });
+        }
+
         async function initApp() { 
             initDOM(); 
             loadLocalData(); 
+            initLassoSelection();
         }
         
         if (document.readyState === 'loading') {
