@@ -1,408 +1,577 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="dark">
+<html lang="ko" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daon's Dashboard</title>
+    <title>DAON'S DASHBOARD</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Typography: Archivo Black (영문 볼드) + Black Han Sans (한글 볼드) [완벽한 사각 스템 조화] + Plus Jakarta Sans & Pretendard [본문 UI] + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Black+Han+Sans&family=JetBrains+Mono:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Marked.js (Markdown) -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
-    <!-- DOMPurify (XSS 방지) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
-    
-    <!-- KaTeX (수식 렌더링) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <!-- Premium Korean Typography: Pretendard (본문 디테일용) -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 
     <style>
-        /* CSS Variables for Light/Dark Mode */
+        /* Neo-Brutalism Design System Tokens */
         :root {
-            --bg-main: #f5f5f7;
-            --text-main: #1c1c1e;
-            --text-muted: #6e6e73;
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --card-border: rgba(0, 0, 0, 0.08);
-            --card-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
-            --hover-bg: rgba(0, 0, 0, 0.05);
-            --input-bg: rgba(255, 255, 255, 0.9);
-            --input-border: rgba(0, 0, 0, 0.1);
-            --accent-glow: rgba(0, 0, 0, 0.03);
-            --table-header: rgba(0, 0, 0, 0.04);
-            --calendar-cell: rgba(255, 255, 255, 0.6);
-            --calendar-hover: rgba(255, 255, 255, 0.9);
-            --scrollbar-thumb: rgba(0, 0, 0, 0.2);
-            --btn-glass: rgba(0, 0, 0, 0.05);
+            --bg-main: #f5f5f2;
+            --bg-canvas: #ffffff;
+            --text-main: #000000;
+            --text-muted: #52525b;
+            --text-faint: #71717a;
+            --card-bg: #ffffff;
+            --card-border: #000000;
+            --card-shadow: 4px 4px 0px #000000;
+            --card-shadow-lg: 6px 6px 0px #000000;
+            --card-shadow-sm: 2px 2px 0px #000000;
+            --card-shadow-hover: 1px 1px 0px #000000;
+            --hover-bg: #eaeae5;
+            --input-bg: #ffffff;
+            --input-border: #000000;
+            --table-header: #ebebe6;
+            --calendar-cell: #ffffff;
+            --calendar-hover: #f3f3ee;
+            --calendar-border: #000000;
+            --scrollbar-thumb: #000000;
+            --btn-glass: #ffffff;
+            --rule-color: #000000;
+            
+            --sub-math: #2563eb;
+            --sub-phys: #0d9488;
+            --sub-eng: #d97706;
+            --sub-chem: #dc2626;
+            --sub-etc: #4b5563;
         }
 
         [data-theme="dark"] {
-            --bg-main: #000000;
-            --text-main: #f5f5f7;
-            --text-muted: #86868b;
-            --card-bg: rgba(28, 28, 30, 0.45);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --card-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
-            --hover-bg: rgba(255, 255, 255, 0.05);
-            --input-bg: rgba(0, 0, 0, 0.3);
-            --input-border: rgba(255, 255, 255, 0.1);
-            --accent-glow: rgba(255, 255, 255, 0.03);
-            --table-header: rgba(0, 0, 0, 0.2);
-            --calendar-cell: rgba(28, 28, 30, 0.8);
-            --calendar-hover: rgba(44, 44, 46, 0.9);
-            --scrollbar-thumb: rgba(255, 255, 255, 0.2);
-            --btn-glass: rgba(255, 255, 255, 0.05);
+            --bg-main: #101012;
+            --bg-canvas: #18181c;
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+            --text-faint: #71717a;
+            --card-bg: #1c1c21;
+            --card-border: #ffffff;
+            --card-shadow: 4px 4px 0px #ffffff;
+            --card-shadow-lg: 6px 6px 0px #ffffff;
+            --card-shadow-sm: 2px 2px 0px #ffffff;
+            --card-shadow-hover: 1px 1px 0px #ffffff;
+            --hover-bg: #272730;
+            --input-bg: #18181c;
+            --input-border: #ffffff;
+            --table-header: #24242a;
+            --calendar-cell: #1c1c21;
+            --calendar-hover: #26262d;
+            --calendar-border: #ffffff;
+            --scrollbar-thumb: #ffffff;
+            --btn-glass: #24242a;
+            --rule-color: #ffffff;
+
+            --sub-math: #60a5fa;
+            --sub-phys: #2dd4bf;
+            --sub-eng: #fbbf24;
+            --sub-chem: #f87171;
+            --sub-etc: #9ca3af;
         }
 
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: "Plus Jakarta Sans", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
             -webkit-font-smoothing: antialiased;
             letter-spacing: -0.01em;
             position: relative;
             overflow-x: hidden;
-            transition: background-color 0.4s ease, color 0.4s ease;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        /* 네오-브루탈리즘 헤드라인: Archivo Black과 Black Han Sans의 단단한 사각 스템 일체화 */
+        h1, h2, h3, .tab-btn, .nb-btn, .nb-btn-solid {
+            font-family: "Archivo Black", "Black Han Sans", "Plus Jakarta Sans", "Pretendard", sans-serif;
+            letter-spacing: 0.015em;
+            word-break: keep-all;
+        }
+
+        .font-mono-num {
+            font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        /* Neo-Brutalist Frame & Components */
+        .nb-card {
+            background-color: var(--card-bg);
+            border: 2.5px solid var(--card-border);
+            border-radius: 18px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.1s ease;
+        }
+        .nb-card-sm {
+            background-color: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 14px;
+            box-shadow: var(--card-shadow-sm);
+        }
+        .nb-btn {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow-sm);
+            font-weight: 700;
+            transition: all 0.1s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nb-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px var(--card-border);
+        }
+        .nb-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px var(--card-border);
+        }
+
+        .nb-btn-solid {
+            background-color: var(--text-main);
+            color: var(--bg-main);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow-sm);
+            font-weight: 800;
+            transition: all 0.1s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nb-btn-solid:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px var(--card-border);
+        }
+        .nb-btn-solid:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px var(--card-border);
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+        ::-webkit-scrollbar { width: 7px; height: 7px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 0; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Ambient Glow (Background) */
-        .ambient-glow-1 { position: fixed; top: -15%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(191,90,242,0.15) 0%, rgba(0,0,0,0) 70%); z-index: -1; pointer-events: none; transition: opacity 0.5s; }
-        .ambient-glow-2 { position: fixed; bottom: -20%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(100,210,255,0.1) 0%, rgba(0,0,0,0) 70%); z-index: -1; pointer-events: none; transition: opacity 0.5s; }
-        [data-theme="light"] .ambient-glow-1 { opacity: 0.5; background: radial-gradient(circle, rgba(191,90,242,0.2) 0%, rgba(255,255,255,0) 70%); }
-        [data-theme="light"] .ambient-glow-2 { opacity: 0.5; background: radial-gradient(circle, rgba(100,210,255,0.2) 0%, rgba(255,255,255,0) 70%); }
-
-        /* Cards & Inputs */
+        /* Legacy mapping preserving ID styles */
         .card-squircle {
-            border-radius: 32px;
+            border-radius: 18px;
             background-color: var(--card-bg);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid var(--card-border);
+            border: 2.5px solid var(--card-border);
             box-shadow: var(--card-shadow);
-            transition: background-color 0.4s, border-color 0.4s;
         }
         .inner-squircle {
-            border-radius: 20px;
-            background-color: var(--accent-glow);
-            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            background-color: var(--card-bg);
+            border: 2px solid var(--card-border);
+            box-shadow: var(--card-shadow-sm);
         }
         .input-dark {
-            background-color: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main);
-            padding: 0.75rem 1rem; border-radius: 14px; width: 100%; outline: none; transition: all 0.3s ease; font-size: 0.9rem;
+            background-color: var(--input-bg);
+            border: 2px solid var(--input-border);
+            color: var(--text-main);
+            padding: 0.65rem 0.9rem;
+            border-radius: 12px;
+            width: 100%;
+            outline: none;
+            font-size: 0.875rem;
+            font-weight: 700;
+            font-family: "Plus Jakarta Sans", "Pretendard", sans-serif;
+            box-shadow: var(--card-shadow-sm);
+            transition: box-shadow 0.1s ease, transform 0.1s ease;
         }
-        .input-dark:focus { border-color: #0a84ff; box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15); }
+        .input-dark:focus {
+            box-shadow: var(--card-shadow);
+            transform: translate(-1px, -1px);
+        }
 
-        /* Custom Checkbox */
+        /* Neo-Brutalist Stamped Checkbox */
         .custom-checkbox {
-            appearance: none; width: 1.35rem; height: 1.35rem; background-color: var(--hover-bg); border: 1.5px solid var(--text-muted);
-            border-radius: 50%; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; transition: all 0.3s; flex-shrink: 0;
+            appearance: none;
+            width: 1.3rem;
+            height: 1.3rem;
+            background-color: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 6px;
+            box-shadow: 1.5px 1.5px 0px var(--card-border);
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.1s ease;
+            flex-shrink: 0;
         }
-        .custom-checkbox:checked { background-color: #0a84ff; border-color: #0a84ff; box-shadow: 0 0 10px rgba(10, 132, 255, 0.4); }
-        .custom-checkbox:checked::after { content: ''; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg) translateY(-1px); }
+        .custom-checkbox:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 2.5px 2.5px 0px var(--card-border);
+        }
+        .custom-checkbox:checked {
+            background-color: var(--text-main);
+            border-color: var(--card-border);
+        }
+        .custom-checkbox:checked::after {
+            content: '';
+            width: 5px;
+            height: 9px;
+            border: solid var(--bg-main);
+            border-width: 0 2.5px 2.5px 0;
+            transform: rotate(45deg) translateY(-1px);
+        }
 
-        /* Utilities */
+        /* Accordion & Toasts */
         .truncate-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .toast-enter-active { transform: translateY(0); opacity: 1; transition: all 400ms cubic-bezier(0.16, 1, 0.3, 1); }
-        .toast-exit-active { transform: translateY(20px); opacity: 0; transition: all 300ms ease-in; }
-        .accordion-grid { display: grid; transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease; }
+        .toast-enter-active { transform: translateY(0); opacity: 1; transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1); }
+        .toast-exit-active { transform: translateY(12px); opacity: 0; transition: all 150ms ease-in; }
+        .accordion-grid { display: grid; transition: grid-template-rows 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease; }
         .accordion-grid.closed { grid-template-rows: 0fr; opacity: 0; pointer-events: none; }
         .accordion-grid.open { grid-template-rows: 1fr; opacity: 1; pointer-events: auto; }
         .accordion-inner { overflow: hidden; }
 
-        .calendar-wrapper { background-color: var(--card-border); border: 1px solid var(--card-border); border-radius: 16px; overflow: hidden; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 1px; }
-        .calendar-cell { background-color: var(--calendar-cell); min-height: 110px; padding: 0.35rem; display: flex; flex-direction: column; transition: background-color 0.2s ease; min-width: 0; }
+        /* Neo-Brutalist Calendar Grid */
+        .calendar-wrapper {
+            background-color: var(--card-border);
+            border: 2.5px solid var(--card-border);
+            border-radius: 14px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 2px;
+            box-shadow: var(--card-shadow-sm);
+        }
+        .calendar-cell {
+            background-color: var(--calendar-cell);
+            min-height: 114px;
+            padding: 0.4rem;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.15s ease;
+            min-width: 0;
+        }
         .calendar-cell:hover { background-color: var(--calendar-hover); }
-        .calendar-cell.today-cell { background-color: rgba(10, 132, 255, 0.08); }
-        .drag-over { background-color: rgba(10, 132, 255, 0.2) !important; border-color: #0a84ff !important; }
+        .calendar-cell.today-cell {
+            background-color: var(--hover-bg);
+            outline: 2.5px solid var(--text-main);
+            outline-offset: -2.5px;
+        }
+        .drag-over {
+            background-color: var(--hover-bg) !important;
+            outline: 3px dashed var(--text-main) !important;
+            outline-offset: -3px;
+        }
         .draggable-item { cursor: grab; touch-action: pan-y; }
         .draggable-item:active { cursor: grabbing; transform: scale(0.98); }
 
+        /* Master DB Table */
         .db-table { border-collapse: separate; border-spacing: 0; width: 100%; }
-        .db-table th, .db-table td { padding: 1rem 1.25rem; text-align: left; vertical-align: middle; white-space: nowrap; border-bottom: 1px solid var(--card-border); }
-        .db-table th { font-weight: 600; color: var(--text-muted); font-size: 0.8125rem; background-color: var(--table-header); text-transform: uppercase; letter-spacing: 0.05em; }
-        .db-table th:first-child { border-top-left-radius: 18px; }
-        .db-table th:last-child { border-top-right-radius: 18px; }
+        .db-table th, .db-table td {
+            padding: 0.85rem 1.1rem;
+            text-align: left;
+            vertical-align: middle;
+            border-bottom: 2px solid var(--card-border);
+        }
+        .db-table th {
+            font-weight: 800;
+            color: var(--text-main);
+            font-size: 0.75rem;
+            background-color: var(--table-header);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
         .db-table tr:hover td { background-color: var(--hover-bg); }
-        .db-table tr:last-child td { border-bottom: none; }
-
-        /* Markdown Styles (Memo Tab) */
-        .markdown-body { font-family: inherit; color: var(--text-main); font-size: 0.95rem; line-height: 1.6; word-break: break-word; }
-        .markdown-body h1, .markdown-body h2, .markdown-body h3 { font-weight: 800; margin-top: 1.5em; margin-bottom: 0.5em; color: var(--text-main); tracking: tight; }
-        .markdown-body h1 { font-size: 1.8rem; border-bottom: 1px solid var(--card-border); padding-bottom: 0.3em; }
-        .markdown-body h2 { font-size: 1.4rem; }
-        .markdown-body p { margin-bottom: 1em; }
-        .markdown-body a { color: #0a84ff; text-decoration: none; }
-        .markdown-body a:hover { text-decoration: underline; }
-        .markdown-body ul, .markdown-body ol { padding-left: 1.5em; margin-bottom: 1em; list-style-type: disc; }
-        .markdown-body ol { list-style-type: decimal; }
-        .markdown-body li { margin-bottom: 0.25em; }
-        .markdown-body blockquote { border-left: 4px solid #0a84ff; padding-left: 1em; color: var(--text-muted); background: var(--hover-bg); padding-top: 0.5em; padding-bottom: 0.5em; border-radius: 0 8px 8px 0; margin-bottom: 1em; }
-        .markdown-body code { background-color: var(--hover-bg); padding: 0.2em 0.4em; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85em; color: #ff375f; }
-        .markdown-body pre { background-color: var(--hover-bg); padding: 1em; border-radius: 12px; overflow-x: auto; margin-bottom: 1em; border: 1px solid var(--card-border); }
-        .markdown-body pre code { background-color: transparent; padding: 0; color: var(--text-main); font-size: 0.9em; }
         
         .sync-spinner { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="p-4 md:p-6 lg:p-8">
+<body class="p-3 sm:p-5 md:p-8">
 
-    <div class="ambient-glow-1"></div>
-    <div class="ambient-glow-2"></div>
-
-    <div id="app-container" class="max-w-[1400px] mx-auto space-y-6 pt-4">
+    <div id="app-container" class="max-w-[1440px] mx-auto space-y-6">
         
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-end pb-5 gap-4">
+        <!-- Neo-Brutalist Top Masthead Showcase Bar -->
+        <header class="nb-card p-5 sm:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-                <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tighter mb-1 flex items-center gap-3">
-                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-[#0a84ff] via-[#5e5ce6] to-[#bf5af2] drop-shadow-sm">Daon's Dashboard</span>
-                    <span id="sync-status-indicator" class="text-xs font-medium px-2 py-1 rounded-md bg-[var(--btn-glass)] text-[var(--text-muted)] flex items-center hidden transition-all duration-300 border border-[var(--card-border)]">
-                        <span id="cloud-icon" class="mr-1"></span>
-                        <span id="cloud-text">연결 중...</span>
+                <div class="flex items-center gap-2 mb-1.5">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[var(--text-main)] text-[var(--bg-main)]">
+                        BRUTALISM // ACTIVE
                     </span>
+                    <span id="sync-status-indicator" class="text-[11px] font-bold font-mono-num inline-flex items-center hidden border-2 border-[var(--card-border)] rounded-full px-2 py-0.5 bg-[var(--card-bg)] shadow-[1px_1px_0px_var(--card-border)]">
+                        <span id="cloud-icon" class="mr-1">●</span>
+                        <span id="cloud-text">CONNECTING...</span>
+                    </span>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--text-main)] uppercase">
+                    DAON'S DASHBOARD
                 </h1>
             </div>
             
-            <div class="flex flex-wrap items-center gap-2.5">
-                <a href="https://cafe.naver.com/kcidorcen" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-gradient-to-b from-[#03c75a] to-[#02b350] hover:from-[#02b350] hover:to-[#029a45] text-white text-xs font-bold transition shadow-[0_4px_14px_rgba(3,199,90,0.3)] flex items-center gap-1.5 border border-[#02b350]">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg> 독편사
+            <div class="flex flex-wrap items-center gap-2.5 text-xs font-bold font-mono-num">
+                <a href="https://cafe.naver.com/kcidorcen" target="_blank" rel="noopener noreferrer" class="nb-btn px-3.5 py-2 flex items-center gap-1.5">
+                    <span class="text-[#03c75a] font-extrabold text-sm leading-none">↗</span> 독편사
                 </a>
-                <a href="https://www.kimyoung.co.kr/offmegaky.asp" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-gradient-to-b from-[#e11d48] to-[#f43f5e] hover:from-[#be123c] hover:to-[#e11d48] text-white text-xs font-bold transition shadow-[0_4px_14px_rgba(225,29,72,0.4)] flex items-center gap-1.5 border border-[#e11d48]">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg> 김영편입
+                <a href="https://www.kimyoung.co.kr/offmegaky.asp" target="_blank" rel="noopener noreferrer" class="nb-btn px-3.5 py-2 flex items-center gap-1.5">
+                    <span class="text-[#e11d48] font-extrabold text-sm leading-none">↗</span> 김영편입
                 </a>
                 
-                <!-- 테마 및 새로고침 토글 -->
-                <button data-action="toggleTheme" class="px-3 py-2 rounded-xl bg-[var(--btn-glass)] border border-[var(--card-border)] hover:bg-[var(--hover-bg)] text-[var(--text-main)] text-sm font-bold transition shadow-sm flex items-center justify-center min-w-[40px]" title="테마 변경">
-                    <span id="theme-icon">☀️</span>
+                <button data-action="toggleTheme" class="nb-btn px-3.5 py-2" title="테마 변경">
+                    <span id="theme-icon">☀️ LIGHT</span>
                 </button>
-                <button data-action="refreshPage" class="px-3 py-2 rounded-xl bg-[var(--btn-glass)] border border-[var(--card-border)] hover:bg-[var(--hover-bg)] text-[var(--text-main)] text-sm font-bold transition shadow-sm flex items-center justify-center min-w-[40px]" title="새로고침">
-                    🔄
+                <button data-action="refreshPage" class="nb-btn px-3.5 py-2" title="새로고침">
+                    REFRESH
                 </button>
 
-                <label class="px-4 py-2 rounded-xl bg-[var(--btn-glass)] border border-[var(--card-border)] hover:bg-[var(--hover-bg)] text-[var(--text-main)] text-xs font-bold transition cursor-pointer shadow-sm">
-                    데이터 복원 <input type="file" class="hidden" accept=".json" data-action="importData">
+                <label class="nb-btn px-3.5 py-2 cursor-pointer">
+                    RESTORE <input type="file" class="hidden" accept=".json" data-action="importData">
                 </label>
-                <button data-action="exportData" class="px-4 py-2 rounded-xl bg-[#0a84ff] hover:bg-blue-500 text-white border border-blue-600 text-xs font-bold transition shadow-[0_0_15px_rgba(10,132,255,0.3)]">
-                    데이터 백업
+                <button data-action="exportData" class="nb-btn-solid px-4 py-2">
+                    BACKUP JSON
                 </button>
             </div>
         </header>
 
-        <div class="flex space-x-2 pb-2 border-b border-[var(--card-border)] overflow-x-auto hide-scrollbar">
-            <button data-action="switchTab" data-tab="dashboard" class="tab-btn active px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-[var(--text-main)] text-[var(--bg-main)] shadow-md flex-shrink-0">Dashboard</button>
-            <button data-action="switchTab" data-tab="curriculum" class="tab-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all text-[var(--text-muted)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-main)] flex-shrink-0">Curriculum</button>
-            <button data-action="switchTab" data-tab="memo" class="tab-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all text-[var(--text-muted)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-main)] flex-shrink-0 flex items-center gap-1.5"><span class="text-xs">📝</span> Memo</button>
-            <button data-action="switchTab" data-tab="database" class="tab-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all text-[var(--text-muted)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-main)] flex-shrink-0">Master DB</button>
+        <!-- Brutalist Movement Tabs -->
+        <div class="flex space-x-2 pb-1 overflow-x-auto hide-scrollbar text-xs font-extrabold tracking-wider uppercase">
+            <button data-action="switchTab" data-tab="dashboard" class="tab-btn active px-6 py-3 border-2 border-[var(--card-border)] bg-[var(--text-main)] text-[var(--bg-main)] rounded-xl shadow-[3px_3px_0px_var(--card-border)] flex-shrink-0 transition-transform active:translate-x-[2px] active:translate-y-[2px]">
+                [01] Dashboard
+            </button>
+            <button data-action="switchTab" data-tab="curriculum" class="tab-btn px-6 py-3 border-2 border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-main)] rounded-xl shadow-[3px_3px_0px_var(--card-border)] hover:bg-[var(--hover-bg)] flex-shrink-0 transition-transform active:translate-x-[2px] active:translate-y-[2px]">
+                [02] Curriculum Ledger
+            </button>
+            <button data-action="switchTab" data-tab="database" class="tab-btn px-6 py-3 border-2 border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-main)] rounded-xl shadow-[3px_3px_0px_var(--card-border)] hover:bg-[var(--hover-bg)] flex-shrink-0 transition-transform active:translate-x-[2px] active:translate-y-[2px]">
+                [03] Master Record DB
+            </button>
         </div>
 
+        <!-- Tab 1: Dashboard -->
         <div id="tab-dashboard" class="tab-content space-y-6 block pb-12">
-            <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar pb-2 pt-1" id="view-ddays"></div>
+            
+            <!-- Brutalist Deadlines Ticker (D-Days) -->
+            <div class="nb-card p-4">
+                <div class="text-[11px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] mb-2 flex justify-between items-center">
+                    <span>EXAMINATION & APPLICATION DEADLINES</span>
+                </div>
+                <div class="flex items-center gap-2.5 overflow-x-auto hide-scrollbar py-1" id="view-ddays"></div>
+            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <!-- Central Worktable: Left Syllabus / Right Brutalist Calendar -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <!-- Todo Lectures (남은 강의) -->
-                <div class="card-squircle p-5 lg:p-7 col-span-1 shadow-sm flex flex-col h-[500px] lg:h-auto lg:max-h-[650px]">
-                    <div class="flex justify-between items-center mb-1">
-                        <h2 class="text-xl font-bold text-[var(--text-main)] tracking-tight">남은 강의</h2>
-                        <span class="text-[10px] font-bold text-[var(--text-muted)] bg-[var(--btn-glass)] px-2.5 py-1 rounded-full border border-[var(--card-border)]">Drag & Drop</span>
+                <div class="lg:col-span-4 nb-card flex flex-col h-[540px] lg:h-[700px] overflow-hidden">
+                    <div class="p-4 border-b-2 border-[var(--card-border)] bg-[var(--table-header)] flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">INVENTORY</span>
+                            <h2 class="text-lg font-extrabold text-[var(--text-main)] uppercase">남은 강의 목록</h2>
+                        </div>
+                        <span class="text-[10px] font-extrabold border-2 border-[var(--card-border)] rounded-full px-2.5 py-1 bg-[var(--card-bg)] shadow-[1.5px_1.5px_0px_var(--card-border)] uppercase">DRAG & DROP</span>
                     </div>
-                    <div id="todo-tabs-container" class="mb-4"></div>
-                    <ul id="view-todo-lectures" class="overflow-y-auto pr-2 flex-1 space-y-3 min-h-0 hide-scrollbar"></ul>
+                    
+                    <div id="todo-tabs-container" class="border-b-2 border-[var(--card-border)] bg-[var(--card-bg)]"></div>
+                    <ul id="view-todo-lectures" class="overflow-y-auto p-3 flex-1 space-y-2.5 min-h-0 hide-scrollbar bg-[var(--card-bg)]"></ul>
                 </div>
 
                 <!-- Study Calendar (학습 캘린더) -->
-                <div class="card-squircle p-5 lg:p-7 col-span-1 lg:col-span-2 shadow-sm flex flex-col">
-                    <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
-                        <h2 class="text-xl font-bold text-[var(--text-main)] tracking-tight">학습 캘린더</h2>
-                        <div class="flex items-center space-x-2 bg-[var(--accent-glow)] rounded-full p-1 border border-[var(--card-border)]">
-                            <button data-action="changeMonth" data-val="-1" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--hover-bg)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition">&lt;</button>
-                            <span class="text-sm text-[var(--text-main)] font-bold px-3 tracking-wider pointer-events-none" id="calendar-month-label"></span>
-                            <button data-action="changeMonth" data-val="1" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--hover-bg)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition">&gt;</button>
+                <div class="lg:col-span-8 nb-card flex flex-col h-auto overflow-hidden">
+                    <div class="p-4 sm:p-5 border-b-2 border-[var(--card-border)] bg-[var(--table-header)] flex flex-wrap justify-between items-center gap-3">
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">TIMETABLE</span>
+                            <h2 class="text-lg font-extrabold text-[var(--text-main)] uppercase">학습 기록 캘린더</h2>
+                        </div>
+                        <div class="flex items-center space-x-1.5 font-mono-num text-xs font-bold">
+                            <button data-action="changeMonth" data-val="-1" class="nb-btn w-8 h-8 flex items-center justify-center">&lt;</button>
+                            <span class="px-3 py-1 font-extrabold text-[var(--text-main)] tracking-wider min-w-[130px] text-center pointer-events-none" id="calendar-month-label"></span>
+                            <button data-action="changeMonth" data-val="1" class="nb-btn w-8 h-8 flex items-center justify-center">&gt;</button>
                         </div>
                     </div>
-                    <div class="grid grid-cols-7 gap-1 text-center text-[10px] sm:text-xs font-bold text-[var(--text-muted)] mb-2 uppercase tracking-wider px-1">
-                        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                    
+                    <div class="p-4 sm:p-5 flex-1 flex flex-col">
+                        <!-- Weekday Headers -->
+                        <div class="grid grid-cols-7 border-2 border-[var(--card-border)] border-b-0 rounded-t-xl bg-[var(--table-header)] text-center text-xs font-extrabold text-[var(--text-main)] uppercase tracking-wider py-2">
+                            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                        </div>
+                        
+                        <!-- Month Grid -->
+                        <div id="view-calendar" class="calendar-wrapper flex-1 rounded-t-none"></div>
                     </div>
-                    <div id="view-calendar" class="calendar-wrapper flex-1"></div>
                 </div>
             </div>
 
-            <!-- Dashboard Charts -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <div class="card-squircle p-6 shadow-sm flex flex-col items-center">
-                    <h3 class="text-xs font-bold text-[var(--text-muted)] mb-2 w-full text-left uppercase tracking-widest">Today's Focus</h3>
-                    <div class="relative w-full aspect-square max-h-[180px] flex justify-center items-center mt-2">
+            <!-- Brutalist Analytics Overview & Metric Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Today's Focus Ratio -->
+                <div class="nb-card p-5 flex flex-col justify-between">
+                    <div class="border-b-2 border-[var(--card-border)] pb-2 mb-3">
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">FIGURE 1.0</span>
+                        <h3 class="text-base font-extrabold text-[var(--text-main)] uppercase">Today's Focus Ratio</h3>
+                    </div>
+                    <div class="relative w-full aspect-square max-h-[175px] flex justify-center items-center my-2">
                         <canvas id="chartDaily"></canvas>
                         <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                            <span id="dailyTotalText" class="text-2xl font-bold text-[var(--text-main)] mt-4 tracking-tight">0m</span>
-                            <div id="dailySplitText" class="flex items-center space-x-1 text-[10px] font-bold mt-1"></div>
+                            <span id="dailyTotalText" class="text-3xl font-extrabold font-mono-num text-[var(--text-main)] tracking-tight">0m</span>
+                            <div id="dailySplitText" class="flex items-center space-x-1.5 text-[10px] font-mono-num mt-1 font-bold"></div>
                         </div>
                     </div>
+                    <div class="text-[10px] font-extrabold font-mono-num text-[var(--text-muted)] text-center border-t-2 border-[var(--card-border)] pt-2 uppercase">LECTURE VS. INDEPENDENT STUDY</div>
                 </div>
 
-                <div class="card-squircle p-6 shadow-sm flex flex-col">
-                    <h3 class="text-xs font-bold text-[var(--text-muted)] mb-4 uppercase tracking-widest">Weekly Trends</h3>
+                <!-- Weekly Study Dispersion -->
+                <div class="nb-card p-5 flex flex-col justify-between">
+                    <div class="border-b-2 border-[var(--card-border)] pb-2 mb-3">
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">FIGURE 2.0</span>
+                        <h3 class="text-base font-extrabold text-[var(--text-main)] uppercase">7-Day Study Dispersion</h3>
+                    </div>
                     <div class="w-full flex-1 min-h-[160px]"><canvas id="chartWeekly"></canvas></div>
+                    <div class="text-[10px] font-extrabold font-mono-num text-[var(--text-muted)] text-center border-t-2 border-[var(--card-border)] pt-2 uppercase">DAILY LOGGED HOURS (STACKED)</div>
                 </div>
 
-                <div class="card-squircle p-6 shadow-sm flex flex-col">
-                    <h3 class="text-xs font-bold text-[var(--text-muted)] mb-4 uppercase tracking-widest" id="monthly-chart-title">Monthly Progress</h3>
+                <!-- Monthly Progression -->
+                <div class="nb-card p-5 flex flex-col justify-between">
+                    <div class="border-b-2 border-[var(--card-border)] pb-2 mb-3">
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">FIGURE 3.0</span>
+                        <h3 class="text-base font-extrabold text-[var(--text-main)] uppercase" id="monthly-chart-title">Annual Monthly Progress</h3>
+                    </div>
                     <div class="w-full flex-1 min-h-[160px]"><canvas id="chartMonthly"></canvas></div>
+                    <div class="text-[10px] font-extrabold font-mono-num text-[var(--text-muted)] text-center border-t-2 border-[var(--card-border)] pt-2 uppercase">CUMULATIVE MONTHLY TIME EXPENDITURE</div>
                 </div>
             </div>
 
-            <!-- Heatmap -->
-            <div class="card-squircle p-6 shadow-sm flex flex-col justify-between h-[300px] md:h-auto">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-bold text-[var(--text-main)] tracking-tight">연속 학습 기록</h2>
-                    <div class="flex items-center space-x-1.5 bg-[rgba(48,209,88,0.1)] border border-[rgba(48,209,88,0.2)] px-3 py-1 rounded-full shadow-[0_0_10px_rgba(48,209,88,0.15)]">
-                        <span id="streak-counter" class="text-sm font-bold text-[#30d158] tracking-tight">🔥 0일째</span>
+            <!-- Continuous Register Streak Log -->
+            <div class="nb-card p-5 sm:p-6">
+                <div class="flex flex-wrap justify-between items-center border-b-2 border-[var(--card-border)] pb-3 mb-4 gap-2">
+                    <div>
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">CONTINUOUS REGISTER</span>
+                        <h2 class="text-lg font-extrabold text-[var(--text-main)] uppercase">연속 학습 일지 (Streak Log)</h2>
+                    </div>
+                    <div class="border-2 border-[var(--card-border)] rounded-xl px-3.5 py-1.5 font-mono-num font-extrabold text-xs bg-[var(--table-header)] text-[var(--text-main)] shadow-[2px_2px_0px_var(--card-border)]">
+                        <span id="streak-counter">STREAK: 0 DAYS</span>
                     </div>
                 </div>
-                <div class="w-full overflow-x-auto hide-scrollbar flex-1 flex flex-col justify-end" id="heatmap-scroll-wrapper">
-                    <div id="heatmap-container" class="grid grid-rows-7 grid-flow-col gap-1 sm:gap-1.5 w-max pb-1"></div>
+                
+                <div class="w-full overflow-x-auto hide-scrollbar flex flex-col justify-end" id="heatmap-scroll-wrapper">
+                    <div id="heatmap-container" class="grid grid-rows-7 grid-flow-col gap-1.5 w-max pb-1"></div>
                 </div>
-                <div class="flex justify-end items-center space-x-2 mt-4 text-[10px] text-[var(--text-muted)] font-medium tracking-wide">
-                    <span>Less</span>
-                    <div class="w-2.5 h-2.5 rounded-[2px] bg-[var(--hover-bg)] border border-[var(--card-border)]"></div>
-                    <div class="w-2.5 h-2.5 rounded-[2px] bg-[rgba(48,209,88,0.3)]"></div>
-                    <div class="w-2.5 h-2.5 rounded-[2px] bg-[rgba(48,209,88,0.6)]"></div>
-                    <div class="w-2.5 h-2.5 rounded-[2px] bg-[#30d158] shadow-[0_0_5px_rgba(48,209,88,0.6)]"></div>
-                    <span>More</span>
+                
+                <div class="flex justify-between items-center mt-4 pt-3 border-t-2 border-[var(--card-border)] text-[11px] font-extrabold font-mono-num text-[var(--text-muted)]">
+                    <span>PAST 20 WEEKS RECORD ARCHIVE</span>
+                    <div class="flex items-center space-x-2">
+                        <span>LESS</span>
+                        <div class="w-3.5 h-3.5 border-2 border-[var(--card-border)] bg-[var(--hover-bg)] rounded-[3px]"></div>
+                        <div class="w-3.5 h-3.5 border-2 border-[var(--card-border)] bg-[rgba(37,99,235,0.3)] rounded-[3px]"></div>
+                        <div class="w-3.5 h-3.5 border-2 border-[var(--card-border)] bg-[rgba(37,99,235,0.65)] rounded-[3px]"></div>
+                        <div class="w-3.5 h-3.5 border-2 border-[var(--card-border)] bg-[#2563eb] rounded-[3px]"></div>
+                        <span>MORE</span>
+                    </div>
                 </div>
             </div>
             
-            <div class="card-squircle p-6 lg:p-8 shadow-sm">
-                <h2 class="text-xl font-bold mb-6 text-[var(--text-main)] tracking-tight">과목별 진도 현황</h2>
-                <div id="view-course-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+            <!-- Course Gallery (과목별 진도 현황) -->
+            <div class="nb-card p-5 sm:p-6">
+                <div class="border-b-2 border-[var(--card-border)] pb-3 mb-5">
+                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">SYLLABUS PROGRESS</span>
+                    <h2 class="text-xl font-extrabold text-[var(--text-main)] uppercase">과목별 진도 및 이수율</h2>
+                </div>
+                <div id="view-course-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
             </div>
         </div>
 
+        <!-- Tab 2: Curriculum Manager -->
         <div id="tab-curriculum" class="tab-content hidden pb-24">
-            <section class="space-y-6 pt-4">
-                <div class="flex flex-wrap justify-between items-end gap-2 border-b border-[var(--card-border)] pb-4">
-                    <h2 class="text-3xl font-bold text-[var(--text-main)] tracking-tight">Curriculum Manager</h2>
-                    <p class="text-sm text-[var(--text-muted)]">과목과 강좌를 체계적으로 관리하세요.</p>
+            <section class="space-y-6 pt-2">
+                <div class="flex flex-wrap justify-between items-end gap-2 border-b-2 border-[var(--card-border)] pb-4">
+                    <div>
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">CURRICULUM REGISTER</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--text-main)] uppercase">강좌 및 강의 커리큘럼 관리</h2>
+                    </div>
+                    <p class="text-xs font-mono-num font-bold text-[var(--text-muted)]">과목별 강좌 구성 및 개별 강의 일람</p>
                 </div>
+                
                 <div id="curriculum-manager" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
-                <div class="pt-6 flex justify-center">
-                    <button data-action="openCourseModal" class="px-6 py-3.5 rounded-full bg-[var(--btn-glass)] border border-[var(--card-border)] hover:bg-[var(--hover-bg)] text-[var(--text-main)] font-bold transition flex items-center space-x-2 backdrop-blur-md shadow-lg">
-                        <span class="text-xl leading-none mb-0.5">+</span>
-                        <span>새로운 강좌 추가</span>
+                
+                <div class="pt-4 flex justify-center">
+                    <button data-action="openCourseModal" class="nb-btn-solid px-6 py-3.5 text-sm uppercase flex items-center space-x-2">
+                        <span class="text-lg leading-none">+</span>
+                        <span>새로운 강좌 등록 (ADD COURSE)</span>
                     </button>
                 </div>
             </section>
         </div>
 
-        <div id="tab-memo" class="tab-content hidden h-[calc(100vh-140px)] min-h-[600px] pb-12">
-            <div class="card-squircle h-full flex flex-col overflow-hidden border border-[var(--card-border)] shadow-xl relative">
-                <!-- 뷰어 컨트롤 바 -->
-                <div class="bg-[var(--card-bg)] border-b border-[var(--card-border)] px-4 py-2.5 flex flex-wrap justify-between items-center z-10 gap-2">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-sm font-bold text-[var(--text-main)] mr-2">뷰어 설정:</span>
-                        <div class="bg-[var(--input-bg)] rounded-lg p-1 border border-[var(--card-border)] flex space-x-1">
-                            <button data-action="setMemoView" data-view="editor" class="memo-view-btn px-3 py-1.5 rounded-md text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition">📝 에디터</button>
-                            <button data-action="setMemoView" data-view="split" class="memo-view-btn active px-3 py-1.5 rounded-md text-xs font-bold bg-[var(--text-main)] text-[var(--bg-main)] shadow-sm transition">🪟 분할</button>
-                            <button data-action="setMemoView" data-view="preview" class="memo-view-btn px-3 py-1.5 rounded-md text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition">👁️ 렌더링</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-1 h-[calc(100%-60px)] overflow-hidden flex-col md:flex-row">
-                    <!-- Sidebar (Folder & Note List) -->
-                    <div class="w-full md:w-64 bg-[var(--card-bg)] border-b md:border-b-0 md:border-r border-[var(--card-border)] flex flex-col flex-shrink-0 h-[250px] md:h-full transition-all">
-                        <div class="p-4 border-b border-[var(--card-border)] flex justify-between items-center">
-                            <h3 class="text-sm font-bold text-[var(--text-main)] tracking-widest uppercase">My Notes</h3>
-                            <button data-action="createNewFolder" class="text-xs text-[#0a84ff] font-bold hover:text-blue-400 bg-[rgba(10,132,255,0.1)] px-2 py-1 rounded-md transition">+ 폴더</button>
-                        </div>
-                        <div class="flex-1 overflow-y-auto p-3 hide-scrollbar">
-                            <ul id="advanced-notes-list" class="space-y-1 text-sm"></ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Editor & Preview Area -->
-                    <div class="flex-1 flex flex-col md:flex-row bg-[var(--bg-main)] relative overflow-hidden" id="memo-workspace">
-                        <div id="memo-empty-state" class="absolute inset-0 flex flex-col items-center justify-center bg-[var(--card-bg)] z-20">
-                            <div class="text-4xl mb-4">📝</div>
-                            <h2 class="text-xl font-bold text-[var(--text-main)] mb-2">선택된 메모가 없습니다</h2>
-                            <p class="text-sm text-[var(--text-muted)]">좌측에서 메모를 선택하거나 새 폴더/메모를 생성해주세요.</p>
-                        </div>
-
-                        <!-- Editor -->
-                        <div id="memo-editor-pane" class="flex-1 flex flex-col h-full border-r border-[var(--card-border)] transition-all">
-                            <input type="text" id="memo-title-input" class="w-full bg-[var(--card-bg)] text-[var(--text-main)] font-extrabold text-xl lg:text-2xl px-6 py-4 outline-none border-b border-[var(--card-border)]" placeholder="제목 없는 메모" oninput="updateActiveNoteTitle()">
-                            <textarea id="memo-content-input" class="flex-1 w-full bg-[var(--bg-main)] text-[var(--text-main)] text-sm lg:text-base p-6 outline-none resize-none hide-scrollbar font-mono leading-relaxed" placeholder="# 마크다운으로 내용 작성\n수식 입력 예시: $E=mc^2$\n\n블록 수식:\n$$\nx = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}\n$$" oninput="syncMarkdownPreview()"></textarea>
-                        </div>
-
-                        <!-- Preview -->
-                        <div id="memo-preview-pane" class="flex-1 h-full overflow-y-auto bg-[var(--card-bg)] p-6 md:p-10 hide-scrollbar transition-all">
-                            <h1 id="memo-preview-title" class="text-3xl font-extrabold text-[var(--text-main)] mb-6 pb-4 border-b border-[var(--card-border)] tracking-tight">제목 없는 메모</h1>
-                            <div id="memo-preview-content" class="markdown-body"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <!-- Tab 3: Master DB -->
         <div id="tab-database" class="tab-content hidden pb-24">
-            <section class="space-y-8 pt-4">
-                <h2 class="text-3xl font-bold text-[var(--text-main)] tracking-tight mb-8">Master Databases</h2>
-                <div class="space-y-10">
+            <section class="space-y-8 pt-2">
+                <div class="border-b-2 border-[var(--card-border)] pb-4">
+                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--text-muted)] block">DATABASE SYSTEM</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--text-main)] uppercase">Master Records Database</h2>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- DB: Courses -->
                     <div>
-                        <div class="flex justify-between items-center cursor-pointer mb-4 group px-2" data-action="toggleMasterDbSection" data-section="courses">
-                            <h3 class="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest group-hover:text-[var(--text-main)] transition">Courses</h3>
-                            <span class="text-[var(--text-muted)] text-xs transform transition-transform duration-300 font-bold" id="icon-db-courses">▼</span>
+                        <div class="flex justify-between items-center cursor-pointer mb-2.5 pb-1 border-b-2 border-[var(--card-border)] group" data-action="toggleMasterDbSection" data-section="courses">
+                            <h3 class="text-sm font-extrabold text-[var(--text-main)] uppercase tracking-wider group-hover:underline">
+                                [TABLE 01] Registered Courses Ledger
+                            </h3>
+                            <span class="text-[var(--text-main)] text-xs font-mono-num font-bold border-2 border-[var(--card-border)] rounded-md px-2 py-0.5 bg-[var(--card-bg)] shadow-[1.5px_1.5px_0px_var(--card-border)]" id="icon-db-courses">[COLLAPSE]</span>
                         </div>
                         <div class="accordion-grid open" id="wrap-db-courses">
                             <div class="accordion-inner">
-                                <div class="overflow-x-auto card-squircle">
+                                <div class="overflow-x-auto nb-card overflow-hidden">
                                     <table class="db-table">
-                                        <thead><tr><th class="w-24">과목</th><th>강좌 제목</th><th class="w-48 sm:w-64">진도율</th></tr></thead>
-                                        <tbody id="db-courses"></tbody>
+                                        <thead><tr><th class="w-24">Subject</th><th>Course Title</th><th class="w-48 sm:w-64">Completion Progress</th></tr></thead>
+                                        <tbody id="db-courses" class="bg-[var(--card-bg)]"></tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- DB: Lectures -->
                     <div>
-                        <div class="flex justify-between items-center cursor-pointer mb-4 group px-2" data-action="toggleMasterDbSection" data-section="lectures">
-                            <h3 class="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest group-hover:text-[var(--text-main)] transition">Lectures</h3>
-                            <span class="text-[var(--text-muted)] text-xs transform transition-transform duration-300 font-bold" id="icon-db-lectures">▼</span>
+                        <div class="flex justify-between items-center cursor-pointer mb-2.5 pb-1 border-b-2 border-[var(--card-border)] group" data-action="toggleMasterDbSection" data-section="lectures">
+                            <h3 class="text-sm font-extrabold text-[var(--text-main)] uppercase tracking-wider group-hover:underline">
+                                [TABLE 02] Itemized Lecture Archive
+                            </h3>
+                            <span class="text-[var(--text-main)] text-xs font-mono-num font-bold border-2 border-[var(--card-border)] rounded-md px-2 py-0.5 bg-[var(--card-bg)] shadow-[1.5px_1.5px_0px_var(--card-border)]" id="icon-db-lectures">[COLLAPSE]</span>
                         </div>
                         <div class="accordion-grid open" id="wrap-db-lectures">
                             <div class="accordion-inner">
-                                <div id="db-lectures-container" class="space-y-5"></div>
+                                <div id="db-lectures-container" class="space-y-4"></div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- DB: Daily Records -->
                     <div>
-                        <div class="flex justify-between items-center cursor-pointer mb-4 group px-2" data-action="toggleMasterDbSection" data-section="daily">
-                            <h3 class="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest group-hover:text-[var(--text-main)] transition">Daily Records</h3>
-                            <span class="text-[var(--text-muted)] text-xs transform transition-transform duration-300 font-bold" id="icon-db-daily">▼</span>
+                        <div class="flex justify-between items-center cursor-pointer mb-2.5 pb-1 border-b-2 border-[var(--card-border)] group" data-action="toggleMasterDbSection" data-section="daily">
+                            <h3 class="text-sm font-extrabold text-[var(--text-main)] uppercase tracking-wider group-hover:underline">
+                                [TABLE 03] Daily Study Logs Archive
+                            </h3>
+                            <span class="text-[var(--text-main)] text-xs font-mono-num font-bold border-2 border-[var(--card-border)] rounded-md px-2 py-0.5 bg-[var(--card-bg)] shadow-[1.5px_1.5px_0px_var(--card-border)]" id="icon-db-daily">[COLLAPSE]</span>
                         </div>
                         <div class="accordion-grid open" id="wrap-db-daily">
                             <div class="accordion-inner">
-                                <div class="overflow-x-auto card-squircle">
-                                    <table class="db-table">
+                                <div class="overflow-x-auto nb-card overflow-hidden">
+                                    <table class="db-table font-mono-num text-xs">
                                         <thead>
                                             <tr>
-                                                <th class="w-24 text-center">날짜</th><th>목표</th><th class="w-20 text-right">인강</th>
-                                                <th class="w-24 text-right">자습</th><th class="w-28 text-right text-[var(--text-main)]">총합</th><th class="w-20 text-center">달성</th>
+                                                <th class="w-24 text-center">Date</th><th>Key Goals & Tasks</th><th class="w-20 text-right">Lec (m)</th>
+                                                <th class="w-24 text-right">Study</th><th class="w-28 text-right text-[var(--text-main)]">Total</th><th class="w-20 text-center">Achieved</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="db-daily"></tbody>
+                                        <tbody id="db-daily" class="bg-[var(--card-bg)]"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -414,15 +583,19 @@
     </div>
 
     <!-- UI Overlays (Toasts, Modals) -->
-    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3"></div>
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 font-mono-num"></div>
 
-    <div id="modal-overlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xl z-[100] flex justify-center items-center p-4 transition-opacity">
-        <div class="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[32px] p-6 sm:p-8 w-full max-w-lg shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <h2 id="modal-title" class="text-2xl font-bold mb-6 pb-4 border-b border-[var(--card-border)] text-[var(--text-main)] tracking-tight">Title</h2>
-            <div id="modal-body" class="space-y-5 sm:space-y-6"></div>
-            <div class="mt-8 flex justify-end space-x-3 pt-4 border-t border-[var(--card-border)]">
-                <button data-action="closeModal" class="px-5 py-2.5 rounded-full bg-[var(--btn-glass)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--hover-bg)] transition font-semibold">취소</button>
-                <button id="modal-save-btn" class="px-6 py-2.5 rounded-full bg-[#0a84ff] text-white font-bold hover:bg-blue-600 transition shadow-[0_0_15px_rgba(10,132,255,0.3)]">저장</button>
+    <div id="modal-overlay" class="hidden fixed inset-0 bg-black/60 z-[100] flex justify-center items-center p-4">
+        <div class="bg-[var(--card-bg)] border-[3px] border-[var(--card-border)] p-6 sm:p-7 w-full max-w-lg shadow-[8px_8px_0px_var(--card-border)] rounded-2xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b-2 border-[var(--card-border)] pb-3 mb-5">
+                <span class="text-[11px] font-extrabold uppercase tracking-widest text-[var(--text-muted)]">ENTRY DOCKET</span>
+                <button data-action="closeModal" class="text-xs font-mono-num font-extrabold text-[var(--text-main)] hover:underline">[ESC / CLOSE]</button>
+            </div>
+            <h2 id="modal-title" class="text-2xl font-extrabold text-[var(--text-main)] mb-6 tracking-tight uppercase">Title</h2>
+            <div id="modal-body" class="space-y-4"></div>
+            <div class="mt-8 flex justify-end space-x-2.5 pt-4 border-t-2 border-[var(--card-border)] font-mono-num text-xs">
+                <button data-action="closeModal" class="nb-btn px-4 py-2 text-[var(--text-muted)]">CANCEL</button>
+                <button id="modal-save-btn" class="nb-btn-solid px-5 py-2">SAVE RECORD</button>
             </div>
         </div>
     </div>
@@ -432,17 +605,10 @@
             viewCourseGallery: null, todoTabsContainer: null, viewTodoLectures: null, calendarMonthLabel: null, viewCalendar: null,
             curriculumManager: null, dbCourses: null, dbLecturesContainer: null, dbDaily: null, heatmapContainer: null,
             streakCounter: null, viewDdays: null, toastContainer: null, modalOverlay: null, modalTitle: null,
-            modalBody: null, modalSaveBtn: null, dailyTotalText: null, monthlyChartTitle: null, syncIndicator: null,
-            advancedNotesList: null, memoTitleInput: null, memoContentInput: null, memoPreviewTitle: null, memoPreviewContent: null,
-            memoWorkspace: null, memoEmptyState: null, memoEditorPane: null, memoPreviewPane: null
+            modalBody: null, modalSaveBtn: null, dailyTotalText: null, monthlyChartTitle: null, syncIndicator: null
         };
 
         function initDOM() {
-            for (const key in DOM) {
-                const elementId = key.replace(/([A-Z])/g, "-$1").toLowerCase().replace(/^-/, '');
-                DOM[key] = document.getElementById(elementId) || document.getElementById(key);
-            }
-            // 수동 매핑
             DOM.viewCourseGallery = document.getElementById('view-course-gallery');
             DOM.todoTabsContainer = document.getElementById('todo-tabs-container');
             DOM.viewTodoLectures = document.getElementById('view-todo-lectures');
@@ -463,16 +629,6 @@
             DOM.dailyTotalText = document.getElementById('dailyTotalText');
             DOM.monthlyChartTitle = document.getElementById('monthly-chart-title');
             DOM.syncIndicator = document.getElementById('sync-status-indicator');
-            
-            DOM.advancedNotesList = document.getElementById('advanced-notes-list');
-            DOM.memoTitleInput = document.getElementById('memo-title-input');
-            DOM.memoContentInput = document.getElementById('memo-content-input');
-            DOM.memoPreviewTitle = document.getElementById('memo-preview-title');
-            DOM.memoPreviewContent = document.getElementById('memo-preview-content');
-            DOM.memoWorkspace = document.getElementById('memo-workspace');
-            DOM.memoEmptyState = document.getElementById('memo-empty-state');
-            DOM.memoEditorPane = document.getElementById('memo-editor-pane');
-            DOM.memoPreviewPane = document.getElementById('memo-preview-pane');
         }
 
         const esc = (str) => {
@@ -481,21 +637,32 @@
         };
         const generateId = (prefix) => prefix + '_' + (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID().split('-')[0] : Math.random().toString(36).substring(2, 10));
 
-        const getTodayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+        // 로컬 타임존 기반 안전 날짜 파서
+        const parseLocalDate = (dateStr) => {
+            if (!dateStr) return new Date();
+            const parts = dateStr.split('-').map(Number);
+            return new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0, 0);
+        };
+
+        const getTodayStr = () => { 
+            const d = new Date(); 
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; 
+        };
         const TODAY = getTodayStr();
         let currentCalendarDate = new Date(); 
 
+        // Brutalist High Contrast Subject Theme Palette
         const SUBJECT_THEMES = {
-            '수학': { bg: 'rgba(191, 90, 242, 0.15)', text: '#bf5af2', border: 'rgba(191, 90, 242, 0.25)', dot: '#bf5af2' },
-            '물리': { bg: 'rgba(100, 210, 255, 0.15)', text: '#64d2ff', border: 'rgba(100, 210, 255, 0.25)', dot: '#64d2ff' },
-            '영어': { bg: 'rgba(255, 214, 10, 0.15)', text: '#ffd60a', border: 'rgba(255, 214, 10, 0.25)', dot: '#ffd60a' },
-            '화학': { bg: 'rgba(255, 55, 95, 0.15)', text: '#ff375f', border: 'rgba(255, 55, 95, 0.25)', dot: '#ff375f' },
-            '기타': { bg: 'rgba(142, 142, 147, 0.15)', text: '#8e8e93', border: 'rgba(142, 142, 147, 0.25)', dot: '#8e8e93' }
+            '수학': { bg: 'transparent', text: 'var(--sub-math)', border: 'var(--card-border)', dot: '#2563eb' },
+            '물리': { bg: 'transparent', text: 'var(--sub-phys)', border: 'var(--card-border)', dot: '#0d9488' },
+            '영어': { bg: 'transparent', text: 'var(--sub-eng)', border: 'var(--card-border)', dot: '#d97706' },
+            '화학': { bg: 'transparent', text: 'var(--sub-chem)', border: 'var(--card-border)', dot: '#dc2626' },
+            '기타': { bg: 'transparent', text: 'var(--sub-etc)', border: 'var(--card-border)', dot: '#4b5563' }
         };
         const subjects = Object.keys(SUBJECT_THEMES);
 
         const COURSE_COLORS = [
-            '#FF3B30', '#FF9500', '#FFCC00', '#34C759', '#00C7BE', '#32ADE6', '#007AFF', '#5856D6', '#AF52DE', '#FF2D55'
+            '#000000', '#2563eb', '#0d9488', '#d97706', '#dc2626', '#7c3aed', '#059669', '#475569', '#c026d3', '#ea580c'
         ];
 
         function getStringColor(str) {
@@ -506,8 +673,6 @@
         }
 
         let courses = [], lectures = [], dailyRecords = [], ddays = [];
-        let noteFolders = [], advancedNotes = [];
-        let pendingDeletes = new Set();
         let toastTimers = {};
         let closedDbCourses = new Set(); 
         let masterDbFoldState = { courses: false, lectures: false, daily: false };
@@ -516,8 +681,7 @@
         let currentSubjectTab = null; 
         let openTodoCourses = new Set(); 
         let courseViewCounts = {};
-        let activeNoteId = null;
-        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let currentTheme = localStorage.getItem('theme') || 'light';
 
         document.documentElement.setAttribute('data-theme', currentTheme);
 
@@ -525,13 +689,13 @@
             if(!DOM.syncIndicator) return;
             DOM.syncIndicator.classList.remove('hidden');
             if(isError) {
-                DOM.syncIndicator.innerHTML = `<span class="text-rose-500 font-bold">연결 오류</span>`;
+                DOM.syncIndicator.innerHTML = `<span class="text-rose-500 font-extrabold font-mono-num">[OFFLINE / ERR]</span>`;
                 return;
             }
             if(isLoading) {
-                DOM.syncIndicator.innerHTML = `<svg class="w-3 h-3 mr-1 text-[var(--text-muted)] sync-spinner" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> 동기화 중...`;
+                DOM.syncIndicator.innerHTML = `<span class="text-[var(--text-muted)] font-mono-num font-extrabold">[SYNCING...]</span>`;
             } else {
-                DOM.syncIndicator.innerHTML = `<svg class="w-3 h-3 mr-1 text-[#30d158]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> 동기화됨`;
+                DOM.syncIndicator.innerHTML = `<span class="text-[var(--text-main)] font-mono-num font-extrabold"><span class="text-[#0d9488]">●</span> ONLINE</span>`;
             }
         };
 
@@ -540,12 +704,6 @@
             lectures = JSON.parse(localStorage.getItem('lectures')) || [];
             dailyRecords = JSON.parse(localStorage.getItem('dailyRecords')) || [];
             ddays = JSON.parse(localStorage.getItem('ddays')) || [];
-            
-            // Notes Data
-            noteFolders = JSON.parse(localStorage.getItem('noteFolders')) || [{ id: 'root', name: '기본 폴더' }];
-            advancedNotes = JSON.parse(localStorage.getItem('advancedNotes')) || [{ id: generateId('AN'), folderId: 'root', title: '환영합니다! 🚀', content: '# Notion Style Memo\n\n- 마크다운(Markdown)을 완벽 지원합니다.\n- 수식 입력 테스트:\n$$ E = mc^2 $$\n- 우측 상단 뷰 모드(에디터/분할/렌더링)를 바꿔보세요.', updatedAt: Date.now() }];
-            
-            advancedNotes.forEach(n => { if(!n.folderId) n.folderId = 'root'; });
 
             const activeSubjects = [...new Set(courses.map(c => c.subject))];
             if (activeSubjects.length > 0 && !currentSubjectTab) currentSubjectTab = activeSubjects[0];
@@ -560,15 +718,13 @@
                 if(data.lectures) lectures = data.lectures;
                 if(data.dailyRecords) dailyRecords = data.dailyRecords;
                 if(data.ddays) ddays = data.ddays;
-                if(data.noteFolders) noteFolders = data.noteFolders;
-                if(data.advancedNotes) advancedNotes = data.advancedNotes;
                 
                 saveData(false); 
                 renderAll();
             }
         };
 
-        window.getExportData = () => ({ courses, lectures, dailyRecords, ddays, noteFolders, advancedNotes });
+        window.getExportData = () => ({ courses, lectures, dailyRecords, ddays });
 
         let cloudSaveTimer = null;
         function saveData(syncToCloud = true) {
@@ -576,20 +732,17 @@
             localStorage.setItem('lectures', JSON.stringify(lectures));
             localStorage.setItem('dailyRecords', JSON.stringify(dailyRecords));
             localStorage.setItem('ddays', JSON.stringify(ddays));
-            localStorage.setItem('noteFolders', JSON.stringify(noteFolders));
-            localStorage.setItem('advancedNotes', JSON.stringify(advancedNotes));
 
-            // 실시간 동기화 지연(디바운싱): 입력 중 과도한 네트워크 요청 및 UI 덮어씌움 방지
             if (syncToCloud && typeof window.triggerCloudSave === 'function') {
                 clearTimeout(cloudSaveTimer);
                 cloudSaveTimer = setTimeout(() => {
                     window.triggerCloudSave(window.getExportData());
-                }, 1500); 
+                }, 1000); 
             }
         }
 
-        const getCourses = () => courses.filter(c => !pendingDeletes.has(c.id));
-        const getLectures = () => lectures.filter(l => !pendingDeletes.has(l.id) && !pendingDeletes.has(l.courseId));
+        const getCourses = () => courses;
+        const getLectures = () => lectures;
         const getDailyRecords = () => [...dailyRecords].sort((a, b) => new Date(a.date) - new Date(b.date));
         const getLecturesByCourse = () => {
             const map = {}; const lecs = getLectures();
@@ -628,7 +781,7 @@
             const subjChar = course && course.subject ? course.subject.charAt(0) : '';
             const match = lecture.title.match(/(\d+강)/);
             const lecPart = match ? match[1] : lecture.title.split(/[\s.]+/)[0];
-            return subjChar ? `${subjChar} ${lecPart}` : lecPart;
+            return subjChar ? `[${subjChar}] ${lecPart}` : lecPart;
         }
 
         function getDailyTaskStats(record) {
@@ -653,7 +806,7 @@
             const payload = JSON.stringify({ type, sourceId, taskId });
             event.dataTransfer.setData('text/plain', payload);
             event.dataTransfer.effectAllowed = 'copyMove';
-            setTimeout(() => event.target.style.opacity = "0.5", 0);
+            setTimeout(() => event.target.style.opacity = "0.4", 0);
         }
         window.handleDragEnd = function(event) { event.target.style.opacity = "1"; }
         window.handleDragOver = function(event) {
@@ -734,150 +887,18 @@
             window.processDrop(payload, dateStr, targetTaskId);
         }
 
-        window.renderAdvancedNotesList = function() {
-            if(!DOM.advancedNotesList) return;
-            let html = '';
-            
-            if (noteFolders.length === 0) {
-                html = `<li class="text-xs text-[var(--text-muted)] text-center py-8">생성된 폴더가 없습니다.<br>상단의 '+ 폴더'를 눌러 추가하세요.</li>`;
-            } else {
-                noteFolders.forEach(folder => {
-                    const folderNotes = advancedNotes.filter(n => n.folderId === folder.id).sort((a, b) => b.updatedAt - a.updatedAt);
-                    html += `
-                        <li class="mb-3">
-                            <div class="flex items-center justify-between group px-2 py-1.5 rounded-lg hover:bg-[var(--hover-bg)] cursor-default text-sm font-bold text-[var(--text-main)] transition">
-                                <span class="flex items-center space-x-2"><span class="text-[var(--text-muted)] text-base">📁</span><span>${esc(folder.name)}</span></span>
-                                <div class="opacity-0 lg:group-hover:opacity-100 opacity-100 flex items-center space-x-1 transition-opacity">
-                                    <button data-action="createNewNote" data-folder="${folder.id}" class="text-[#0a84ff] hover:text-[var(--text-main)] px-1.5 py-0.5 rounded transition" title="새 메모">+</button>
-                                    <button data-action="deleteFolder" data-id="${folder.id}" class="text-red-500 hover:text-red-400 px-1.5 py-0.5 rounded transition" title="폴더 삭제">×</button>
-                                </div>
-                            </div>
-                            <ul class="ml-[14px] pl-3 border-l-2 border-[var(--card-border)] mt-1.5 space-y-1">
-                                ${folderNotes.length > 0 ? folderNotes.map(n => `
-                                    <li data-action="openAdvancedNote" data-id="${n.id}" class="px-3 py-2 rounded-xl cursor-pointer transition flex items-center justify-between group ${activeNoteId === n.id ? 'bg-[#0a84ff] text-white shadow-md' : 'hover:bg-[var(--hover-bg)] text-[var(--text-muted)] hover:text-[var(--text-main)]'}">
-                                        <span class="truncate font-semibold text-xs flex-1 pointer-events-none">${esc(n.title) || '제목 없음'}</span>
-                                        <button data-action="deleteNote" data-id="${n.id}" class="opacity-0 group-hover:opacity-100 text-red-300 hover:text-white px-1 text-[10px] transition hidden md:block">×</button>
-                                    </li>
-                                `).join('') : `<li class="text-[10px] text-[var(--text-muted)] px-3 py-1 font-medium">메모가 없습니다.</li>`}
-                            </ul>
-                        </li>
-                    `;
-                });
-            }
-            DOM.advancedNotesList.innerHTML = html;
-        };
-
-        window.applyNoteView = function() {
-            if(!DOM.memoWorkspace) return;
-            if(!activeNoteId || !advancedNotes.find(n => n.id === activeNoteId)) {
-                DOM.memoEmptyState.classList.remove('hidden');
-                DOM.memoEditorPane.classList.add('hidden');
-                DOM.memoPreviewPane.classList.add('hidden');
-            } else {
-                DOM.memoEmptyState.classList.add('hidden');
-                const note = advancedNotes.find(n => n.id === activeNoteId);
-                
-                // 입력 중일 때(포커스 상태) 값이 덮어씌워져 커서가 풀리거나 중복 입력되는 현상 방지
-                if (document.activeElement !== DOM.memoTitleInput) {
-                    DOM.memoTitleInput.value = note.title;
-                }
-                if (document.activeElement !== DOM.memoContentInput) {
-                    DOM.memoContentInput.value = note.content || '';
-                }
-                
-                DOM.memoPreviewTitle.innerText = note.title || '제목 없음';
-                
-                // Get current view mode
-                const viewBtn = document.querySelector('.memo-view-btn.active');
-                const viewMode = viewBtn ? viewBtn.dataset.view : 'split';
-                
-                DOM.memoEditorPane.className = 'flex-1 flex flex-col h-full border-r border-[var(--card-border)] transition-all';
-                DOM.memoPreviewPane.className = 'flex-1 h-full overflow-y-auto bg-[var(--card-bg)] p-6 md:p-10 hide-scrollbar transition-all';
-                
-                if (viewMode === 'editor') {
-                    DOM.memoEditorPane.classList.remove('hidden');
-                    DOM.memoPreviewPane.classList.add('hidden');
-                } else if (viewMode === 'preview') {
-                    DOM.memoEditorPane.classList.add('hidden');
-                    DOM.memoPreviewPane.classList.remove('hidden');
-                } else {
-                    DOM.memoEditorPane.classList.remove('hidden');
-                    DOM.memoPreviewPane.classList.remove('hidden');
-                }
-                
-                window.renderMarkdownPreview();
-            }
-        };
-
-        window.updateActiveNoteTitle = function() {
-            if(!activeNoteId) return;
-            const note = advancedNotes.find(n => n.id === activeNoteId);
-            if(note) {
-                note.title = DOM.memoTitleInput.value;
-                note.updatedAt = Date.now();
-                DOM.memoPreviewTitle.innerText = note.title || '제목 없음';
-                saveData(); renderAdvancedNotesList();
-            }
-        };
-
-        window.syncMarkdownPreview = function() {
-            if(!activeNoteId) return;
-            const note = advancedNotes.find(n => n.id === activeNoteId);
-            if(note) {
-                note.content = DOM.memoContentInput.value;
-                note.updatedAt = Date.now();
-                saveData(); window.renderMarkdownPreview();
-            }
-        };
-
-        window.renderMarkdownPreview = function() {
-            if(!DOM.memoPreviewContent || !activeNoteId) return;
-            const note = advancedNotes.find(n => n.id === activeNoteId);
-            if(!note) return;
-            let content = note.content || '';
-
-            const mathBlocks = [];
-            // 블록 수식 $$ ... $$
-            content = content.replace(/\$\$(.*?)\$\$/gs, (match, math) => {
-                mathBlocks.push({ type: 'block', text: math });
-                return `%%%MATH_${mathBlocks.length - 1}%%%`;
-            });
-            // 인라인 수식 $ ... $
-            content = content.replace(/\$(.*?)\$/g, (match, math) => {
-                mathBlocks.push({ type: 'inline', text: math });
-                return `%%%MATH_${mathBlocks.length - 1}%%%`;
-            });
-
-            // 마크다운 렌더링
-            let html = marked.parse(content);
-
-            // 보호했던 수식 렌더링 후 복원
-            mathBlocks.forEach((block, i) => {
-                try {
-                    const renderedMath = katex.renderToString(block.text, {
-                        displayMode: block.type === 'block',
-                        throwOnError: false
-                    });
-                    html = html.replace(`%%%MATH_${i}%%%`, renderedMath);
-                } catch(e) {
-                    html = html.replace(`%%%MATH_${i}%%%`, `<span class="text-red-500">[수식 오류: ${esc(block.text)}]</span>`);
-                }
-            });
-
-            DOM.memoPreviewContent.innerHTML = DOMPurify.sanitize(html, { ADD_ATTR: ['target'] });
-        };
-
         function calculateDday(targetDateStr) {
-            const today = new Date(TODAY); const target = new Date(targetDateStr);
+            const today = parseLocalDate(TODAY);
+            const target = parseLocalDate(targetDateStr);
             const diffTime = target.getTime() - today.getTime();
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
             if (diffDays === 0) return 'D-DAY';
             return diffDays > 0 ? `D-${diffDays}` : `D+${Math.abs(diffDays)}`;
         }
 
         function renderDdays() {
             if(!DOM.viewDdays) return;
-            const addBtnHtml = `<button data-action="openDdayModal" class="flex items-center justify-center min-w-[80px] h-full px-4 py-2.5 rounded-2xl bg-[var(--btn-glass)] border border-[var(--card-border)] hover:bg-[var(--hover-bg)] transition-all text-[var(--text-muted)] hover:text-[var(--text-main)] flex-shrink-0 group shadow-sm"><span class="text-xl font-bold leading-none mb-0.5 group-hover:scale-110 transition-transform">+</span></button>`;
+            const addBtnHtml = `<button data-action="openDdayModal" class="nb-btn px-3 py-1.5 text-xs flex-shrink-0"><span class="font-extrabold mr-1">+</span>ADD D-DAY</button>`;
 
             if(ddays.length === 0) { DOM.viewDdays.innerHTML = addBtnHtml; return; }
 
@@ -886,32 +907,32 @@
                 const isDday = calculateDday(d.targetDate) === 'D-DAY';
                 const ddayText = calculateDday(d.targetDate);
                 
-                let themeClass = "bg-[rgba(100,210,255,0.1)] text-[#0a84ff] border-[rgba(10,132,255,0.2)]";
-                if(isDday || ddayText.includes('D-') && parseInt(ddayText.replace('D-','')) <= 7) {
-                    themeClass = "bg-gradient-to-r from-[rgba(255,55,95,0.15)] to-[rgba(255,55,95,0.05)] text-[#ff375f] border-[rgba(255,55,95,0.3)] shadow-[0_0_10px_rgba(255,55,95,0.1)]";
+                let highlightClass = "border-2 border-[var(--card-border)] text-[var(--text-main)] bg-[var(--card-bg)] shadow-[2px_2px_0px_var(--card-border)]";
+                if(isDday || (ddayText.startsWith('D-') && parseInt(ddayText.replace('D-','')) <= 7)) {
+                    highlightClass = "border-2 border-[var(--card-border)] bg-[var(--text-main)] text-[var(--bg-main)] shadow-[2px_2px_0px_var(--card-border)] font-extrabold";
                 } else if(isPast) {
-                    themeClass = "bg-[var(--btn-glass)] text-[var(--text-muted)] border-[var(--card-border)]";
+                    highlightClass = "border-2 border-[var(--card-border)] text-[var(--text-muted)] opacity-60 shadow-none";
                 }
 
                 return `
-                    <div class="relative flex items-center px-4 py-2.5 rounded-2xl border transition-all flex-shrink-0 group ${themeClass} backdrop-blur-md">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] font-medium opacity-70 mb-0.5 tracking-wide truncate max-w-[100px]" title="${esc(d.title)}">${esc(d.title)}</span>
-                            <span class="text-lg font-extrabold tracking-tight leading-none">${ddayText}</span>
+                    <div class="relative flex items-center px-3 py-1.5 rounded-xl transition flex-shrink-0 group ${highlightClass} font-mono-num text-xs font-bold">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[11px] truncate max-w-[120px]" title="${esc(d.title)}">${esc(d.title)}</span>
+                            <span class="font-extrabold tracking-tight">${ddayText}</span>
                         </div>
-                        <button data-action="deleteDday" data-id="${d.id}" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[var(--card-bg)] text-[var(--text-muted)] hover:text-red-500 border border-[var(--card-border)] rounded-full flex items-center justify-center text-[10px] font-bold opacity-0 group-hover:opacity-100 transition shadow-md z-10 hidden md:flex">✕</button>
+                        <button data-action="deleteDday" data-id="${d.id}" class="ml-2 hover:text-red-500 font-extrabold opacity-0 group-hover:opacity-100 transition">✕</button>
                     </div>
                 `;
             }).join('');
             DOM.viewDdays.innerHTML = addBtnHtml + ddayHtml;
         }
 
-        const renderProgressBar = (percent, dotColor = '#fff') => `
-            <div class="flex items-center space-x-3 w-full">
-                <div class="flex-1 bg-[var(--card-border)] h-2 rounded-full overflow-hidden flex shadow-inner">
-                    <div class="h-full transition-all duration-700 ease-out" style="width: ${percent}%; background-color: ${dotColor}; box-shadow: 0 0 10px ${dotColor};"></div>
+        const renderProgressBar = (percent, dotColor = 'var(--text-main)') => `
+            <div class="flex items-center space-x-2.5 w-full font-mono-num text-xs">
+                <div class="flex-1 bg-[var(--table-header)] h-3 border-2 border-[var(--card-border)] rounded-full overflow-hidden shadow-[1px_1px_0px_var(--card-border)]">
+                    <div class="h-full transition-all duration-200" style="width: ${percent}%; background-color: ${dotColor};"></div>
                 </div>
-                <span class="text-xs font-bold font-mono text-[var(--text-muted)] w-9 text-right flex-shrink-0">${percent}%</span>
+                <span class="text-[11px] font-extrabold text-[var(--text-main)] w-8 text-right flex-shrink-0">${percent}%</span>
             </div>
         `;
 
@@ -927,16 +948,18 @@
                     const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
 
                     return `
-                    <div class="inner-squircle p-5 flex flex-col justify-between min-h-[120px] hover:border-[var(--text-muted)] transition shadow-md relative overflow-hidden group bg-[var(--accent-glow)]">
-                        <div class="absolute top-0 left-0 w-1.5 h-full" style="background-color: ${theme.dot}; box-shadow: 0 0 10px ${theme.dot};"></div>
-                        <div class="pl-3 w-full min-w-0">
-                            <span class="text-[10px] font-extrabold uppercase tracking-widest mb-2 inline-block" style="color: ${theme.text};">${esc(c.subject)}</span>
-                            <div class="font-bold text-base text-[var(--text-main)] truncate w-full" title="${esc(c.title)}">${esc(c.title)}</div>
+                    <div class="nb-card p-4 flex flex-col justify-between min-h-[120px] hover:translate-x-[-1px] hover:translate-y-[-1px] transition">
+                        <div>
+                            <div class="flex justify-between items-center mb-1.5">
+                                <span class="text-[10px] font-mono-num uppercase tracking-wider font-extrabold px-2 py-0.5 border border-[var(--card-border)] rounded-md bg-[var(--table-header)]" style="color: ${theme.dot};">${esc(c.subject)}</span>
+                                <span class="text-[10px] font-mono-num font-bold text-[var(--text-muted)]">${completed}/${total} LECTURES</span>
+                            </div>
+                            <div class="font-extrabold text-sm text-[var(--text-main)] truncate w-full" title="${esc(c.title)}">${esc(c.title)}</div>
                         </div>
-                        <div class="mt-4 pl-3">${renderProgressBar(percent, theme.dot)}</div>
+                        <div class="mt-3.5">${renderProgressBar(percent, theme.dot)}</div>
                     </div>
                     `}).join('')
-                : `<div class="col-span-full py-10 text-center text-sm font-medium text-[var(--text-muted)]">진행 중인 강좌가 없습니다.</div>`;
+                : `<div class="col-span-full py-8 text-center text-xs font-mono-num font-bold text-[var(--text-muted)] border-2 border-dashed border-[var(--card-border)] rounded-xl">NO REGISTERED COURSES FOUND.</div>`;
         }
 
         function renderTodoLectures() {
@@ -951,16 +974,13 @@
 
             let tabsHtml = '';
             if (activeSubjects.length > 0) {
-                tabsHtml = `<div class="flex border-b border-[var(--card-border)] w-full overflow-x-auto hide-scrollbar">`;
+                tabsHtml = `<div class="flex border-b-2 border-[var(--card-border)] w-full overflow-x-auto hide-scrollbar font-mono-num text-xs">`;
                 tabsHtml += activeSubjects.map(subj => {
                     const isActive = currentSubjectTab === subj;
-                    const theme = getTheme(subj);
                     return `
                         <button data-action="setLectureTab" data-subj="${esc(subj)}"
-                                class="relative px-3 sm:px-4 py-2.5 text-[11px] sm:text-xs font-bold transition-all uppercase tracking-widest flex-shrink-0 ${isActive ? 'text-[var(--text-main)]' : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'}"
-                                style="${isActive ? `color: ${theme.dot};` : ''}">
+                                class="px-4 py-2.5 transition-all font-extrabold flex-shrink-0 uppercase border-r-2 border-[var(--card-border)] ${isActive ? 'bg-[var(--text-main)] text-[var(--bg-main)]' : 'bg-[var(--card-bg)] text-[var(--text-main)] hover:bg-[var(--hover-bg)]'}">
                             ${esc(subj)}
-                            ${isActive ? `<div class="absolute bottom-0 left-0 w-full h-[2px] rounded-t-md" style="background-color: ${theme.dot}; box-shadow: 0 -2px 8px ${theme.dot};"></div>` : ''}
                         </button>
                     `;
                 }).join('');
@@ -971,7 +991,7 @@
             const filteredCourses = dataCourses.filter(c => c.subject === currentSubjectTab);
             
             if(filteredCourses.length === 0) {
-                if(DOM.viewTodoLectures) DOM.viewTodoLectures.innerHTML = `<div class="py-12 text-center text-sm font-bold text-[var(--text-muted)]">이 과목의 강좌가 없습니다.</div>`;
+                if(DOM.viewTodoLectures) DOM.viewTodoLectures.innerHTML = `<div class="py-12 text-center text-xs font-mono-num font-bold text-[var(--text-muted)]">선택된 과목의 강좌가 없습니다.</div>`;
                 return;
             }
 
@@ -987,27 +1007,27 @@
                 const cColor = course.color || getStringColor(course.title);
 
                 html += `
-                    <li class="mb-3 inner-squircle bg-[var(--btn-glass)] border border-[var(--card-border)] overflow-hidden transition-all shadow-sm">
-                        <div class="flex justify-between items-center p-3.5 cursor-pointer hover:bg-[var(--hover-bg)] transition" data-action="toggleTodoCourse" data-id="${course.id}">
-                            <div class="flex items-center space-x-3 font-bold text-sm text-[var(--text-main)] w-full overflow-hidden pr-2">
-                                <div class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${cColor}; box-shadow: 0 0 8px ${cColor};"></div>
-                                <span class="truncate flex-1" title="${esc(course.title)}">${esc(course.title)}</span>
-                                <span class="text-[10px] text-[var(--text-main)] bg-[var(--card-bg)] px-2 py-0.5 rounded-md flex-shrink-0 border border-[var(--card-border)]">${courseTodos.length}강</span>
+                    <li class="border-2 border-[var(--card-border)] rounded-xl bg-[var(--card-bg)] shadow-[2px_2px_0px_var(--card-border)] overflow-hidden">
+                        <div class="flex justify-between items-center p-3 cursor-pointer hover:bg-[var(--hover-bg)]" data-action="toggleTodoCourse" data-id="${course.id}">
+                            <div class="flex items-center space-x-2.5 font-extrabold text-xs text-[var(--text-main)] w-full overflow-hidden pr-2">
+                                <span class="w-3 h-3 rounded-full border-2 border-[var(--card-border)] flex-shrink-0" style="background-color: ${cColor};"></span>
+                                <span class="truncate flex-1 text-sm font-bold" title="${esc(course.title)}">${esc(course.title)}</span>
+                                <span class="text-[10px] font-mono-num text-[var(--text-main)] border-2 border-[var(--card-border)] rounded-md px-1.5 py-0.5 bg-[var(--table-header)]">${courseTodos.length} LEFT</span>
                             </div>
-                            <span class="text-[var(--text-muted)] text-[10px] font-bold transform transition-transform ${isOpen ? 'rotate-180' : ''} flex-shrink-0">▼</span>
+                            <span class="text-[var(--text-main)] font-mono-num text-[11px] font-extrabold transform transition-transform ${isOpen ? 'rotate-180' : ''}">▼</span>
                         </div>
                         <div class="accordion-grid ${isOpen ? 'open' : 'closed'}">
                             <div class="accordion-inner">
-                                <ul class="p-2 pt-0 space-y-1.5 border-t border-[var(--card-border)] bg-[var(--accent-glow)] max-h-[300px] overflow-y-auto pr-1">
+                                <ul class="p-2 space-y-1.5 border-t-2 border-[var(--card-border)] bg-[var(--table-header)] max-h-[260px] overflow-y-auto font-mono-num text-xs">
                                     ${courseTodos.map(l => `
                                         <li draggable="true" 
                                             ondragstart="handleDragStart(event, 'todo', '${l.id}')" 
                                             ondragend="handleDragEnd(event)"
-                                            class="draggable-item flex items-center justify-between text-xs p-3 rounded-xl border border-[var(--card-border)] hover:border-[var(--text-muted)] transition group bg-[var(--card-bg)] hover:bg-[var(--hover-bg)] shadow-sm">
-                                            <div class="flex items-center space-x-3 overflow-hidden flex-1 pointer-events-none">
-                                                <div data-action="toggleLecture" data-id="${l.id}" class="w-4 h-4 rounded-full border-2 border-[var(--text-muted)] flex-shrink-0 group-hover:border-[#0a84ff] transition-colors cursor-pointer pointer-events-auto"></div>
-                                                <span class="text-[var(--text-main)] font-semibold truncate flex-1 pointer-events-none" title="${esc(l.title)}">${esc(l.title)}</span>
-                                                <span class="text-[10px] text-[var(--text-muted)] font-mono font-bold pointer-events-none flex-shrink-0">(${l.duration || 0}m)</span>
+                                            class="draggable-item flex items-center justify-between p-2.5 border-2 border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] shadow-[1.5px_1.5px_0px_var(--card-border)] hover:translate-x-[1px] hover:translate-y-[1px] transition">
+                                            <div class="flex items-center space-x-2 overflow-hidden flex-1 pointer-events-none">
+                                                <div data-action="toggleLecture" data-id="${l.id}" class="w-4 h-4 rounded-md border-2 border-[var(--card-border)] flex-shrink-0 hover:bg-[var(--text-main)] cursor-pointer pointer-events-auto flex items-center justify-center text-[9px]"></div>
+                                                <span class="text-[var(--text-main)] font-bold truncate flex-1" title="${esc(l.title)}">${esc(l.title)}</span>
+                                                <span class="text-[10px] text-[var(--text-muted)] font-extrabold flex-shrink-0 font-mono-num">[${l.duration || 0}m]</span>
                                             </div>
                                         </li>
                                     `).join('')}
@@ -1019,7 +1039,7 @@
             });
 
             if(!hasAnyTodo) {
-                html = `<div class="py-12 text-center text-sm font-bold text-[var(--text-muted)]">이 과목의 남은 강의가 없습니다 🎉</div>`;
+                html = `<div class="py-12 text-center text-xs font-mono-num font-bold text-[var(--text-muted)]">ALL LECTURES COMPLETED FOR THIS SUBJECT.</div>`;
             }
             if(DOM.viewTodoLectures) DOM.viewTodoLectures.innerHTML = html;
         }
@@ -1030,12 +1050,12 @@
             const month = currentCalendarDate.getMonth();
             const firstDay = new Date(year, month, 1).getDay(); 
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
             DOM.calendarMonthLabel.innerText = `${monthNames[month]} ${year}`;
 
             const recordsMap = getRecordsMap();
             let calendarHTML = '';
-            for(let i=0; i<firstDay; i++) calendarHTML += `<div class="calendar-cell bg-transparent pointer-events-none border-transparent"></div>`;
+            for(let i=0; i<firstDay; i++) calendarHTML += `<div class="calendar-cell bg-transparent pointer-events-none border-transparent opacity-20"></div>`;
 
             for(let i=1; i<=daysInMonth; i++) {
                 const dateStr = `${year}-${String(month+1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
@@ -1043,23 +1063,22 @@
                 const stats = getDailyTaskStats(record);
                 const isToday = dateStr === TODAY;
                 
-                let cellClass = "calendar-cell cursor-pointer hover:bg-[var(--hover-bg)]";
-                let dayTextClass = "text-[var(--text-muted)] font-bold";
+                let cellClass = "calendar-cell cursor-pointer";
+                let dayNumHtml = `<span class="text-[11px] font-mono-num font-extrabold text-[var(--text-muted)]">${String(i).padStart(2, '0')}</span>`;
                 if(isToday) {
-                    cellClass += " today-cell shadow-[inset_0_0_15px_rgba(10,132,255,0.15)]";
-                    dayTextClass = "text-[#0a84ff] font-extrabold";
+                    cellClass += " today-cell";
+                    dayNumHtml = `<span class="text-[10px] font-mono-num font-extrabold bg-[var(--text-main)] text-[var(--bg-main)] px-1.5 py-0.5 rounded-md border border-[var(--card-border)]">${String(i).padStart(2, '0')} TODAY</span>`;
                 }
 
-                let cellContent = `<div class="${dayTextClass} text-right text-xs mb-1.5 p-1 pointer-events-none">${i}</div>`;
+                let cellContent = `<div class="flex justify-between items-center mb-1.5 pointer-events-none border-b border-[var(--card-border)] pb-1">${dayNumHtml}</div>`;
                 
                 if(record && record.tasks && record.tasks.length > 0) {
                     record.tasks.forEach(task => {
                         const isCompleted = task.completed;
-                        const textStyle = isCompleted ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text-main)]';
-                        const bgStyle = isCompleted ? 'bg-[rgba(128,128,128,0.1)]' : 'bg-[var(--btn-glass)]';
-                        let dotColor = '#0a84ff';
+                        const textStyle = isCompleted ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text-main)]';
+                        let dotColor = 'var(--text-main)';
                         if (task.type === 'lecture') {
-                            dotColor = '#bf5af2';
+                            dotColor = '#0d9488';
                             if (task.refId) {
                                 const lec = lectures.find(l => l.id === task.refId);
                                 if (lec) {
@@ -1070,19 +1089,22 @@
                         }
                         
                         cellContent += `
-                            <div class="${bgStyle} ${textStyle} border border-[var(--card-border)] rounded-md px-1.5 py-1 mb-1 text-[10px] sm:text-[11px] font-semibold flex justify-between items-center shadow-sm w-full min-w-0 draggable-item" 
+                            <div class="border-2 border-[var(--card-border)] rounded-md pl-1.5 pr-1 py-0.5 mb-1 text-[10px] font-mono-num font-bold flex justify-between items-center bg-[var(--card-bg)] shadow-[1px_1px_0px_var(--card-border)] draggable-item" 
                                  data-action="toggleTask" data-rec-id="${record.id}" data-task-id="${task.id}" title="${esc(task.title)}"
                                  draggable="true" ondragstart="handleDragStart(event, 'calendar', '${record.id}', '${task.id}')" ondragend="handleDragEnd(event)">
-                                 <span class="truncate flex-1 min-w-0 pointer-events-none">${esc(task.title)}</span>
-                                 <div class="w-1.5 h-1.5 rounded-full flex-shrink-0 ml-1.5 transition-all ${isCompleted ? 'bg-[#555]' : ''} pointer-events-none" style="${!isCompleted ? `background-color: ${dotColor}; box-shadow: 0 0 6px ${dotColor};` : ''}"></div>
+                                 <div class="flex items-center space-x-1 overflow-hidden min-w-0 pointer-events-none">
+                                     <span class="w-1.5 h-1.5 rounded-full flex-shrink-0" style="background-color: ${dotColor};"></span>
+                                     <span class="truncate flex-1 ${textStyle}">${isCompleted ? '✓ ' : ''}${esc(task.title)}</span>
+                                 </div>
+                                 <span class="text-[9px] text-[var(--text-muted)] ml-1 flex-shrink-0 font-mono-num">${task.time}m</span>
                             </div>
                         `;
                     });
                     
                     if(stats.total > 0) {
-                        cellContent += `<div class="mt-auto pt-1 flex flex-col items-end space-y-0.5">`;
-                        if (stats.lecture > 0) cellContent += `<span class="text-[9px] sm:text-[10px] text-[#bf5af2] font-mono font-bold tracking-tight leading-none bg-[rgba(191,90,242,0.1)] px-1 rounded">L: ${formatTime(stats.lecture)}</span>`;
-                        if (stats.study > 0) cellContent += `<span class="text-[9px] sm:text-[10px] text-[#0a84ff] font-mono font-bold tracking-tight leading-none bg-[rgba(10,132,255,0.1)] px-1 rounded">S: ${formatTime(stats.study)}</span>`;
+                        cellContent += `<div class="mt-auto pt-1 flex justify-between items-center text-[9px] font-mono-num font-extrabold text-[var(--text-muted)] border-t border-[var(--card-border)]">`;
+                        cellContent += `<span>${stats.lecture > 0 ? 'L:' + stats.lecture + 'm' : ''}</span>`;
+                        cellContent += `<span class="text-[var(--text-main)]">Σ ${formatTime(stats.total)}</span>`;
                         cellContent += `</div>`;
                     }
                 }
@@ -1092,191 +1114,37 @@
 
             const totalCells = firstDay + daysInMonth;
             const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-            for(let i=0; i<remainingCells; i++) calendarHTML += `<div class="calendar-cell bg-transparent pointer-events-none border-transparent"></div>`;
+            for(let i=0; i<remainingCells; i++) calendarHTML += `<div class="calendar-cell bg-transparent pointer-events-none border-transparent opacity-20"></div>`;
 
             DOM.viewCalendar.innerHTML = calendarHTML;
         }
 
-        function renderCurriculumManager() {
-            if(!DOM.curriculumManager) return;
-            const dataCourses = getCourses();
-            const lecsMap = getLecturesByCourse();
-
-            if (dataCourses.length === 0) {
-                DOM.curriculumManager.innerHTML = `<div class="col-span-full py-16 text-center text-[var(--text-muted)] border border-[var(--card-border)] border-dashed rounded-[32px] text-sm font-medium">등록된 강좌가 없습니다.</div>`;
-                return;
-            }
-
-            let html = '';
-            subjects.forEach(subject => {
-                const subjCourses = dataCourses.filter(c => c.subject === subject);
-                if(subjCourses.length === 0) return; 
-
-                const theme = getTheme(subject);
-
-                html += `
-                    <div class="card-squircle overflow-hidden h-fit border border-[var(--card-border)] shadow-lg">
-                        <div class="bg-[var(--table-header)] px-6 py-5 flex justify-between items-center border-b border-[var(--card-border)]">
-                            <h3 class="text-lg font-extrabold flex items-center space-x-3">
-                                <span class="w-3 h-3 rounded-full shadow-[0_0_8px_${theme.dot}]" style="background-color: ${theme.dot}"></span>
-                                <span style="color: ${theme.text}" class="tracking-wide">${esc(subject)}</span>
-                            </h3>
-                        </div>
-                        
-                        <div class="p-6 space-y-5">
-                            ${subjCourses.map(course => {
-                                const courseLecs = lecsMap[course.id] || [];
-                                const totalLecs = courseLecs.length;
-                                let visibleCount = courseViewCounts[course.id] !== undefined ? Math.min(courseViewCounts[course.id], totalLecs) : Math.min(10, totalLecs);
-                                const displayLecs = courseLecs.slice(0, visibleCount);
-                                const hiddenCount = totalLecs - visibleCount;
-                                const cColor = course.color || getStringColor(course.title);
-
-                                return `
-                                <div class="inner-squircle border border-[var(--card-border)] p-5 transition hover:border-[var(--text-muted)] min-w-0 bg-[var(--btn-glass)]">
-                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4 border-b border-[var(--card-border)] pb-4">
-                                        <div class="flex items-center space-x-2 flex-1 min-w-0">
-                                            <div class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${cColor}; box-shadow: 0 0 8px ${cColor};"></div>
-                                            <div class="font-bold text-[var(--text-main)] text-lg truncate" title="${esc(course.title)}">${esc(course.title)}</div>
-                                        </div>
-                                        <div class="flex space-x-2.5 text-xs flex-shrink-0 mt-1 sm:mt-0 items-center">
-                                            <button data-action="openLectureModal" data-course-id="${course.id}" class="text-[var(--text-main)] bg-[var(--hover-bg)] hover:bg-[var(--card-border)] border border-[var(--card-border)] font-bold px-3 py-1.5 rounded-full transition shadow-sm">+ 추가</button>
-                                            <button data-action="openCourseModal" data-course-id="${course.id}" class="text-[var(--text-muted)] hover:text-[var(--text-main)] font-semibold px-2 py-1 transition">수정</button>
-                                            <button data-action="deleteCourse" data-id="${course.id}" class="text-red-500/80 hover:text-red-500 font-semibold px-1 transition">삭제</button>
-                                        </div>
-                                    </div>
-                                    <div class="mt-2">
-                                        ${displayLecs.length > 0 ? `
-                                        <ul class="ml-1.5 pl-3 border-l-2 border-[var(--card-border)] space-y-2.5">
-                                            ${displayLecs.map(lec => `
-                                                <li class="flex justify-between items-center text-sm group rounded-xl px-2.5 py-1.5 -ml-2.5 hover:bg-[var(--hover-bg)] transition">
-                                                    <div class="flex items-center space-x-3 overflow-hidden flex-1">
-                                                        <input type="checkbox" class="custom-checkbox w-4 h-4 flex-shrink-0" ${lec.status === '완료' ? 'checked' : ''} data-action="toggleLecture" data-id="${lec.id}">
-                                                        <span class="truncate font-semibold ${lec.status === '완료' ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text-main)]'}" title="${esc(lec.title)}">${esc(lec.title)}</span>
-                                                        <span class="text-[11px] text-[var(--text-muted)] font-mono font-bold">(${lec.duration || 0}m)</span>
-                                                    </div>
-                                                    <div class="flex items-center space-x-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity flex-shrink-0 ml-3">
-                                                        <button data-action="openLectureModal" data-course-id="${course.id}" data-lec-id="${lec.id}" class="text-[10px] font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] px-2.5 py-1 rounded-full hover:bg-[var(--hover-bg)] border border-[var(--card-border)] transition">수정</button>
-                                                        <button data-action="deleteLecture" data-id="${lec.id}" class="text-[10px] font-bold text-red-400 hover:text-white px-2.5 py-1 rounded-full hover:bg-red-500 transition">삭제</button>
-                                                    </div>
-                                                </li>
-                                            `).join('')}
-                                        </ul>
-                                        ` : (totalLecs === 0 ? '<p class="text-xs text-[var(--text-muted)] py-1 font-medium ml-1.5">등록된 강의가 없습니다.</p>' : '')}
-                                    </div>
-                                    ${totalLecs > 0 ? `
-                                        <div class="pt-3.5 flex justify-center items-center gap-2 border-t border-[var(--card-border)] mt-3.5">
-                                            ${hiddenCount > 0 ? `
-                                                <button data-action="courseShowMore" data-id="${course.id}" class="text-xs font-bold text-[var(--text-main)] px-3 py-1.5 rounded-full bg-[var(--hover-bg)] hover:bg-[var(--card-border)] border border-[var(--card-border)] transition shadow-sm">▼ ${Math.min(10, hiddenCount)}개 더보기</button>
-                                            ` : ''}
-                                            ${visibleCount > 0 ? `
-                                                <button data-action="courseFoldLess" data-id="${course.id}" class="text-xs font-bold text-[var(--text-main)] px-3 py-1.5 rounded-full bg-[var(--hover-bg)] hover:bg-[var(--card-border)] border border-[var(--card-border)] transition shadow-sm">▲ ${visibleCount % 10 === 0 ? 10 : visibleCount % 10}개 접기</button>
-                                                <button data-action="courseFoldAll" data-id="${course.id}" class="text-[10px] font-bold text-[var(--text-muted)] px-3 py-1.5 rounded-full bg-[var(--hover-bg)] hover:text-[var(--text-main)] border border-[var(--card-border)] transition shadow-sm">완전히 접기</button>
-                                            ` : ''}
-                                        </div>
-                                    ` : ''}
-                                </div>`;
-                            }).join('')}
-                        </div>
-                    </div>
-                `;
-            });
-            DOM.curriculumManager.innerHTML = html;
-        }
-
-        function renderMasterDB() {
-            if(!DOM.dbCourses || !DOM.dbLecturesContainer || !DOM.dbDaily) return;
-            const dataCourses = getCourses();
-            const lecsMap = getLecturesByCourse();
-
-            DOM.dbCourses.innerHTML = dataCourses.length > 0 ? dataCourses.map(c => {
-                const theme = getTheme(c.subject);
-                return `
-                <tr>
-                    <td><span class="text-[11px] font-extrabold uppercase tracking-widest" style="color: ${theme.text};">${esc(c.subject)}</span></td>
-                    <td class="text-[var(--text-main)] font-bold truncate max-w-[200px] sm:max-w-[400px]" title="${esc(c.title)}">${esc(c.title)}</td>
-                    <td>${renderProgressBar(getCourseProgress(lecsMap, c.id), theme.dot)}</td>
-                </tr>
-            `}).join('') : `<tr><td colspan="3" class="text-center text-[var(--text-muted)] py-8 font-semibold text-sm">데이터가 없습니다.</td></tr>`;
-
-            let lecturesHtml = '';
-            subjects.forEach(subj => {
-                const subjCourses = dataCourses.filter(c => c.subject === subj);
-                if(subjCourses.length === 0) return;
-                
-                const theme = getTheme(subj);
-                lecturesHtml += `<div class="mb-6"><h4 class="text-[11px] font-extrabold mb-3 flex items-center space-x-2 tracking-widest uppercase ml-1" style="color: ${theme.text}"><span class="w-2 h-2 rounded-full shadow-[0_0_8px_${theme.dot}]" style="background-color: ${theme.dot}"></span><span>${esc(subj)}</span></h4>`;
-                
-                subjCourses.forEach(course => {
-                    const courseLecs = lecsMap[course.id] || [];
-                    const isClosed = closedDbCourses.has(course.id); 
-                    
-                    lecturesHtml += `
-                    <div class="inner-squircle border border-[var(--card-border)] mb-3 overflow-hidden bg-[var(--card-bg)] shadow-sm">
-                        <div class="px-5 py-4 flex justify-between items-center cursor-pointer hover:bg-[var(--hover-bg)] transition-colors" data-action="toggleDbCourse" data-id="${course.id}">
-                            <div class="font-bold text-sm text-[var(--text-main)] pointer-events-none">${esc(course.title)} <span class="text-[10px] text-[var(--text-muted)] ml-3 font-semibold bg-[var(--hover-bg)] px-2.5 py-1 rounded-full border border-[var(--card-border)]">${courseLecs.length}강</span></div>
-                            <div class="text-[var(--text-muted)] text-xs transform transition-transform duration-300 font-bold ${isClosed ? '' : 'rotate-180'} pointer-events-none">▼</div>
-                        </div>
-                        <div class="accordion-grid ${isClosed ? 'closed' : 'open'} bg-[var(--btn-glass)]">
-                            <div class="accordion-inner border-t border-[var(--card-border)]">
-                                <table class="w-full text-sm">
-                                    <thead class="text-[var(--text-muted)] text-[10px] font-extrabold uppercase tracking-widest bg-[var(--table-header)]">
-                                        <tr><th class="p-3 pl-5 text-left border-b border-[var(--card-border)]">Title</th><th class="p-3 w-24 text-center border-b border-[var(--card-border)]">Status</th><th class="p-3 w-20 text-center border-b border-[var(--card-border)]">Time</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        ${courseLecs.length > 0 ? courseLecs.map(l => `
-                                        <tr class="border-b border-[var(--card-border)] hover:bg-[var(--hover-bg)] transition-colors last:border-b-0">
-                                            <td class="p-3 pl-5 font-semibold ${l.status === '완료' ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text-main)]'}">${esc(l.title)}</td>
-                                            <td class="p-3 text-center"><span class="text-[10px] px-2.5 py-1 rounded-full font-bold border ${l.status === '완료' ? 'border-[var(--card-border)] bg-[var(--hover-bg)] text-[var(--text-muted)]' : 'border-[#0a84ff] bg-[rgba(10,132,255,0.1)] text-[#0a84ff]'} shadow-sm">${l.status}</span></td>
-                                            <td class="p-3 text-center text-[11px] text-[var(--text-muted)] font-mono font-bold">${l.duration||0}m</td>
-                                        </tr>
-                                        `).join('') : `<tr><td colspan="3" class="p-5 text-center text-[var(--text-muted)] text-xs font-semibold">등록된 강의가 없습니다.</td></tr>`}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>`;
-                });
-                lecturesHtml += `</div>`;
-            });
-            if(Object.keys(lecsMap).length === 0) lecturesHtml = `<div class="text-center text-[var(--text-muted)] py-8 font-semibold text-sm inner-squircle border border-[var(--card-border)]">데이터가 없습니다.</div>`;
-            DOM.dbLecturesContainer.innerHTML = lecturesHtml;
-
-            const records = getDailyRecords();
-            DOM.dbDaily.innerHTML = records.length > 0 ? records.map(d => {
-                const stats = getDailyTaskStats(d);
-                return `
-                <tr class="cursor-pointer hover:bg-[var(--hover-bg)] transition-colors" data-action="openDailyModal" data-date="${d.date}">
-                    <td class="text-[var(--text-muted)] font-mono font-bold text-center text-xs tracking-wider">${d.date.substring(5)}</td>
-                    <td class="text-[var(--text-main)] font-semibold truncate max-w-[150px] sm:max-w-[250px]" title="${esc(stats.goals)}">${esc(stats.goals) || '<span class="text-[var(--text-muted)] italic">목표 없음</span>'}</td>
-                    <td class="text-right text-[var(--text-muted)] font-mono font-semibold text-xs">${stats.lecture > 0 ? stats.lecture + 'm' : '-'}</td>
-                    <td class="text-right text-[var(--text-muted)] font-mono font-semibold text-xs">${stats.study > 0 ? formatTime(stats.study) : '-'}</td>
-                    <td class="text-right text-[#0a84ff] font-bold font-mono text-sm tracking-tight">${formatTime(stats.total)}</td>
-                    <td class="text-center" onclick="event.stopPropagation()">
-                        <input type="checkbox" data-action="toggleDailyAchieved" data-id="${d.id}" ${stats.allCompleted ? 'checked' : ''} class="custom-checkbox mx-auto scale-90">
-                    </td>
-                </tr>
-            `}).join('') : `<tr><td colspan="6" class="text-center text-[var(--text-muted)] py-8 font-semibold text-sm">데이터가 없습니다.</td></tr>`;
-        }
-
         let chartInstances = { daily: null, weekly: null, monthly: null };
         function updateChartGlobalColors() {
-            Chart.defaults.color = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim();
-            Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+            const styles = getComputedStyle(document.documentElement);
+            Chart.defaults.color = styles.getPropertyValue('--text-main').trim() || '#000000';
+            Chart.defaults.borderColor = styles.getPropertyValue('--card-border').trim() || '#000000';
+            Chart.defaults.font.family = '"Plus Jakarta Sans", "Pretendard", sans-serif';
             Chart.defaults.font.size = 11;
+            Chart.defaults.font.weight = 'bold';
         }
         
-        const getChartBaseOptions = (isBar) => ({
-            responsive: true, maintainAspectRatio: false,
-            scales: {
-                x: { stacked: isBar, grid: { display: false }, border: { display: false } },
-                y: { stacked: isBar, grid: { color: 'rgba(128,128,128,0.1)' }, border: { display: false }, beginAtZero: true, ticks: { maxTicksLimit: 5, callback: v => v + 'h' } }
-            },
-            plugins: { legend: { display: false } }
-        });
+        const getChartBaseOptions = (isBar) => {
+            const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--table-header').trim() || '#ebebe6';
+            const axisColor = getComputedStyle(document.documentElement).getPropertyValue('--card-border').trim() || '#000000';
+            return {
+                responsive: true, maintainAspectRatio: false,
+                scales: {
+                    x: { stacked: isBar, grid: { display: false }, border: { color: axisColor, width: 2 } },
+                    y: { stacked: isBar, grid: { color: gridColor }, border: { color: axisColor, width: 2 }, beginAtZero: true, ticks: { maxTicksLimit: 5, callback: v => v + 'h' } }
+                },
+                plugins: { legend: { display: false } }
+            };
+        };
 
         const getChartTooltip = (customLabelCb, customAfterTitleCb) => ({
-            backgroundColor: 'rgba(28, 28, 30, 0.9)', titleColor: '#fff', bodyColor: '#f5f5f7', padding: 12, cornerRadius: 12,
+            backgroundColor: '#000000', titleColor: '#ffffff', bodyColor: '#ffffff', padding: 8, cornerRadius: 8,
+            borderWidth: 2, borderColor: '#ffffff',
             callbacks: { label: customLabelCb, afterTitle: customAfterTitleCb || (() => '') }
         });
 
@@ -1297,15 +1165,15 @@
             if (splitTextContainer) {
                 if (totalToday > 0) {
                     splitTextContainer.innerHTML = `
-                        ${todayStats.lecture > 0 ? `<span class="text-[#bf5af2] bg-[rgba(191,90,242,0.15)] px-1.5 py-0.5 rounded-md">인강 ${formatTime(todayStats.lecture)}</span>` : ''}
-                        ${todayStats.study > 0 ? `<span class="text-[#0a84ff] bg-[rgba(10,132,255,0.15)] px-1.5 py-0.5 rounded-md">자습 ${formatTime(todayStats.study)}</span>` : ''}
+                        ${todayStats.lecture > 0 ? `<span class="border border-[var(--card-border)] rounded-md px-1 bg-[var(--table-header)]">인강 ${formatTime(todayStats.lecture)}</span>` : ''}
+                        ${todayStats.study > 0 ? `<span class="border border-[var(--card-border)] rounded-md px-1 bg-[var(--table-header)]">자습 ${formatTime(todayStats.study)}</span>` : ''}
                     `;
                 } else { splitTextContainer.innerHTML = ''; }
             }
 
             const dailyData = totalToday > 0 ? [todayStats.lecture, todayStats.study, 0] : [0, 0, 1];
-            const bgEmpty = getComputedStyle(document.documentElement).getPropertyValue('--card-border').trim();
-            const dailyBg = totalToday > 0 ? ['#bf5af2', '#0a84ff', bgEmpty] : [bgEmpty, bgEmpty, bgEmpty];
+            const bgEmpty = getComputedStyle(document.documentElement).getPropertyValue('--table-header').trim();
+            const dailyBg = totalToday > 0 ? ['#0d9488', '#2563eb', bgEmpty] : [bgEmpty, bgEmpty, bgEmpty];
 
             if(chartInstances.daily) {
                 chartInstances.daily.data.datasets[0].data = dailyData;
@@ -1315,8 +1183,8 @@
             } else {
                 chartInstances.daily = new Chart(ctxDaily, {
                     type: 'doughnut',
-                    data: { labels: ['인강 시청', '개인 공부', '미학습'], datasets: [{ data: dailyData, backgroundColor: dailyBg, borderWidth: 0, hoverOffset: 4 }] },
-                    options: { responsive: true, maintainAspectRatio: false, cutout: '82%', plugins: { legend: { display: false } } }
+                    data: { labels: ['인강 시청', '개인 공부', '미학습'], datasets: [{ data: dailyData, backgroundColor: dailyBg, borderWidth: 2, borderColor: 'var(--card-border)', hoverOffset: 2 }] },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '78%', plugins: { legend: { display: false } } }
                 });
             }
 
@@ -1354,8 +1222,8 @@
                 chartInstances.weekly = new Chart(ctxWeekly, {
                     type: 'bar',
                     data: { labels: weeklyLabels, datasets: [
-                        { label: '인강 시청', data: dataLecHours, backgroundColor: '#bf5af2', borderRadius: 6, barPercentage: 0.5 }, 
-                        { label: '개인 공부', data: dataStudyHours, backgroundColor: '#0a84ff', borderRadius: 6, barPercentage: 0.5 }
+                        { label: '인강 시청', data: dataLecHours, backgroundColor: '#0d9488', borderWidth: 2, borderColor: 'var(--card-border)', borderRadius: 4, barPercentage: 0.6 }, 
+                        { label: '개인 공부', data: dataStudyHours, backgroundColor: '#2563eb', borderWidth: 2, borderColor: 'var(--card-border)', borderRadius: 4, barPercentage: 0.6 }
                     ]},
                     options: wOpts
                 });
@@ -1364,14 +1232,14 @@
             // Monthly Chart
             const ctxMonthly = document.getElementById('chartMonthly').getContext('2d');
             const targetYear = currentCalendarDate.getFullYear();
-            if(DOM.monthlyChartTitle) DOM.monthlyChartTitle.innerText = `${targetYear} Monthly Progress`;
-            let monthlyLabels = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+            if(DOM.monthlyChartTitle) DOM.monthlyChartTitle.innerText = `${targetYear} Academic Year Progress`;
+            let monthlyLabels = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
             let monthTotals = new Array(12).fill(0);
             const isCurrentYear = targetYear === new Date().getFullYear();
             const currentMonthLimit = isCurrentYear ? new Date().getMonth() : (targetYear > new Date().getFullYear() ? -1 : 11);
             
             getDailyRecords().forEach(r => {
-                let d = new Date(r.date);
+                let d = parseLocalDate(r.date);
                 if(d.getFullYear() === targetYear) monthTotals[d.getMonth()] += getDailyTaskStats(r).total;
             });
 
@@ -1381,7 +1249,7 @@
                 else cumulativeDataHours.push(monthTotals[m] / 60); 
             }
 
-            const monthlyTooltip = getChartTooltip(c => ` 월간 학습량: ${formatTime(Math.round(c.raw * 60))}`);
+            const monthlyTooltip = getChartTooltip(c => ` 월간 총계: ${formatTime(Math.round(c.raw * 60))}`);
 
             if(chartInstances.monthly) {
                 chartInstances.monthly.data.datasets[0].data = cumulativeDataHours;
@@ -1391,14 +1259,15 @@
                 mOpts.plugins.tooltip = monthlyTooltip;
                 chartInstances.monthly = new Chart(ctxMonthly, {
                     type: 'bar',
-                    data: { labels: monthlyLabels, datasets: [{ label: '월간 총 학습', data: cumulativeDataHours, backgroundColor: '#bf5af2', borderRadius: 6, barPercentage: 0.5 }] },
+                    data: { labels: monthlyLabels, datasets: [{ label: '월간 학습량', data: cumulativeDataHours, backgroundColor: 'var(--text-main)', borderWidth: 2, borderColor: 'var(--card-border)', borderRadius: 4, barPercentage: 0.6 }] },
                     options: mOpts
                 });
             }
         }
 
         function calculateStreak(recordsMap) {
-            let streak = 0; let d = new Date(); 
+            let streak = 0; 
+            let d = parseLocalDate(getTodayStr()); 
             const todayRec = recordsMap[getTodayStr()];
             const todayTotal = todayRec ? getDailyTaskStats(todayRec).total : 0;
             if (todayTotal === 0) d.setDate(d.getDate() - 1);
@@ -1416,11 +1285,11 @@
         function renderHeatmap() {
             if(!DOM.heatmapContainer) return;
             let html = '';
-            let d = new Date();
+            let d = parseLocalDate(getTodayStr());
             d.setDate(d.getDate() - 140); 
             while(d.getDay() !== 0) d.setDate(d.getDate() - 1);
 
-            const today = new Date();
+            const today = parseLocalDate(getTodayStr());
             const recordsMap = getRecordsMap();
             
             while(d <= today) {
@@ -1428,23 +1297,189 @@
                 let rec = recordsMap[dateStr];
                 let total = rec ? getDailyTaskStats(rec).total : 0;
                 
-                let colorClass = 'bg-[var(--hover-bg)] border border-[var(--card-border)]';
-                if (total > 0 && total < 60) colorClass = 'bg-[rgba(48,209,88,0.3)] border-transparent';
-                else if (total >= 60 && total < 120) colorClass = 'bg-[rgba(48,209,88,0.6)] border-transparent';
-                else if (total >= 120) colorClass = 'bg-[#30d158] shadow-[0_0_5px_rgba(48,209,88,0.5)] border-transparent';
+                let colorClass = 'bg-[var(--table-header)] border-2 border-[var(--card-border)]';
+                if (total > 0 && total < 60) colorClass = 'bg-[rgba(37,99,235,0.3)] border-2 border-[var(--card-border)]';
+                else if (total >= 60 && total < 120) colorClass = 'bg-[rgba(37,99,235,0.65)] border-2 border-[var(--card-border)]';
+                else if (total >= 120) colorClass = 'bg-[#2563eb] border-2 border-[var(--card-border)]';
                 
                 let tooltipText = total > 0 ? `${dateStr} : ${total}m` : `${dateStr}`;
-                html += `<div class="w-[11px] h-[11px] sm:w-[13px] sm:h-[13px] rounded-[3px] ${colorClass} transition-all hover:ring-2 hover:ring-[#0a84ff] cursor-pointer" title="${tooltipText}"></div>`;
+                html += `<div class="w-[13px] h-[13px] rounded-[3px] ${colorClass} transition-all cursor-pointer hover:translate-x-[-1px] hover:translate-y-[-1px]" title="${tooltipText}"></div>`;
                 d.setDate(d.getDate() + 1);
             }
             DOM.heatmapContainer.innerHTML = html;
-            DOM.streakCounter.innerText = `🔥 ${calculateStreak(recordsMap)}일째`;
+            DOM.streakCounter.innerText = `STREAK: ${calculateStreak(recordsMap)} DAYS ACTIVE`;
             
             requestAnimationFrame(() => {
                 if(DOM.heatmapContainer && DOM.heatmapContainer.parentElement) {
                     DOM.heatmapContainer.parentElement.scrollLeft = DOM.heatmapContainer.parentElement.scrollWidth;
                 }
             });
+        }
+
+        function renderCurriculumManager() {
+            if(!DOM.curriculumManager) return;
+            const dataCourses = getCourses();
+            const lecsMap = getLecturesByCourse();
+
+            if (dataCourses.length === 0) {
+                DOM.curriculumManager.innerHTML = `<div class="col-span-full py-12 text-center font-mono-num font-bold text-[var(--text-muted)] border-2 border-dashed border-[var(--card-border)] rounded-xl text-xs">NO COURSES REGISTERED IN THE CURRICULUM.</div>`;
+                return;
+            }
+
+            let html = '';
+            subjects.forEach(subject => {
+                const subjCourses = dataCourses.filter(c => c.subject === subject);
+                if(subjCourses.length === 0) return; 
+
+                const theme = getTheme(subject);
+
+                html += `
+                    <div class="nb-card overflow-hidden">
+                        <div class="px-5 py-3.5 flex justify-between items-center border-b-2 border-[var(--card-border)] bg-[var(--table-header)]">
+                            <h3 class="text-xs font-extrabold flex items-center space-x-2">
+                                <span class="w-2.5 h-2.5 rounded-full border border-[var(--card-border)]" style="background-color: ${theme.dot}"></span>
+                                <span style="color: ${theme.dot}" class="tracking-widest uppercase">${esc(subject)}</span>
+                            </h3>
+                            <span class="text-[10px] font-mono-num font-bold border-2 border-[var(--card-border)] rounded-md px-2 py-0.5 bg-[var(--card-bg)]">${subjCourses.length} REGISTERED</span>
+                        </div>
+                        
+                        <div class="p-4 space-y-4">
+                            ${subjCourses.map(course => {
+                                const courseLecs = lecsMap[course.id] || [];
+                                const totalLecs = courseLecs.length;
+                                let visibleCount = courseViewCounts[course.id] !== undefined ? Math.min(courseViewCounts[course.id], totalLecs) : Math.min(10, totalLecs);
+                                const displayLecs = courseLecs.slice(0, visibleCount);
+                                const hiddenCount = totalLecs - visibleCount;
+                                const cColor = course.color || getStringColor(course.title);
+
+                                return `
+                                <div class="border-2 border-[var(--card-border)] rounded-xl p-4 bg-[var(--card-bg)] shadow-[2px_2px_0px_var(--card-border)]">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3 border-b-2 border-[var(--card-border)] pb-3">
+                                        <div class="flex items-center space-x-2 flex-1 min-w-0">
+                                            <span class="w-3 h-3 rounded-full border border-[var(--card-border)] flex-shrink-0" style="background-color: ${cColor};"></span>
+                                            <div class="font-extrabold text-[var(--text-main)] text-base truncate" title="${esc(course.title)}">${esc(course.title)}</div>
+                                        </div>
+                                        <div class="flex space-x-1.5 text-xs font-mono-num flex-shrink-0">
+                                            <button data-action="openLectureModal" data-course-id="${course.id}" class="nb-btn px-2.5 py-1 text-[11px]">+ ADD</button>
+                                            <button data-action="openCourseModal" data-course-id="${course.id}" class="nb-btn px-2.5 py-1 text-[11px]">EDIT</button>
+                                            <button data-action="deleteCourse" data-id="${course.id}" class="nb-btn px-2.5 py-1 text-[11px] text-red-500 hover:text-red-700">DEL</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        ${displayLecs.length > 0 ? `
+                                        <ul class="border-l-2 border-[var(--card-border)] ml-1 pl-3 space-y-1.5 font-mono-num text-xs">
+                                            ${displayLecs.map(lec => `
+                                                <li class="flex justify-between items-center py-1.5 px-2 rounded-lg hover:bg-[var(--hover-bg)] transition group border border-transparent hover:border-[var(--card-border)]">
+                                                    <div class="flex items-center space-x-2.5 overflow-hidden flex-1">
+                                                        <input type="checkbox" class="custom-checkbox" ${lec.status === '완료' ? 'checked' : ''} data-action="toggleLecture" data-id="${lec.id}">
+                                                        <span class="truncate font-bold ${lec.status === '완료' ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text-main)]'}" title="${esc(lec.title)}">${esc(lec.title)}</span>
+                                                        <span class="text-[10px] text-[var(--text-muted)] font-extrabold">[${lec.duration || 0}m]</span>
+                                                    </div>
+                                                    <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-2">
+                                                        <button data-action="openLectureModal" data-course-id="${course.id}" data-lec-id="${lec.id}" class="nb-btn text-[10px] px-2 py-0.5">EDIT</button>
+                                                        <button data-action="deleteLecture" data-id="${lec.id}" class="nb-btn text-[10px] px-2 py-0.5 text-red-500">DEL</button>
+                                                    </div>
+                                                </li>
+                                            `).join('')}
+                                        </ul>
+                                        ` : (totalLecs === 0 ? '<p class="text-xs font-mono-num font-bold text-[var(--text-muted)] py-1">등록된 강의가 없습니다.</p>' : '')}
+                                    </div>
+                                    ${totalLecs > 0 ? `
+                                        <div class="pt-3 flex justify-between items-center border-t-2 border-[var(--card-border)] mt-3 text-[11px] font-mono-num font-bold">
+                                            <span class="text-[var(--text-muted)]">SHOWING ${visibleCount} OF ${totalLecs}</span>
+                                            <div class="flex space-x-1.5">
+                                                ${hiddenCount > 0 ? `
+                                                    <button data-action="courseShowMore" data-id="${course.id}" class="nb-btn px-2.5 py-1">+ ${Math.min(10, hiddenCount)} MORE</button>
+                                                ` : ''}
+                                                ${visibleCount > 0 ? `
+                                                    <button data-action="courseFoldLess" data-id="${course.id}" class="nb-btn px-2.5 py-1">- LESS</button>
+                                                    <button data-action="courseFoldAll" data-id="${course.id}" class="nb-btn px-2.5 py-1 text-[var(--text-muted)]">COLLAPSE</button>
+                                                ` : ''}
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                </div>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            DOM.curriculumManager.innerHTML = html;
+        }
+
+        function renderMasterDB() {
+            if(!DOM.dbCourses || !DOM.dbLecturesContainer || !DOM.dbDaily) return;
+            const dataCourses = getCourses();
+            const lecsMap = getLecturesByCourse();
+
+            DOM.dbCourses.innerHTML = dataCourses.length > 0 ? dataCourses.map(c => {
+                const theme = getTheme(c.subject);
+                return `
+                <tr>
+                    <td class="font-mono-num text-xs font-extrabold" style="color: ${theme.dot};">${esc(c.subject)}</td>
+                    <td class="text-[var(--text-main)] font-extrabold truncate max-w-[200px] sm:max-w-[400px]" title="${esc(c.title)}">${esc(c.title)}</td>
+                    <td>${renderProgressBar(getCourseProgress(lecsMap, c.id), theme.dot)}</td>
+                </tr>
+            `}).join('') : `<tr><td colspan="3" class="text-center font-mono-num text-[var(--text-muted)] py-6 text-xs font-bold">NO RECORD DATA.</td></tr>`;
+
+            let lecturesHtml = '';
+            subjects.forEach(subj => {
+                const subjCourses = dataCourses.filter(c => c.subject === subj);
+                if(subjCourses.length === 0) return;
+                
+                const theme = getTheme(subj);
+                lecturesHtml += `<div class="mb-4"><h4 class="text-xs font-extrabold mb-2 flex items-center space-x-1.5 tracking-widest uppercase" style="color: ${theme.dot}"><span>●</span><span>${esc(subj)}</span></h4>`;
+                
+                subjCourses.forEach(course => {
+                    const courseLecs = lecsMap[course.id] || [];
+                    const isClosed = closedDbCourses.has(course.id); 
+                    
+                    lecturesHtml += `
+                    <div class="border-2 border-[var(--card-border)] rounded-xl mb-3 bg-[var(--card-bg)] shadow-[2px_2px_0px_var(--card-border)] overflow-hidden">
+                        <div class="px-4 py-3 flex justify-between items-center cursor-pointer hover:bg-[var(--hover-bg)]" data-action="toggleDbCourse" data-id="${course.id}">
+                            <div class="text-sm font-extrabold text-[var(--text-main)] pointer-events-none">${esc(course.title)} <span class="font-mono-num text-[10px] text-[var(--text-main)] ml-2 border border-[var(--card-border)] rounded px-1.5 py-0.5 bg-[var(--table-header)]">${courseLecs.length} LECTURES</span></div>
+                            <div class="text-[var(--text-main)] font-mono-num text-xs font-extrabold pointer-events-none">[${isClosed ? '+' : '—'}]</div>
+                        </div>
+                        <div class="accordion-grid ${isClosed ? 'closed' : 'open'} bg-[var(--table-header)]">
+                            <div class="accordion-inner border-t-2 border-[var(--card-border)]">
+                                <table class="w-full text-xs font-mono-num font-bold">
+                                    <thead class="text-[var(--text-muted)] text-[10px] uppercase tracking-wider bg-[var(--table-header)] border-b-2 border-[var(--card-border)]">
+                                        <tr><th class="p-2.5 pl-4 text-left">Lecture Title</th><th class="p-2.5 w-24 text-center">Status</th><th class="p-2.5 w-20 text-center">Duration</th></tr>
+                                    </thead>
+                                    <tbody class="bg-[var(--card-bg)]">
+                                        ${courseLecs.length > 0 ? courseLecs.map(l => `
+                                        <tr class="border-b border-[var(--card-border)] hover:bg-[var(--hover-bg)] last:border-b-0">
+                                            <td class="p-2.5 pl-4 ${l.status === '완료' ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text-main)]'}">${esc(l.title)}</td>
+                                            <td class="p-2.5 text-center"><span class="text-[10px] px-2 py-0.5 border-2 border-[var(--card-border)] rounded-md ${l.status === '완료' ? 'bg-[var(--table-header)] text-[var(--text-muted)]' : 'bg-[var(--text-main)] text-[var(--bg-main)] font-extrabold'}">${l.status}</span></td>
+                                            <td class="p-2.5 text-center text-[10px] text-[var(--text-muted)]">${l.duration||0}m</td>
+                                        </tr>
+                                        `).join('') : `<tr><td colspan="3" class="p-4 text-center text-[var(--text-muted)] text-xs font-bold">NO LECTURES REGISTERED.</td></tr>`}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                lecturesHtml += `</div>`;
+            });
+            if(Object.keys(lecsMap).length === 0) lecturesHtml = `<div class="text-center font-mono-num text-[var(--text-muted)] py-6 text-xs font-bold border-2 border-dashed border-[var(--card-border)] rounded-xl">NO RECORD DATA.</div>`;
+            DOM.dbLecturesContainer.innerHTML = lecturesHtml;
+
+            const records = getDailyRecords();
+            DOM.dbDaily.innerHTML = records.length > 0 ? records.map(d => {
+                const stats = getDailyTaskStats(d);
+                return `
+                <tr class="cursor-pointer hover:bg-[var(--hover-bg)] transition-colors" data-action="openDailyModal" data-date="${d.date}">
+                    <td class="text-[var(--text-muted)] font-extrabold text-center text-xs tracking-wider">${d.date.substring(5)}</td>
+                    <td class="text-[var(--text-main)] font-bold truncate max-w-[150px] sm:max-w-[250px]" title="${esc(stats.goals)}">${esc(stats.goals) || '<span class="text-[var(--text-faint)] italic">목표 없음</span>'}</td>
+                    <td class="text-right text-[var(--text-muted)] text-xs">${stats.lecture > 0 ? stats.lecture + 'm' : '—'}</td>
+                    <td class="text-right text-[var(--text-muted)] text-xs">${stats.study > 0 ? formatTime(stats.study) : '—'}</td>
+                    <td class="text-right text-[var(--text-main)] font-extrabold text-xs">${formatTime(stats.total)}</td>
+                    <td class="text-center" onclick="event.stopPropagation()">
+                        <input type="checkbox" data-action="toggleDailyAchieved" data-id="${d.id}" ${stats.allCompleted ? 'checked' : ''} class="custom-checkbox mx-auto">
+                    </td>
+                </tr>
+            `}).join('') : `<tr><td colspan="6" class="text-center font-mono-num text-[var(--text-muted)] py-6 text-xs font-bold">NO LOGGED RECORDS.</td></tr>`;
         }
 
         function renderAll() {
@@ -1454,15 +1489,13 @@
             renderCharts();
             renderHeatmap();
             renderDdays();
-            renderAdvancedNotesList();
-            applyNoteView();
             renderCurriculumManager();
             renderMasterDB();
         }
 
         function updateThemeIcon() {
             const icon = document.getElementById('theme-icon');
-            if(icon) icon.innerText = currentTheme === 'dark' ? '☀️' : '🌙';
+            if(icon) icon.innerText = currentTheme === 'dark' ? '☀️ LIGHT' : '🌙 DARK';
         }
 
         function toggleTheme() {
@@ -1470,23 +1503,27 @@
             document.documentElement.setAttribute('data-theme', currentTheme);
             localStorage.setItem('theme', currentTheme);
             updateThemeIcon();
+            
+            if (chartInstances.daily) { chartInstances.daily.destroy(); chartInstances.daily = null; }
+            if (chartInstances.weekly) { chartInstances.weekly.destroy(); chartInstances.weekly = null; }
+            if (chartInstances.monthly) { chartInstances.monthly.destroy(); chartInstances.monthly = null; }
             renderCharts(); 
         }
 
-        function showUndoToast(message, onUndo = null, onConfirm = null) {
+        function showUndoToast(message, onUndo = null) {
             const toastId = 'toast-' + Date.now();
             const toast = document.createElement('div');
             toast.id = toastId;
-            toast.className = 'bg-[var(--text-main)] text-[var(--bg-main)] backdrop-blur-xl border border-[var(--card-border)] p-4 rounded-2xl shadow-2xl flex items-center justify-between w-[320px] relative overflow-hidden toast-enter-active z-[999]';
+            toast.className = 'bg-[var(--card-bg)] text-[var(--text-main)] border-2 border-[var(--card-border)] rounded-xl p-3.5 text-xs font-bold flex items-center justify-between w-[320px] relative shadow-[4px_4px_0px_var(--card-border)] toast-enter-active z-[999]';
             
             toast.innerHTML = `
                 <div class="flex flex-col w-full z-10">
                     <div class="flex justify-between items-center w-full">
-                        <span class="text-sm font-semibold">${esc(message)}</span>
-                        ${onUndo ? `<button data-action="undoToast" data-toast-id="${toastId}" class="text-xs text-white font-bold ml-3 bg-[#0a84ff] hover:bg-blue-500 px-3 py-1.5 rounded-full transition">실행 취소</button>` : `<button data-action="closeToast" data-toast-id="${toastId}" class="text-xs opacity-70 hover:opacity-100 px-2 py-1 transition">✕</button>`}
+                        <span class="font-extrabold">${esc(message)}</span>
+                        ${onUndo ? `<button data-action="undoToast" data-toast-id="${toastId}" class="ml-2 px-2.5 py-1 border-2 border-[var(--card-border)] rounded-md bg-[var(--text-main)] text-[var(--bg-main)] hover:opacity-90 transition font-mono-num font-extrabold">UNDO</button>` : `<button data-action="closeToast" data-toast-id="${toastId}" class="px-1 text-[var(--text-main)] opacity-70 hover:opacity-100 transition">✕</button>`}
                     </div>
                 </div>
-                ${onUndo ? `<div class="absolute bottom-0 left-0 h-1 bg-[#0a84ff] transition-all ease-linear" style="width: 100%; transition-duration: 5000ms;" id="bar-${toastId}"></div>` : ''}
+                ${onUndo ? `<div class="absolute bottom-0 left-0 h-[3px] bg-[var(--text-main)] transition-all ease-linear" style="width: 100%; transition-duration: 5000ms;" id="bar-${toastId}"></div>` : ''}
             `;
             DOM.toastContainer.appendChild(toast);
 
@@ -1499,12 +1536,12 @@
 
             const removeToast = () => {
                 toast.classList.replace('toast-enter-active', 'toast-exit-active');
-                setTimeout(() => toast.remove(), 300);
+                setTimeout(() => toast.remove(), 200);
                 delete toastTimers[toastId];
             };
 
             const duration = onUndo ? 5000 : 3000;
-            const timer = setTimeout(() => { if(onConfirm) onConfirm(); removeToast(); }, duration);
+            const timer = setTimeout(() => { removeToast(); }, duration);
             toastTimers[toastId] = { timer, onUndo, removeToast };
         }
 
@@ -1522,11 +1559,9 @@
             const colorOpt = e.target.closest('.color-option');
             if (colorOpt) {
                 document.querySelectorAll('.color-option').forEach(el => {
-                    el.classList.remove('border-[var(--text-main)]', 'scale-110');
-                    el.classList.add('border-transparent');
+                    el.classList.remove('ring-4', 'ring-[var(--card-border)]', 'scale-110');
                 });
-                colorOpt.classList.remove('border-transparent');
-                colorOpt.classList.add('border-[var(--text-main)]', 'scale-110');
+                colorOpt.classList.add('ring-4', 'ring-[var(--card-border)]', 'scale-110');
                 const inputColor = document.getElementById('input-ccolor');
                 if (inputColor) inputColor.value = colorOpt.dataset.color;
                 return;
@@ -1541,8 +1576,11 @@
                 case 'switchTab': {
                     const tabName = target.dataset.tab;
                     document.querySelectorAll('.tab-btn').forEach(btn => {
-                        if(btn.dataset.tab === tabName) btn.className = "tab-btn active px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-[var(--text-main)] text-[var(--bg-main)] shadow-md flex-shrink-0 flex items-center gap-1.5";
-                        else btn.className = "tab-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all text-[var(--text-muted)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-main)] flex-shrink-0 flex items-center gap-1.5";
+                        if(btn.dataset.tab === tabName) {
+                            btn.className = "tab-btn active px-6 py-3 border-2 border-[var(--card-border)] bg-[var(--text-main)] text-[var(--bg-main)] rounded-xl shadow-[3px_3px_0px_var(--card-border)] flex-shrink-0 transition-transform active:translate-x-[2px] active:translate-y-[2px]";
+                        } else {
+                            btn.className = "tab-btn px-6 py-3 border-2 border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-main)] rounded-xl shadow-[3px_3px_0px_var(--card-border)] hover:bg-[var(--hover-bg)] flex-shrink-0 transition-transform active:translate-x-[2px] active:translate-y-[2px]";
+                        }
                     });
                     document.querySelectorAll('.tab-content').forEach(content => {
                         if(content.id === `tab-${tabName}`) content.classList.remove('hidden');
@@ -1550,73 +1588,23 @@
                     });
                     if (tabName === 'dashboard') {
                         renderCharts(); renderHeatmap();
-                    } else if (tabName === 'memo') {
-                        window.renderMarkdownPreview();
                     }
-                    break;
-                }
-                case 'setMemoView': {
-                    const view = target.dataset.view;
-                    document.querySelectorAll('.memo-view-btn').forEach(btn => {
-                        if(btn.dataset.view === view) btn.className = "memo-view-btn active px-3 py-1.5 rounded-md text-xs font-bold bg-[var(--text-main)] text-[var(--bg-main)] shadow-sm transition";
-                        else btn.className = "memo-view-btn px-3 py-1.5 rounded-md text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition";
-                    });
-                    applyNoteView();
-                    break;
-                }
-                case 'createNewFolder': {
-                    const fname = prompt('새 폴더 이름을 입력하세요:', '새 폴더');
-                    if(fname && fname.trim()) {
-                        noteFolders.push({ id: generateId('F'), name: fname.trim() });
-                        saveData(); renderAdvancedNotesList();
-                    }
-                    break;
-                }
-                case 'deleteFolder': {
-                    // 기다림 없이 바로 삭제
-                    const fId = target.dataset.id;
-                    const folder = noteFolders.find(f => f.id === fId);
-                    if(!folder) return;
-                    noteFolders = noteFolders.filter(f => f.id !== fId);
-                    advancedNotes = advancedNotes.filter(n => n.folderId !== fId);
-                    if(activeNoteId && !advancedNotes.find(n => n.id === activeNoteId)) activeNoteId = null;
-                    saveData(); renderAdvancedNotesList(); applyNoteView();
-                    showUndoToast('폴더와 메모가 삭제되었습니다.', null, null, false);
-                    break;
-                }
-                case 'createNewNote': {
-                    const fId = target.dataset.folder;
-                    const newId = generateId('AN');
-                    advancedNotes.unshift({ id: newId, folderId: fId, title: '새로운 메모', content: '', updatedAt: Date.now() });
-                    activeNoteId = newId;
-                    saveData(); renderAdvancedNotesList(); applyNoteView();
-                    setTimeout(() => DOM.memoTitleInput.focus(), 50);
-                    break;
-                }
-                case 'openAdvancedNote': {
-                    activeNoteId = target.dataset.id;
-                    renderAdvancedNotesList(); applyNoteView();
-                    break;
-                }
-                case 'deleteNote': {
-                    e.stopPropagation();
-                    // 대기 없이 즉시 삭제
-                    const nId = target.dataset.id;
-                    advancedNotes = advancedNotes.filter(n => n.id !== nId);
-                    if(activeNoteId === nId) activeNoteId = null;
-                    saveData(); renderAdvancedNotesList(); applyNoteView();
                     break;
                 }
                 case 'openDdayModal': {
                     const html = `
-                        <div>
-                            <label class="block text-sm text-[var(--text-muted)] font-semibold mb-2 tracking-wide">디데이 이름</label>
-                            <input type="text" id="input-dday-title" class="input-dark mb-6 !py-3 !text-lg font-bold" placeholder="예: 편입시험, 모의고사 등">
-                            <label class="block text-sm text-[var(--text-muted)] font-semibold mb-2 tracking-wide">목표 날짜</label>
-                            <input type="date" id="input-dday-date" class="input-dark mb-2 !py-3 !text-lg font-bold w-full cursor-pointer hover:bg-[var(--hover-bg)] transition-colors" value="${TODAY}">
+                        <div class="space-y-4 font-mono-num text-xs font-bold">
+                            <div>
+                                <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">EVENT / EXAM TITLE</label>
+                                <input type="text" id="input-dday-title" class="input-dark font-sans" placeholder="예: 편입시험, TOEIC 등">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">TARGET DATE</label>
+                                <input type="date" id="input-dday-date" class="input-dark" value="${TODAY}">
+                            </div>
                         </div>
                     `;
-                    openModal('디데이 추가', html, () => {
+                    openModal('디데이 일정 추가 (ADD D-DAY)', html, () => {
                         const title = document.getElementById('input-dday-title').value.trim() || '목표일';
                         const dateVal = document.getElementById('input-dday-date').value;
                         if(dateVal) {
@@ -1642,27 +1630,29 @@
                     const course = cId ? getCourses().find(c => c.id === cId) : { subject: '수학', title: '', color: '' };
                     const options = subjects.map(s => `<option value="${s}" ${course.subject === s ? 'selected' : ''}>${s}</option>`).join('');
                     const colorOptionsHtml = COURSE_COLORS.map(c => `
-                        <div data-color="${c}" class="color-option w-7 h-7 rounded-full cursor-pointer border-2 transition-transform hover:scale-110 ${(course.color || getStringColor(course.title)) === c ? 'border-[var(--text-main)] scale-110' : 'border-transparent'}" style="background-color: ${c}"></div>
+                        <div data-color="${c}" class="color-option w-6 h-6 rounded-full cursor-pointer border-2 border-[var(--card-border)] ${(course.color || getStringColor(course.title)) === c ? 'ring-4 ring-[var(--card-border)] scale-110' : ''}" style="background-color: ${c}"></div>
                     `).join('');
 
                     const html = `
-                        <div>
-                            <label class="block text-sm text-[var(--text-muted)] mb-2 font-semibold">과목 분류</label>
-                            <select id="input-subject" class="input-dark">${options}</select>
-                        </div>
-                        <div class="mt-5">
-                            <label class="block text-sm text-[var(--text-muted)] mb-2 font-semibold">강좌 제목</label>
-                            <input type="text" id="input-ctitle" class="input-dark" value="${esc(course.title)}" placeholder="강좌 제목 입력">
-                        </div>
-                        <div class="mt-5">
-                            <label class="block text-sm text-[var(--text-muted)] mb-3 font-semibold">강좌 색상 (캘린더 표시용)</label>
-                            <div class="flex flex-wrap gap-3" id="color-picker-container">
-                                ${colorOptionsHtml}
+                        <div class="space-y-4 font-mono-num text-xs font-bold">
+                            <div>
+                                <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">SUBJECT DISCIPLINE</label>
+                                <select id="input-subject" class="input-dark">${options}</select>
                             </div>
-                            <input type="hidden" id="input-ccolor" value="${course.color || ''}">
+                            <div>
+                                <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">COURSE TITLE</label>
+                                <input type="text" id="input-ctitle" class="input-dark font-sans" value="${esc(course.title)}" placeholder="강좌 제목 입력">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">LEDGER COLOR IDENTIFIER</label>
+                                <div class="flex flex-wrap gap-2.5 pt-1.5" id="color-picker-container">
+                                    ${colorOptionsHtml}
+                                </div>
+                                <input type="hidden" id="input-ccolor" value="${course.color || ''}">
+                            </div>
                         </div>
                     `;
-                    openModal(cId ? '강좌 수정' : '새로운 강좌 추가', html, () => {
+                    openModal(cId ? '강좌 정보 수정 (EDIT COURSE)' : '새로운 강좌 등록 (ADD COURSE)', html, () => {
                         const subj = document.getElementById('input-subject').value;
                         const tit = document.getElementById('input-ctitle').value || '제목 없음';
                         const col = document.getElementById('input-ccolor').value || getStringColor(tit);
@@ -1681,27 +1671,27 @@
                     const statusOptions = ['미시작', '완료'].map(s => `<option value="${s}" ${lecture.status === s ? 'selected' : ''}>${s}</option>`).join('');
                     const cName = getCourseName(cId);
                     const html = `
-                        <div class="bg-[var(--btn-glass)] p-4 rounded-[16px] border border-[var(--card-border)] mb-6 text-sm text-[var(--text-main)] flex justify-between items-center">
-                            <div class="flex items-center space-x-2">
-                                <span class="text-[var(--text-muted)] font-semibold flex-shrink-0">대상:</span> <span class="truncate-text font-medium max-w-[200px]">${esc(cName)}</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-[var(--text-muted)] font-semibold mb-2">강의 제목</label>
-                            <input type="text" id="input-ltitle" class="input-dark mb-2" value="${esc(lecture.title)}" placeholder="강의 제목 입력">
-                        </div>
-                        <div class="grid grid-cols-2 gap-5 mt-5">
-                            <div>
-                                <label class="block text-sm text-[var(--text-muted)] mb-2 font-semibold">시간 (분)</label>
-                                <input type="number" id="input-lduration" class="input-dark" value="${lecture.duration}" min="0" step="5">
+                        <div class="space-y-4 font-mono-num text-xs font-bold">
+                            <div class="border-2 border-[var(--card-border)] rounded-xl p-3 bg-[var(--table-header)] text-xs text-[var(--text-muted)]">
+                                PARENT COURSE: <span class="text-[var(--text-main)] font-extrabold">${esc(cName)}</span>
                             </div>
                             <div>
-                                <label class="block text-sm text-[var(--text-muted)] mb-2 font-semibold">상태</label>
-                                <select id="input-lstatus" class="input-dark">${statusOptions}</select>
+                                <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">LECTURE TITLE</label>
+                                <input type="text" id="input-ltitle" class="input-dark font-sans" value="${esc(lecture.title)}" placeholder="강의 제목 입력">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">DURATION (MINUTES)</label>
+                                    <input type="number" id="input-lduration" class="input-dark" value="${lecture.duration}" min="0" step="5">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">STATUS</label>
+                                    <select id="input-lstatus" class="input-dark">${statusOptions}</select>
+                                </div>
                             </div>
                         </div>
                     `;
-                    openModal(lId ? '강의 수정' : '새 강의 추가', html, () => {
+                    openModal(lId ? '강의 정보 수정 (EDIT LECTURE)' : '새 강의 추가 (ADD LECTURE)', html, () => {
                         const tit = document.getElementById('input-ltitle').value || '제목 없음';
                         const dur = parseInt(document.getElementById('input-lduration').value) || 0;
                         const stat = document.getElementById('input-lstatus').value;
@@ -1715,14 +1705,33 @@
                 }
                 case 'deleteCourse': {
                     const cId = target.dataset.id;
-                    pendingDeletes.add(cId); renderAll(); 
-                    showUndoToast('강좌가 삭제 대기 중입니다.', () => { pendingDeletes.delete(cId); renderAll(); }, () => { pendingDeletes.delete(cId); courses = courses.filter(c => c.id !== cId); lectures = lectures.filter(l => l.courseId !== cId); saveData(); renderAll(); });
+                    const courseToDelete = courses.find(c => c.id === cId);
+                    if (!courseToDelete) return;
+                    const lecsToDelete = lectures.filter(l => l.courseId === cId);
+
+                    courses = courses.filter(c => c.id !== cId);
+                    lectures = lectures.filter(l => l.courseId !== cId);
+                    saveData(); renderAll();
+
+                    showUndoToast('강좌가 삭제되었습니다.', () => {
+                        courses.push(courseToDelete);
+                        lectures.push(...lecsToDelete);
+                        saveData(); renderAll();
+                    });
                     break;
                 }
                 case 'deleteLecture': {
                     const lId = target.dataset.id;
-                    pendingDeletes.add(lId); renderAll();
-                    showUndoToast('강의가 삭제 대기 중입니다.', () => { pendingDeletes.delete(lId); renderAll(); }, () => { pendingDeletes.delete(lId); lectures = lectures.filter(l => l.id !== lId); saveData(); renderAll(); });
+                    const lecToDelete = lectures.find(l => l.id === lId);
+                    if (!lecToDelete) return;
+
+                    lectures = lectures.filter(l => l.id !== lId);
+                    saveData(); renderAll();
+
+                    showUndoToast('강의가 삭제되었습니다.', () => {
+                        lectures.push(lecToDelete);
+                        saveData(); renderAll();
+                    });
                     break;
                 }
                 case 'courseShowMore': {
@@ -1768,8 +1777,13 @@
                     masterDbFoldState[sec] = !masterDbFoldState[sec];
                     const wrap = document.getElementById(`wrap-db-${sec}`);
                     const icon = document.getElementById(`icon-db-${sec}`);
-                    if(masterDbFoldState[sec]) { wrap.classList.replace('open', 'closed'); icon.classList.add('rotate-180'); } 
-                    else { wrap.classList.replace('closed', 'open'); icon.classList.remove('rotate-180'); }
+                    if(masterDbFoldState[sec]) { 
+                        wrap.classList.replace('open', 'closed'); 
+                        icon.innerText = '[EXPAND]'; 
+                    } else { 
+                        wrap.classList.replace('closed', 'open'); 
+                        icon.innerText = '[COLLAPSE]'; 
+                    }
                     break;
                 }
                 case 'openDailyModal': {
@@ -1782,45 +1796,49 @@
                     const lecOptions = allLectures.map(l => `<option value="${l.id}">[${esc(getCourseName(l.courseId))}] ${esc(l.title)} (${l.duration||0}m)</option>`).join('');
 
                     const html = `
-                        <div class="flex justify-between items-center mb-6 border-b border-[var(--card-border)] pb-4">
-                            <label class="block text-sm text-[var(--text-muted)] font-bold uppercase tracking-widest">학습 날짜</label>
-                            <div class="text-[var(--text-main)] font-mono text-xl font-bold tracking-tight">${dateStr}</div>
-                        </div>
-                        <div class="bg-[var(--card-bg)] p-5 rounded-[20px] border border-[var(--card-border)] mb-8 space-y-5 shadow-inner">
-                            <div>
-                                <label class="block text-[11px] text-[#bf5af2] mb-2.5 font-bold uppercase tracking-widest">인강 추가</label>
-                                <div class="flex space-x-2">
-                                    <select id="modal-lecture-select" class="input-dark flex-1 py-2.5 text-sm bg-[var(--input-bg)]"><option value=""></option>${lecOptions}</select>
-                                    <button data-action="addModalLecTask" class="px-5 py-2.5 bg-[#bf5af2] hover:bg-purple-500 text-white font-bold rounded-xl transition whitespace-nowrap text-sm shadow-[0_0_10px_rgba(191,90,242,0.3)]">추가</button>
-                                </div>
+                        <div class="space-y-4 font-mono-num text-xs font-bold">
+                            <div class="flex justify-between items-center border-b-2 border-[var(--card-border)] pb-2">
+                                <span class="text-[11px] uppercase text-[var(--text-muted)] font-extrabold tracking-wider">LOG DATE</span>
+                                <div class="text-[var(--text-main)] font-extrabold text-sm">${dateStr}</div>
                             </div>
-                            <div class="pt-5 border-t border-[var(--card-border)]">
-                                <label class="block text-[11px] text-[#0a84ff] mb-2.5 font-bold uppercase tracking-widest">직접 입력 (자습)</label>
-                                <div class="flex flex-col space-y-2.5">
-                                    <input type="text" id="modal-study-title" class="input-dark py-2.5 text-sm bg-[var(--input-bg)]" placeholder="항목 입력 (예: 복습)">
+
+                            <div class="border-2 border-[var(--card-border)] rounded-xl p-3.5 bg-[var(--table-header)] space-y-3">
+                                <div>
+                                    <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">1. INSERT FROM CURRICULUM</label>
                                     <div class="flex space-x-2">
-                                        <div class="flex-1 flex items-center space-x-2 bg-[var(--input-bg)] rounded-xl p-2 border border-[var(--card-border)] focus-within:border-[#0a84ff] transition">
-                                            <input type="number" id="modal-study-h" class="bg-transparent w-full outline-none text-right font-mono text-sm text-[var(--text-main)]" min="0">
-                                            <span class="text-xs text-[var(--text-muted)] pr-2 font-medium">h</span>
+                                        <select id="modal-lecture-select" class="input-dark flex-1 py-1.5 text-xs bg-[var(--card-bg)]"><option value="">강의 선택...</option>${lecOptions}</select>
+                                        <button data-action="addModalLecTask" class="nb-btn-solid px-3.5 py-1.5 text-xs">ADD</button>
+                                    </div>
+                                </div>
+                                <div class="pt-2 border-t-2 border-[var(--card-border)]">
+                                    <label class="block text-[11px] uppercase text-[var(--text-muted)] font-extrabold mb-1 tracking-wider">2. DIRECT STUDY LOG</label>
+                                    <div class="flex flex-col space-y-2">
+                                        <input type="text" id="modal-study-title" class="input-dark py-1.5 text-xs bg-[var(--card-bg)] font-sans" placeholder="과업 항목 입력 (예: 오답 노트 복습)">
+                                        <div class="flex space-x-2">
+                                            <div class="flex-1 flex items-center bg-[var(--card-bg)] border-2 border-[var(--card-border)] rounded-xl px-2.5 py-1 shadow-[1.5px_1.5px_0px_var(--card-border)]">
+                                                <input type="number" id="modal-study-h" class="bg-transparent w-full outline-none text-right font-mono-num text-xs font-extrabold text-[var(--text-main)]" min="0" placeholder="0">
+                                                <span class="text-[10px] text-[var(--text-muted)] ml-1 font-bold">h</span>
+                                            </div>
+                                            <div class="flex-1 flex items-center bg-[var(--card-bg)] border-2 border-[var(--card-border)] rounded-xl px-2.5 py-1 shadow-[1.5px_1.5px_0px_var(--card-border)]">
+                                                <input type="number" id="modal-study-m" class="bg-transparent w-full outline-none text-right font-mono-num text-xs font-extrabold text-[var(--text-main)]" min="0" max="59" placeholder="0">
+                                                <span class="text-[10px] text-[var(--text-muted)] ml-1 font-bold">m</span>
+                                            </div>
+                                            <button data-action="addModalStudyTask" class="nb-btn px-3.5 py-1.5 text-xs">ADD</button>
                                         </div>
-                                        <div class="flex-1 flex items-center space-x-2 bg-[var(--input-bg)] rounded-xl p-2 border border-[var(--card-border)] focus-within:border-[#0a84ff] transition">
-                                            <input type="number" id="modal-study-m" class="bg-transparent w-full outline-none text-right font-mono text-sm text-[var(--text-main)]" min="0" max="59">
-                                            <span class="text-xs text-[var(--text-muted)] pr-2 font-medium">m</span>
-                                        </div>
-                                        <button data-action="addModalStudyTask" class="px-5 py-2.5 bg-[#0a84ff] hover:bg-blue-500 text-white font-bold rounded-xl transition whitespace-nowrap text-sm shadow-[0_0_10px_rgba(10,132,255,0.3)]">추가</button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div>
-                            <div class="flex items-end justify-between mb-3">
-                                <label class="block text-sm text-[var(--text-main)] font-bold tracking-wide">학습 항목 목록</label>
-                                <span class="text-[10px] font-medium text-[var(--text-muted)]">체크해야 시간에 합산됩니다</span>
+
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-[11px] uppercase text-[var(--text-muted)] font-extrabold tracking-wider">ITEMIZED ENTRIES</span>
+                                    <span class="text-[10px] text-[var(--text-muted)] font-bold">[CHECK TO LOG TIME]</span>
+                                </div>
+                                <div id="modal-task-list" class="space-y-1.5 max-h-[240px] overflow-y-auto pr-1"></div>
                             </div>
-                            <div id="modal-task-list" class="space-y-1 max-h-[280px] overflow-y-auto pr-2"></div>
                         </div>
                     `;
-                    openModal(`학습 기록`, html, () => {
+                    openModal(`일일 학습 기록 (DAILY LOG)`, html, () => {
                         const idx = dailyRecords.findIndex(d => d.date === currentModalDate);
                         if(idx > -1) dailyRecords[idx].tasks = currentModalTasks;
                         else dailyRecords.push({ id: generateId('D'), date: currentModalDate, tasks: currentModalTasks }); 
@@ -1883,7 +1901,11 @@
                 }
                 case 'undoToast': {
                     const tId = target.dataset.toastId;
-                    if(toastTimers[tId]) { clearTimeout(toastTimers[tId].timer); if(toastTimers[tId].onUndo) toastTimers[tId].onUndo(); toastTimers[tId].removeToast(); }
+                    if(toastTimers[tId]) { 
+                        clearTimeout(toastTimers[tId].timer); 
+                        if(toastTimers[tId].onUndo) toastTimers[tId].onUndo(); 
+                        toastTimers[tId].removeToast(); 
+                    }
                     break;
                 }
                 case 'closeToast': {
@@ -1892,16 +1914,32 @@
                     break;
                 }
                 case 'exportData': {
-                    const data = { courses, lectures, dailyRecords, ddays, noteFolders, advancedNotes };
+                    const data = { courses, lectures, dailyRecords, ddays };
                     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
-                    a.href = url; a.download = `data.json`; a.click();
+                    a.href = url; a.download = `daon_academic_register.json`; a.click();
                     URL.revokeObjectURL(url);
-                    showUndoToast('data.json 파일 다운로드가 완료되었습니다.', null, null);
+                    showUndoToast('백업 파일 다운로드가 완료되었습니다.', null);
                     break;
                 }
                 case 'closeModal': closeModal(); break;
+            }
+        });
+
+        // 자습 시간 변경 시 포커스 유지
+        document.addEventListener('input', (e) => {
+            const target = e.target;
+            if (target.dataset.action === 'updateTaskTime') {
+                const task = currentModalTasks.find(t => t.id === target.dataset.id);
+                if(task) {
+                    task.time = parseInt(target.value) || 0;
+                    const idx = dailyRecords.findIndex(d => d.date === currentModalDate);
+                    if(idx > -1) dailyRecords[idx].tasks = currentModalTasks;
+                    else dailyRecords.push({ id: generateId('D'), date: currentModalDate, tasks: currentModalTasks });
+                    saveData();
+                    renderCalendar(); renderCharts(); renderMasterDB(); renderHeatmap();
+                }
             }
         });
 
@@ -1911,17 +1949,6 @@
             const action = target.dataset.action;
 
             switch(action) {
-                case 'updateTaskTime': {
-                    const task = currentModalTasks.find(t => t.id === target.dataset.id);
-                    if(task) {
-                        task.time = parseInt(target.value) || 0;
-                        const idx = dailyRecords.findIndex(d => d.date === currentModalDate);
-                        if(idx > -1) dailyRecords[idx].tasks = currentModalTasks;
-                        else dailyRecords.push({ id: generateId('D'), date: currentModalDate, tasks: currentModalTasks });
-                        saveData(); renderAll(); renderModalTaskList();
-                    }
-                    break;
-                }
                 case 'toggleLecture': {
                     const idx = lectures.findIndex(l => l.id === target.dataset.id);
                     if(idx > -1) { 
@@ -1954,13 +1981,11 @@
                             const data = JSON.parse(ev.target.result);
                             if (data.courses && data.lectures && data.dailyRecords) {
                                 courses = data.courses; lectures = data.lectures; dailyRecords = data.dailyRecords;
-                                if(data.noteFolders) noteFolders = data.noteFolders;
-                                if(data.advancedNotes) advancedNotes = data.advancedNotes;
                                 if(data.ddays) ddays = data.ddays;
                                 saveData(); renderAll();
-                                showUndoToast('데이터가 성공적으로 복원되었습니다.', null, null);
-                            } else { alert('올바른 백업 파일 형식이 아닙니다.'); }
-                        } catch(err) { alert('파일을 읽는 중 오류가 발생했습니다.'); }
+                                showUndoToast('데이터가 성공적으로 복원되었습니다.', null);
+                            } else { showUndoToast('올바른 백업 파일 형식이 아닙니다.', null); }
+                        } catch(err) { showUndoToast('파일을 읽는 중 오류가 발생했습니다.', null); }
                     };
                     reader.readAsText(file);
                     target.value = ''; 
@@ -1973,50 +1998,41 @@
             const container = document.getElementById('modal-task-list');
             if (!container) return;
             if (currentModalTasks.length === 0) {
-                container.innerHTML = '<div class="text-sm text-[var(--text-muted)] text-center py-8 inner-squircle border border-[var(--card-border)] border-dashed font-medium">등록된 학습 항목이 없습니다.</div>';
+                container.innerHTML = '<div class="text-xs font-mono-num text-[var(--text-muted)] text-center py-6 border-2 border-dashed border-[var(--card-border)] rounded-xl font-bold">NO TASKS LOGGED FOR THIS DATE.</div>';
                 return;
             }
             container.innerHTML = currentModalTasks.map(t => {
-                let badgeColor = '#0a84ff';
-                let badgeBg = 'rgba(10,132,255,0.1)';
-                let badgeBorder = 'rgba(10,132,255,0.2)';
-                
+                let badgeColor = 'var(--text-main)';
                 if (t.type === 'lecture') {
-                    badgeColor = '#bf5af2';
-                    badgeBg = 'rgba(191,90,242,0.1)';
-                    badgeBorder = 'rgba(191,90,242,0.2)';
+                    badgeColor = '#0d9488';
                     if (t.refId) {
                         const lec = lectures.find(l => l.id === t.refId);
                         if (lec) {
                             const crs = courses.find(c => c.id === lec.courseId);
-                            if (crs) {
-                                badgeColor = crs.color || getStringColor(crs.title);
-                                badgeBg = badgeColor + '1a';
-                                badgeBorder = badgeColor + '33';
-                            }
+                            if (crs) badgeColor = crs.color || getStringColor(crs.title);
                         }
                     }
                 }
 
                 return `
-                <div class="flex items-center justify-between p-3.5 inner-squircle border border-[var(--card-border)] transition hover:bg-[var(--hover-bg)] mb-2 shadow-sm bg-[var(--btn-glass)]">
-                    <div class="flex items-center space-x-3.5 flex-1 min-w-0">
-                        <input type="checkbox" class="custom-checkbox w-5 h-5 flex-shrink-0" ${t.completed ? 'checked' : ''} data-action="toggleModalTask" data-id="${t.id}">
+                <div class="flex items-center justify-between p-2.5 border-2 border-[var(--card-border)] rounded-xl bg-[var(--card-bg)] mb-1.5 font-mono-num text-xs shadow-[1.5px_1.5px_0px_var(--card-border)]">
+                    <div class="flex items-center space-x-2.5 flex-1 min-w-0">
+                        <input type="checkbox" class="custom-checkbox" ${t.completed ? 'checked' : ''} data-action="toggleModalTask" data-id="${t.id}">
                         <div class="flex-1 truncate flex items-center min-w-0">
-                            <span class="text-[10px] px-2.5 py-0.5 rounded-full border mr-3 flex-shrink-0 font-bold" style="color: ${badgeColor}; background-color: ${badgeBg}; border-color: ${badgeBorder};">${t.type === 'lecture' ? '인강' : '자습'}</span>
-                            <span class="text-[var(--text-main)] text-sm font-medium truncate min-w-0 ${t.completed ? 'line-through text-[var(--text-muted)]' : ''}" title="${esc(t.title)}">${esc(t.title)}</span>
+                            <span class="text-[9px] px-1.5 py-0.5 border-2 border-[var(--card-border)] rounded-md mr-2 flex-shrink-0 font-extrabold" style="color: ${badgeColor};">${t.type === 'lecture' ? 'LEC' : 'STUDY'}</span>
+                            <span class="text-[var(--text-main)] font-bold truncate min-w-0 ${t.completed ? 'line-through text-[var(--text-faint)]' : ''}" title="${esc(t.title)}">${esc(t.title)}</span>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-3 ml-3 flex-shrink-0">
+                    <div class="flex items-center space-x-2 ml-2 flex-shrink-0">
                         ${t.type === 'study' ?
                             `<div class="flex items-center space-x-1">
-                                <input type="number" data-action="updateTaskTime" data-id="${t.id}" value="${t.time}" min="0" class="w-12 bg-[var(--input-bg)] border border-[var(--input-border)] rounded px-1 py-1 text-xs text-[var(--text-main)] font-mono font-bold text-right outline-none focus:border-[#0a84ff] transition-colors shadow-inner">
-                                <span class="text-xs text-[var(--text-muted)] font-mono font-bold">m</span>
+                                <input type="number" data-action="updateTaskTime" data-id="${t.id}" value="${t.time}" min="0" class="w-12 bg-[var(--card-bg)] border-2 border-[var(--card-border)] rounded-md px-1 py-0.5 text-xs text-[var(--text-main)] font-mono-num font-extrabold text-right outline-none">
+                                <span class="text-[10px] text-[var(--text-muted)] font-bold">m</span>
                             </div>`
                         :
-                            `<span class="text-xs text-[var(--text-muted)] font-mono font-bold w-10 text-right">${t.time}m</span>`
+                            `<span class="text-[11px] text-[var(--text-muted)] font-extrabold w-8 text-right">${t.time}m</span>`
                         }
-                        <button data-action="removeModalTask" data-id="${t.id}" class="text-red-500 hover:text-white font-bold px-3 py-1.5 rounded-full bg-[rgba(255,59,48,0.1)] hover:bg-red-500 transition text-[11px]">삭제</button>
+                        <button data-action="removeModalTask" data-id="${t.id}" class="nb-btn text-red-500 hover:text-red-700 px-2 py-0.5 text-[10px]">DEL</button>
                     </div>
                 </div>
             `}).join('');
@@ -2034,6 +2050,7 @@
         }
     </script>
     
+    <!-- Firebase 실시간 클라우드 동기화 모듈 (다온 님의 모든 기기 연동을 위한 단일 룸 지정) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
